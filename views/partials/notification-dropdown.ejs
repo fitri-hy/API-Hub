@@ -1,0 +1,38 @@
+<% if (typeof notificationsEnabled === 'undefined' || notificationsEnabled) { %>
+<div class="relative" id="notification-wrapper">
+	<button type="button" id="notification-bell" class="relative flex items-center justify-center h-9 w-9 rounded-full hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Notifications" data-unread-count="<%= typeof notificationUnreadCount !== 'undefined' ? notificationUnreadCount : 0 %>">
+		<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
+			<path d="M0 0h24v24H0z" fill="none" />
+			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+		</svg>
+		<span id="notification-badge" class="absolute -top-0.5 -right-0.5 hidden flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[8px] font-bold text-white bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-900"></span>
+	</button>
+
+	<div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-950 border border-gray-200/70 dark:border-gray-800/70 rounded-xl shadow-xl z-50 overflow-hidden">
+		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+			<h3 class="text-sm font-semibold">Notifications</h3>
+			<div class="flex items-center gap-2">
+				<button id="notif-mark-all" class="text-xs link font-medium" title="Mark all as read">
+					Mark all read
+				</button>
+			</div>
+		</div>
+
+		<div id="notification-list" class="max-h-[400px] overflow-y-auto divide-y divide-gray-200/70 dark:divide-gray-800/70">
+			<div id="notification-empty" class="hidden px-4 py-8 text-center">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+				</svg>
+				<p class="text-sm">No notifications yet</p>
+			</div>
+		</div>
+
+		<div class="border-t border-gray-100 dark:border-gray-800 px-4 py-2.5 text-center">
+			<% const notifBasePath = typeof currentPath !== 'undefined' && currentPath.startsWith('/user/') ? '/user' : '/admin'; %>
+			<a href="<%= notifBasePath %>/notification" class="text-xs font-medium link">
+				View all notifications
+			</a>
+		</div>
+	</div>
+</div>
+<% } %>

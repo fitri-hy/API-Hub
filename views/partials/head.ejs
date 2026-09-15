@@ -1,0 +1,46 @@
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <%# SEO Meta Tags — use seo_* first, fall back to site_*, then app_name %>
+  <% const metaTitle = (typeof seo_meta_title !== 'undefined' && seo_meta_title) ? seo_meta_title : ((typeof site_title !== 'undefined' && site_title) ? site_title : (typeof appname !== 'undefined' ? appname : 'SaaSGateway')); %>
+  <% const metaDesc = (typeof seo_meta_description !== 'undefined' && seo_meta_description) ? seo_meta_description : ((typeof site_description !== 'undefined' && site_description) ? site_description : ''); %>
+  <% const metaKeywords = (typeof seo_meta_keywords !== 'undefined' && seo_meta_keywords) ? seo_meta_keywords : ((typeof site_keywords !== 'undefined' && site_keywords) ? site_keywords : ''); %>
+
+  <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %><%= metaTitle %></title>
+
+  <% if (metaDesc) { %>
+  <meta name="description" content="<%= metaDesc %>">
+  <% } %>
+  <% if (metaKeywords) { %>
+  <meta name="keywords" content="<%= metaKeywords %>">
+  <% } %>
+
+  <%# Open Graph Tags %>
+  <% const ogTitle = (typeof og_title !== 'undefined' && og_title) ? og_title : metaTitle; %>
+  <% const ogDesc = (typeof og_description !== 'undefined' && og_description) ? og_description : metaDesc; %>
+  <% const ogUrl = (typeof og_url !== 'undefined' && og_url) ? og_url : (typeof baseUrl !== 'undefined' ? baseUrl : ''); %>
+  <% const ogImage = (typeof site_og_image !== 'undefined' && site_og_image) ? site_og_image : ''; %>
+
+  <meta property="og:type" content="website">
+  <% if (ogTitle) { %>
+  <meta property="og:title" content="<%= ogTitle %>">
+  <% } %>
+  <% if (ogDesc) { %>
+  <meta property="og:description" content="<%= ogDesc %>">
+  <% } %>
+  <% if (ogUrl) { %>
+  <meta property="og:url" content="<%= ogUrl %>">
+  <% } %>
+  <% if (ogImage) { %>
+  <meta property="og:image" content="<%= ogUrl + ogImage %>">
+  <% } %>
+
+  <%# Favicon %>
+  <% if (typeof site_favicon !== 'undefined' && site_favicon) { %>
+  <link rel="icon" type="image/x-icon" href="<%= site_favicon %>">
+  <% } %>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/output.css">
+  <script src="/js/app.js" defer></script>

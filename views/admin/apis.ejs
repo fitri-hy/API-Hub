@@ -1,0 +1,121 @@
+<div class="card p-5">
+	<div class="flex items-center justify-between gap-6 border-b border-gray-200/70 pb-4 dark:border-gray-800/70">
+	  <div>
+		<h3 class="text-sm font-bold">API Ready</h3>
+		<p class="mt-0.5 text-xs font-medium"><%= totalAllApis %> APIs Available.</p>
+	  </div>
+	  <a href="/admin/apis/create" class="flex items-center gap-1 text-sm px-4 py-2 rounded-md btn-normal">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			<path d="M0 0h24v24H0z" fill="none" />
+			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h6m0 0h6m-6 0v6m0-6V6" />
+		</svg>
+		Create API
+	  </a>
+	</div>
+	<div class="mt-4">
+		<form method="GET" action="/admin/apis" class="flex items-center gap-2 flex-1">
+			<div class="flex-1">
+				<input type="text" name="search" value="<%= filters.search %>" placeholder="Search by name or slug..." 
+					class="w-full bg-form px-4 py-2">
+			</div>
+			<select name="status" class="bg-form px-4 py-2">
+				<option value="">All Statuses</option>
+				<option value="active" <%= filters.status === 'active' ? 'selected' : '' %>>Active</option>
+				<option value="inactive" <%= filters.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+				<option value="draft" <%= filters.status === 'draft' ? 'selected' : '' %>>Draft</option>
+			</select>
+			<button type="submit" class="p-2 btn-normal rounded-md">
+				<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none"></path>
+					<path fill="none" stroke="currentColor" stroke-width="1.5" d="M19 3H5C3.58579 3 2.87868 3 2.43934 3.4122C2 3.8244 2 4.48782 2 5.81466V6.50448C2 7.54232 2 8.06124 2.2596 8.49142C2.5192 8.9216 2.99347 9.18858 3.94202 9.72255L6.85504 11.3624C7.49146 11.7206 7.80967 11.8998 8.03751 12.0976C8.51199 12.5095 8.80408 12.9935 8.93644 13.5872C9 13.8722 9 14.2058 9 14.8729L9 17.5424C9 18.452 9 18.9067 9.25192 19.2613C9.50385 19.6158 9.95128 19.7907 10.8462 20.1406C12.7248 20.875 13.6641 21.2422 14.3321 20.8244C15 20.4066 15 19.4519 15 17.5424V14.8729C15 14.2058 15 13.8722 15.0636 13.5872C15.1959 12.9935 15.488 12.5095 15.9625 12.0976C16.1903 11.8998 16.5085 11.7206 17.145 11.3624L20.058 9.72255C21.0065 9.18858 21.4808 8.9216 21.7404 8.49142C22 8.06124 22 7.54232 22 6.50448V5.81466C22 4.48782 22 3.8244 21.5607 3.4122C21.1213 3 20.4142 3 19 3Z"></path>
+				</svg>
+			</button>
+		</form>
+	</div>
+
+	<!-- API List Section -->
+	<div class="divide-y divide-gray-200/70">
+		<% apis.forEach(function(api) { %>
+			<div class="flex items-center gap-6 mt-2 border-b border-gray-200/70 dark:border-gray-800/70 py-2">
+				<div class="flex-1 min-w-0">
+					<div class="flex items-center gap-2.5 mb-1 flex-wrap">
+						<h4 class="font-semibold tracking-tight"><%= api.name %></h4>
+						<span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full <%= helpers.statusBadgeClass(api.status) %>">
+							<%= api.status %>
+						</span>
+						<% if (api.is_public) { %>
+							<span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-500 dark:bg-blue-950 dark:text-blue-200">Public</span>
+						<% } %>
+					</div>
+					<p class="text-xs font-mono mb-1">/<%= api.slug %>/* | v<%= api.version %></p>
+				</div>
+
+				<div class="lg:flex items-center gap-2 hidden">
+					<div class="w-16 h-auto p-3 text-center bg-emerald-100/50 dark:bg-emerald-950/50 rounded-md border border-emerald-100/70 dark:border-emerald-950/70">
+						<div class="w-full text-center text-xs font-semibold text-emerald-600 overflow-hidden line-clamp-1"><%= helpers.formatNumber(api.total_requests) %></div>
+						<div class="text-xs font-medium">req</div>
+					</div>
+					<div class="w-16 h-auto p-3 text-center bg-blue-100/50 dark:bg-blue-950/50 rounded-md border border-blue-100/70 dark:border-blue-950/70">
+						<div class="w-full text-center text-xs font-semibold text-blue-600 overflow-hidden line-clamp-1"><%= api.credit_cost %></div>
+						<div class="text-xs font-medium">cr/req</div>
+					</div>
+					<div class="w-16 h-auto p-3 text-center bg-amber-100/50 dark:bg-amber-950/50 rounded-md border border-amber-100/70 dark:border-amber-950/70">
+						<div class="w-full text-center text-xs font-semibold text-amber-600 overflow-hidden line-clamp-1"><%= api.route_count || 0 %></div>
+						<div class="text-xs font-medium">routes</div>
+					</div>
+				</div>
+
+			<!-- Tombol Aksi -->
+			<div class="flex items-center flex-col gap-1 shrink-0">
+			  <a href="/admin/apis/<%= api.id %>" class="flex items-center gap-1 text-sm link">
+				Detail
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M18 15V6H9" />
+				</svg>
+			  </a>
+			  <a href="/admin/apis/<%= api.id %>/edit" class="flex items-center gap-1 text-sm link-amber">
+				Edit
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M18 15V6H9" />
+				</svg>
+			  </a>
+			</div>
+		</div>
+		<% }); %>
+		<% if (apis.length === 0) { %>
+			<div class="px-4 py-16 text-center">
+				<p class="text-xs font-medium">No data available</p>
+				<p class="mt-1 text-[11px]">The data will appear here.</p>
+			</div>
+		<% } %>
+	</div>
+
+	<% if (pagination.totalPages > 1) { %>
+		<div class="flex items-center justify-between gap-4 border-t border-gray-200/70 dark:border-gray-800/70 mt-2 p-2">
+			<p class="text-xs">
+				Showing 
+				<span class="font-medium"><%= (pagination.currentPage - 1) * pagination.perPage + 1 %>-<%= Math.min(pagination.currentPage * pagination.perPage, pagination.total) %></span>
+				from
+				<span class="font-medium"><%= pagination.total %></span>
+			</p>
+
+			<nav class="flex items-center gap-1">
+				<% pagination.pages.forEach(function(p) { %>
+					<% if (p === '...') { %>
+						<span class="flex h-8 min-w-8 items-center justify-center px-1 text-xs">...</span>
+					<% } else { %>
+						<a href="?page=<%= p %>&search=<%= filters.search %>&role=<%= filters.role %>&status=<%= filters.status %>"
+							class="flex h-6 min-w-6 items-center justify-center rounded p-1 text-xs font-medium
+							<%= p === pagination.currentPage
+								? 'bg-blue-500 dark:bg-blue-600 text-white'
+								: 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' %>">
+							<%= p %>
+						</a>
+					<% } %>
+				<% }); %>
+			</nav>
+		</div>
+	<% } %>
+</div>

@@ -1,0 +1,233 @@
+<!-- Credit Overview -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+  <div class="card p-5">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+        <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider">Balance</h4>
+        <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(creditStats.balance) %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-5">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
+        <svg class="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider">Total Added</h4>
+        <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(creditStats.totalEarned) %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-5">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-rose-100 dark:bg-rose-900/30 rounded-xl">
+        <svg class="h-5 w-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider">Total Used</h4>
+        <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(creditStats.totalSpent) %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Buy Packages -->
+<div class="card p-5 mb-4">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-sm font-bold">Buy Packages</h3>
+    <a href="/user/transactions" class="text-xs link">View My Transactions →</a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Standard Packages -->
+    <div>
+      <h4 class="text-xs font-semibold uppercase tracking-wider mb-3">Standard Packages</h4>
+      <% if (packages && packages.length > 0) { %>
+        <div class="space-y-3">
+          <% packages.forEach(function(pkg) { %>
+            <div class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 hover:scale-105 hover:transition hover:duration-300">
+              <div class="flex items-center justify-between">
+                <h5 class="text-xl font-semibold"><%= pkg.name %></h5>
+                <span class="text-lg font-bold"><%= helpers.formatCurrency(pkg.price) %></span>
+              </div>
+              <p class="mb-4"><%= pkg.description || '' %></p>
+              <div class="flex items-center gap-4 text-xs mb-3">
+                <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-500 border border-emerald-200/70 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"><%= helpers.formatNumber(pkg.credits_included) %> credits</span>
+                <span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-500 border border-rose-200/70 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20"><%= pkg.rate_limit_per_minute %> req/min</span>
+              </div>
+              <form method="POST" action="/user/credits/purchase" class="inline">
+                <input type="hidden" name="type" value="standard_package">
+                <input type="hidden" name="package_id" value="<%= pkg.id %>">
+                <div class="flex justify-end">
+				  <button type="submit" class="btn-normal px-3 py-2 rounded-md text-xs font-medium">Buy Now</button>
+                </div>
+			  </form>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="text-sm text-center">No packages available.</p>
+      <% } %>
+    </div>
+
+    <!-- Custom Package Builder -->
+    <div>
+      <h4 class="text-xs font-semibold uppercase tracking-wider mb-3">Custom Package</h4>
+      <div class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4">
+        <form id="customPackageForm" method="POST" action="/user/credits/purchase">
+          <input type="hidden" name="type" value="custom_package">
+          
+          <div class="space-y-4">
+            <!-- Credits Input -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Credits</label>
+              <input type="number" id="customCredits" name="credits" min="1" value="100" 
+                class="w-full bg-form px-4 py-2 text-sm rounded-md" 
+                onchange="calculateCustomPackage()" oninput="calculateCustomPackage()">
+              <p class="text-[10px] mt-1">Price: <span id="creditPriceDisplay"><%= helpers.formatCurrency(customPackageSettings.creditValueRp) %></span>/credit</p>
+            </div>
+
+            <!-- Rate Limit Input -->
+			<div>
+			  <div class="flex justify-between items-center mb-2">
+				<label class="block text-xs font-semibold uppercase tracking-wider">Rate Limit (req/min)</label>
+				<span id="rateLimitDisplay" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/50 dark:border-indigo-900/50 px-2 py-0.5 rounded-full shadow-sm"><%= customPackageSettings.rateLimitMin %>/min</span>
+			  </div>
+
+			  <input type="range" id="customRateLimit" name="rate_limit" 
+				min="<%= customPackageSettings.rateLimitMin %>" 
+				max="<%= customPackageSettings.rateLimitMax %>" 
+				step="<%= customPackageSettings.rateLimitStep %>" 
+				value="<%= customPackageSettings.rateLimitMin %>"
+				class="w-full h-2 bg-gray-200 dark:bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-600 dark:accent-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20" 
+				onchange="calculateCustomPackage(); updateSliderBackground(this);" 
+				oninput="calculateCustomPackage(); updateSliderBackground(this);">
+				
+			  <div class="flex justify-between text-[11px] mt-1.5 font-medium">
+				<span><%= customPackageSettings.rateLimitMin %>/min</span>
+				<span><%= customPackageSettings.rateLimitMax %>/min</span>
+			  </div>
+
+			  <p class="text-[11px] mt-1">
+				Extra cost: <span id="rateLimitCostDisplay" class="font-semibold"><%= helpers.formatCurrency(0) %></span>
+			  </p>
+			</div>
+
+            <!-- Notes -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Notes (Optional)</label>
+              <textarea name="notes" rows="2" class="w-full bg-form px-3 py-2 text-sm rounded-md" placeholder="Any special requests..."></textarea>
+            </div>
+
+            <!-- Price Summary -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 space-y-2">
+              <div class="flex justify-between text-sm">
+                <span>Credits cost</span>
+                <span id="creditCostDisplay">-</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span>Rate limit cost</span>
+                <span id="rateLimitTotalDisplay">-</span>
+              </div>
+              <hr class="border-gray-200 dark:border-gray-700">
+              <div class="flex justify-between font-bold">
+                <span>Total</span>
+                <span id="totalCostDisplay">-</span>
+              </div>
+            </div>
+			<div class="flex items-center justify-center lg:justify-end">
+              <button type="submit" class="lg:max-w-xs btn-normal px-4 py-2.5 rounded-md text-sm font-medium">
+                Submit Purchase Request
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Transactions -->
+<div class="card">
+  <h3 class="p-5 text-sm font-bold">Recent Activity</h3>
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+          <th class="px-4 py-2 text-center">Type</th>
+          <th class="px-4 py-2 text-right">Amount</th>
+          <th class="px-4 py-2 text-right">Balance</th>
+          <th class="px-4 py-2 text-left">Description</th>
+          <th class="px-4 py-2 text-right">Time</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
+        <% if (transactions && transactions.length > 0) { %>
+          <% transactions.forEach(function(tx) { %>
+            <tr>
+              <td class="px-4 py-2 text-center">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium <%= helpers.statusBadgeClass(tx.type) %>">
+                  <%= tx.type.charAt(0).toUpperCase() + tx.type.slice(1) %>
+                </span>
+              </td>
+              <td class="px-4 py-2 text-sm font-medium text-right <%= tx.amount > 0 ? 'text-emerald-500' : 'text-rose-500' %>">
+                <%= tx.amount > 0 ? '+' : '' %><%= helpers.formatNumber(tx.amount) %>
+              </td>
+              <td class="px-4 py-2 text-sm text-right"><%= helpers.formatNumber(tx.balance_after) %></td>
+              <td class="px-4 py-2 text-xs max-w-[200px] truncate"><%= tx.description %></td>
+              <td class="px-4 py-2 text-xs text-right whitespace-nowrap"><%= helpers.formatDate(tx.created_at, 'datetime') %></td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr><td colspan="5" class="px-6 py-12 text-sm text-center">No transactions yet.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%
+const settingsJson = JSON.stringify(customPackageSettings);
+pageScript = `
+<script>
+const settings = ` + settingsJson + `;
+
+function calculateCustomPackage() {
+  const credits = parseInt(document.getElementById('customCredits').value) || 0;
+  const rateLimit = parseInt(document.getElementById('customRateLimit').value) || settings.rateLimitMin;
+  
+  // Update displays
+  document.getElementById('rateLimitDisplay').textContent = rateLimit + '/min';
+  
+  // Calculate costs
+  const creditCost = credits * settings.creditValueRp;
+  
+  // Rate limit cost: steps above min * price per step
+  const stepsAboveMin = Math.max(0, Math.ceil((rateLimit - settings.rateLimitMin) / settings.rateLimitStep));
+  const rateLimitCost = stepsAboveMin * settings.rateLimitPricePerStep;
+  
+  const totalCost = creditCost + rateLimitCost;
+  
+  // Format currency
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+  };
+  
+  // Update displays
+  document.getElementById('creditCostDisplay').textContent = formatCurrency(creditCost);
+  document.getElementById('rateLimitCostDisplay').textContent = formatCurrency(rateLimitCost);
+  document.getElementById('rateLimitTotalDisplay').textContent = formatCurrency(rateLimitCost);
+  document.getElementById('totalCostDisplay').textContent = formatCurrency(totalCost);
+}
+
+// Initialize
+calculateCustomPackage();
+</script>
+`;
+%>

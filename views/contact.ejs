@@ -1,0 +1,169 @@
+<!-- HERO -->
+<section class="container mx-auto px-4 py-12 lg:px-12 lg:py-20">
+	<div class="mx-auto max-w-3xl text-center">
+		<span class="inline-flex items-center gap-1.5 rounded-full border border-blue-200/20 bg-blue-100/50 px-3 py-1 text-xs font-semibold text-blue-600 dark:border-blue-700/20 dark:bg-blue-950/50 dark:text-sky-400">
+			Get in Touch
+		</span>
+		<h1 class="mt-4 text-4xl font-black tracking-tighter sm:text-5xl">
+			<span class="font-serif font-normal italic">Contact Us</span>
+		</h1>
+		<p class="mt-4 text-lg">
+			Have questions, feedback, or need help? We'd love to hear from you.
+		</p>
+	</div>
+</section>
+
+<!-- Contact Content -->
+<section class="container mx-auto px-4 pb-16 lg:px-12">
+	<div class="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-3">
+
+		<!-- Contact Info Cards -->
+		<div class="space-y-4">
+			<div class="relative overflow-hidden card p-5">
+				<div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-sky-500/5 blur-2xl"></div>
+				<div class="relative">
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24">
+							<path d="M0 0h24v24H0z" fill="none"/>
+							<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+								<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+								<path d="m3 7l9 6l9-6"/>
+							</g>
+						</svg>
+					</div>
+					<h3 class="font-bold">Email</h3>
+					<p class="mt-1 text-sm">support@apihub.com</p>
+				</div>
+			</div>
+
+			<div class="relative overflow-hidden card p-5">
+				<div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-blue-500/5 blur-2xl"></div>
+				<div class="relative">
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24">
+							<path d="M0 0h24v24H0z" fill="none"/>
+							<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm0-2l-10 6L2 4"/>
+						</svg>
+					</div>
+					<h3 class="font-bold">Response Time</h3>
+					<p class="mt-1 text-sm">We typically respond within 24 hours.</p>
+				</div>
+			</div>
+
+			<div class="relative overflow-hidden card p-5">
+				<div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-500/5 blur-2xl"></div>
+				<div class="relative">
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24">
+							<path d="M0 0h24v24H0z" fill="none"/>
+							<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2m0 5v5l4.25 2.5"/>
+						</svg>
+					</div>
+					<h3 class="font-bold">Availability</h3>
+					<p class="mt-1 text-sm">Monday - Friday, 9:00 AM - 6:00 PM</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Contact Form -->
+		<div class="lg:col-span-2">
+			<div class="card p-5">
+				<h2 class="mb-6 text-xl font-bold tracking-tight">Send a Message</h2>
+
+				<form id="contactForm" class="space-y-4">
+					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						<div>
+							<label for="name" class="mb-1 block text-sm font-medium">Name</label>
+							<input
+								type="text"
+								id="name"
+								name="name"
+								required
+								placeholder="Your name"
+								class="w-full bg-form px-4 py-2"
+							/>
+						</div>
+
+						<div>
+							<label for="email" class="mb-1 block text-sm font-medium">Email</label>
+							<input
+								type="email"
+								id="email"
+								name="email"
+								required
+								placeholder="you@example.com"
+								class="w-full bg-form px-4 py-2"
+							/>
+						</div>
+					</div>
+
+					<div>
+						<label for="subject" class="mb-1 block text-sm font-medium">Subject</label>
+						<input
+							type="text"
+							id="subject"
+							name="subject"
+							required
+							placeholder="How can we help?"
+							class="w-full bg-form px-4 py-2"
+						/>
+					</div>
+
+					<div>
+						<label for="message" class="mb-1 block text-sm font-medium">Message</label>
+						<textarea
+							id="message"
+							name="message"
+							rows="6"
+							required
+							placeholder="Tell us more..."
+							class="w-full resize-none bg-form px-4 py-2"
+						></textarea>
+					</div>
+
+					<button
+						type="submit"
+						class="inline-flex gap-2 items-center justify-center rounded-md bg-gradient-to-r from-sky-500 to-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-500/20 hover:from-sky-400 hover:to-blue-500 active:scale-95"
+					>
+						Send Message
+
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 1024 1024">
+							<path d="M0 0h1024v1024H0z" fill="none" />
+							<path fill="currentColor" d="M931.4 498.9L94.9 79.5c-3.4-1.7-7.3-2.1-11-1.2c-8.5 2.1-13.8 10.7-11.7 19.3l86.2 352.2c1.3 5.3 5.2 9.6 10.4 11.3l147.7 50.7l-147.6 50.7c-5.2 1.8-9.1 6-10.3 11.3L72.2 926.5c-.9 3.7-.5 7.6 1.2 10.9c3.9 7.9 13.5 11.1 21.5 7.2l836.5-417c3.1-1.5 5.6-4.1 7.2-7.1c3.9-8 .7-17.6-7.2-21.6M170.8 826.3l50.3-205.6l295.2-101.3c2.3-.8 4.2-2.6 5-5c1.4-4.2-.8-8.7-5-10.2L221.1 403L171 198.2l628 314.9z" />
+						</svg>
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<%
+pageScript = `
+<script>
+document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const form = new FormData(this);
+
+    const name = form.get('name');
+    const email = form.get('email');
+    const subject = form.get('subject');
+    const message = form.get('message');
+
+    const body =
+        'Name: ' + name + '\\n' +
+        'Email: ' + email + '\\n\\n' +
+        'Message:\\n' + message;
+
+    const mailto =
+        'mailto:cs@apihub.com' +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(body);
+
+    window.open(mailto, '_blank');
+});
+</script>
+`;
+%>

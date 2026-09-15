@@ -1,0 +1,257 @@
+<section class="container mx-auto px-4 py-12 lg:px-12">
+	<div>
+		<div class="card p-5">
+			<div class="flex flex-col gap-4 border-b pb-4 mb-4 border-gray-200/70 dark:border-gray-800/70">
+				<div class="flex items-center gap-4">
+					<span class="rounded-full px-2.5 py-1 text-xs md:text-sm font-semibold <%= helpers.statusBadgeClass(api.status) %>">
+						<%= api.status ? api.status.charAt(0).toUpperCase() + api.status.slice(1) : 'Draft' %>
+					</span>
+					<span class="rounded-full px-2.5 py-1 text-xs md:text-sm text-sm font-semibold bg-blue-100/30 dark:bg-blue-950/70 border border-blue-200/70 dark:border-blue-900/70 text-blue-600 dark:text-blue-400">
+						v<%= api.version %>
+					</span>
+				</div>
+				<div class="flex flex-col lg:flex-row gap-6 justify-between">
+					<div>
+						<div class="flex items-center gap-4">
+							<a href="/browser-apis" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
+									<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+								</svg>
+							</a>
+							<h1 class="text-xl md:text-2xl font-bold tracking-tight"><%= api.name %></h1>
+						</div>
+						<p class="text-xs md:text-sm mt-2"><%= api.description || 'No description available.' %></p>
+					</div>
+					<div class="flex flex-col p-2 items-center justify-center rounded-lg bg-purple-100/50 dark:bg-purple-950/50 border border-purple-100/70 dark:border-purple-950/70">
+						<div class="text-3xl font-bold text-purple-500"><%= api.credit_cost %></div>
+						<div class="text-xs">Credits / Request</div>
+					</div>
+				</div>
+			</div>
+			<div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+				<div class="card p-5 flex flex-col items-center justify-center">
+					<div class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+							<path d="M0 0h24v24H0z" fill="none" />
+							<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+								<path d="M4 6a2 2 0 1 0 4 0 2 2 0 1 0 -4 0" />
+								<path d="M4 18a2 2 0 1 0 4 0 2 2 0 1 0 -4 0" />
+								<path d="M16 12a2 2 0 1 0 4 0 2 2 0 1 0 -4 0" />
+								<path d="M6 8v8" />
+								<path d="M8 6h4l4 4" />
+							</g>
+						</svg>
+						<span class="text-[10px] font-semibold uppercase tracking-wider">Version</span>
+					</div>
+					<div class="text-sm md:text-lg font-bold">v<%= api.version %></div>
+				</div>
+				<div class="card p-5 flex flex-col items-center justify-center">
+					<div class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+							<path d="M0 0h24v24H0z" fill="none" />
+							<g fill="none" stroke="currentColor" stroke-width="1.5">
+								<path stroke-linecap="round" d="M19 19L17.5 17.5" />
+								<path stroke-linecap="round" d="M19 5L17.5 6.5" />
+								<path stroke-linecap="round" d="M5 19L6.5 17.5" />
+								<path stroke-linecap="round" d="M5 5L6.5 6.5" />
+								<path stroke-linecap="round" d="M2 12H4" />
+								<path stroke-linecap="round" d="M19.9998 12L21.9998 12" />
+								<path stroke-linecap="round" d="M12 4.00021L12 2.00021" />
+								<path d="M10.1214 14.3635C8.94978 13.1919 8.94978 11.2924 10.1214 10.1209C11.2929 8.94929 13.1924 8.94929 14.364 10.1209C14.8096 10.5665 15.1209 11.4916 15.3355 12.467C15.6564 13.9255 15.8169 14.6548 15.2361 15.2356C14.6553 15.8164 13.926 15.6559 12.4675 15.335C11.4921 15.1204 10.567 14.8092 10.1214 14.3635Z" />
+								<path stroke-linecap="round" d="M9 21.5422C4.94289 20.2679 2 16.4776 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 16.4776 19.0571 20.2679 15 21.5422" />
+							</g>
+						</svg>
+						<span class="text-[10px] font-semibold uppercase tracking-wider">Rate Limit</span>
+					</div>
+					<div class="text-sm md:text-lg font-bold"><%= api.rate_limit_per_minute %><span class="ml-1 text-xs font-medium">/min</span></div>
+				</div>
+				<div class="card p-5 flex flex-col items-center justify-center">
+					<div class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+							<path d="M0 0h24v24H0z" fill="none" />
+							<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+								<rect width="18" height="12" x="3" y="10" rx="2" />
+								<path d="M6 6a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v4H6z" />
+							</g>
+						</svg>
+						<span class="text-[10px] font-semibold uppercase tracking-wider">Authentication</span>
+					</div>
+					<div class="text-sm md:text-lg font-bold"><%= api.auth_required ? 'Required' : 'Not Required' %></div>
+				</div>
+				<div class="card p-5 flex flex-col items-center justify-center">
+					<div class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+							<path d="M0 0h24v24H0z" fill="none"></path>
+							<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5">
+								<path d="M9 12a3 3 0 1 0 6 0 3 3 0 1 0 -6 0"></path>
+								<path d="M12 3v6"></path>
+								<path d="M9.5 14.5 5 19"></path>
+								<path d="M14.5 14.5 19 19"></path>
+							</g>
+						</svg>
+						<span class="text-[10px] font-semibold uppercase tracking-wider">Endpoints</span>
+					</div>
+					<div class="text-sm md:text-lg font-bold"><%= routes.length %></div>
+				</div>
+			</div>
+			<div class="mt-4 rounded-md bg-amber-100/40 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-900/40 p-4">
+				<div class="flex items-center gap-3">
+					<div class="hidden md:flex items-center justify-center p-3 rounded-lg bg-amber-600 dark:bg-amber-900 text-white">
+						<svg xmlns="http://www.w3.org/2000/svg" class="m-auto" width="24" height="24" viewBox="0 0 16 16">
+							<path d="M0 0h16v16H0z" fill="none"></path>
+							<g fill="currentColor">
+								<path d="M5.338 1.59a61 61 0 0 0-2.837.856a.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025a1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453a7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625a11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43A63 63 0 0 1 5.072.56"></path>
+								<path d="M9.5 6.5a1.5 1.5 0 0 1-1 1.415l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99a1.5 1.5 0 1 1 2-1.415"></path>
+							</g>
+						</svg>
+					</div>
+					<div>
+						<h3 class="font-semibold text-sm md:text-xl text-amber-600 dark:text-gray-100">
+							Authentication Required
+						</h3>
+						<p class="text-xs md:text-sm text-amber-800 dark:text-gray-300">
+							This API requires an API key. Pass it via the
+							<span class="font-semibold">
+								X-API-Key
+							</span>
+							header.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt-8">
+			<div class="mb-4">
+				<h2 class="text-md md:text-lg font-bold tracking-tight">API Endpoints</h2>
+				<p class="text-xs md:text-sm mt-1">Available endpoints for this API.</p>
+			</div>
+
+			<% if (routes && routes.length > 0) { %>
+				<div id="api-routes" class="space-y-3 select-text">
+					<% routes.forEach(route => { %>
+						<div class="route-item overflow-hidden card">
+							<button type="button" class="route-trigger flex w-full cursor-pointer gap-3 p-5 text-left transition md:flex-row md:items-center md:justify-between" aria-expanded="false">
+								<div class="flex w-full min-w-0 items-center gap-3">
+									<span class="shrink-0 rounded-md px-2.5 py-1 text-xs font-bold <%= helpers.methodBadgeClass(route.method) %>"><%= route.method %></span>
+									<code class="truncate text-sm font-semibold"><%= api.base_route %><%= route.path %></code>
+								</div>
+								<div class="flex items-center justify-between gap-4 md:justify-end">
+									<% if (route.description) { %>
+										<span class="hidden max-w-xs truncate text-xs md:block"><%= route.description %></span>
+									<% } %>
+									<div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+										<svg  class="route-arrow transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+											<path d="M0 0h24v24H0z" fill="none" />
+											<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9L12 15L5 9" />
+										</svg>
+									</div>
+								</div>
+							</button>
+
+							<div class="route-body grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] duration-300 ease-in-out">
+								<div class="min-h-0 overflow-hidden">
+									<!--
+									<% if (route.description) { %>
+										<div class="px-5 py-4 border-t border-gray-200/70 dark:border-gray-800/70">
+											<p class="text-sm leading-relaxed"><%= route.description %></p>
+										</div>
+									<% } %>
+									-->
+									
+									<% if (route.documentation) { %>
+										<div class="px-5 py-4 border-t border-gray-200/70 dark:border-gray-800/70">
+											<div class="prose prose-sm max-w-none dark:prose-invert">
+												<%- route.documentation %>
+											</div>
+										</div>
+									<% } %>
+
+									<% if (route.sampleResponse) { %>
+										<div class="px-5 py-4 border-t border-gray-200/70 dark:border-gray-800/70">
+											<h3 class="text-xl font-bold tracking-wide mb-4">
+												Response
+											</h3>
+											<pre class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 p-4 text-sm leading-relaxed text-slate-200 shadow-inner"><code><%= route.sampleResponse %></code></pre>
+										</div>
+									<% } %>
+
+									<% if (!route.documentation && !route.sampleResponse && !route.description) { %>
+										<div class="px-5 py-4 border-t border-gray-200/70 dark:border-gray-800/70">
+											<p>No documentation available for this endpoint.</p>
+										</div>
+									<% } %>
+								</div>
+							</div>
+						</div>
+					<% }) %>
+				</div>
+			<% } else { %>
+				<div class="flex flex-col items-center justify-center py-12 px-6">
+					<p class="text-center">No active endpoints available for this API.</p>
+				</div>
+			<% } %>
+		</div>
+	</div>
+</section>
+
+<%
+pageScript = `
+	<script>
+		(() => {
+			const routes = document.getElementById('api-routes');
+
+			if (!routes) return;
+
+			const items = [...routes.querySelectorAll('.route-item')];
+
+			const closeItem = (item) => {
+				const trigger = item.querySelector('.route-trigger');
+				const body = item.querySelector('.route-body');
+				const icon = item.querySelector('.route-arrow');
+
+				trigger.setAttribute('aria-expanded', 'false');
+
+				body.classList.remove('grid-rows-[1fr]', 'opacity-100');
+				body.classList.add('grid-rows-[0fr]', 'opacity-0');
+
+				icon.classList.remove('rotate-180');
+			};
+
+			const openItem = (item) => {
+				const trigger = item.querySelector('.route-trigger');
+				const body = item.querySelector('.route-body');
+				const icon = item.querySelector('.route-arrow');
+
+				trigger.setAttribute('aria-expanded', 'true');
+
+				body.classList.remove('grid-rows-[0fr]', 'opacity-0');
+				body.classList.add('grid-rows-[1fr]', 'opacity-100');
+
+				icon.classList.add('rotate-180');
+			};
+
+			items.forEach((item) => {
+				const trigger = item.querySelector('.route-trigger');
+
+				trigger.addEventListener('click', () => {
+					const isOpen =
+						trigger.getAttribute('aria-expanded') === 'true';
+
+					items.forEach((other) => {
+						if (other !== item) {
+							closeItem(other);
+						}
+					});
+
+					if (isOpen) {
+						closeItem(item);
+					} else {
+						openItem(item);
+					}
+				});
+			});
+		})();
+	</script>
+`;
+%>

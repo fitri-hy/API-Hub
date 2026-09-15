@@ -1,0 +1,474 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+	<div class="lg:col-span-2 space-y-4">
+    
+		<!-- User Details Form -->
+		<div class="card p-5">
+		  <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200/70 dark:border-gray-800/70">
+			<div class="flex items-center gap-4">
+			  <a href="/admin/users" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
+					<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			  </a>
+			  <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-orange-200 dark:bg-orange-900">
+				<% if (userData.avatar) { %>
+				  <img src="<%= userData.avatar %>" alt="Avatar" class="h-full w-full object-cover">
+				<% } else { %>
+				  <span class="text-xl font-bold text-orange-700 dark:text-orange-200"><%= userData.full_name.charAt(0).toUpperCase() %></span>
+				<% } %>
+			  </div>
+			  <div>
+			    <div class="flex items-center gap-1 min-w-0">
+					<h3 class="text-base font-bold truncate min-w-0">
+						<%= userData.full_name || userData.username %>
+					</h3>
+					<% if (userData.is_verified) { %>
+						<span class="text-blue-500 flex-shrink-0">
+							<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+								<path d="M0 0h24v24H0z" fill="none" />
+								<path fill="currentColor" d="M19.965 8.521Q20 8.26 20 8c0-2.379-2.143-4.288-4.521-3.965C14.786 2.802 13.466 2 12 2s-2.786.802-3.479 2.035C6.138 3.712 4 5.621 4 8q0 .26.035.521C2.802 9.215 2 10.535 2 12s.802 2.785 2.035 3.479A4 4 0 0 0 4 16c0 2.379 2.138 4.283 4.521 3.965C9.214 21.198 10.534 22 12 22s2.786-.802 3.479-2.035C17.857 20.283 20 18.379 20 16q0-.26-.035-.521C21.198 14.785 22 13.465 22 12s-.802-2.785-2.035-3.479m-9.01 7.895l-3.667-3.714l1.424-1.404l2.257 2.286l4.327-4.294l1.408 1.42z" />
+							</svg>
+						</span>
+					<% } %>
+				</div>
+				<p class="text-xs">ID: #<%= userData.id %> | UUID: <span class="font-mono"><%= userData.uuid %></span></p>
+			  </div>
+			</div>
+			
+			<div class="flex items-center gap-2">
+				<span class="inline-flex items-center px-2.5 py-1 gap-1 rounded-full text-xs font-medium <%= userData.is_active ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-200 border border-emerald-100/70 dark:border-emerald-900/70' : 'bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-200 border border-rose-100/70 dark:border-rose-900/70' %>">
+					<span class="w-1.5 h-1.5 rounded-full <%= userData.is_active ? 'bg-emerald-500' : 'bg-rose-500' %>"></span>
+					<%= userData.is_active ? 'Active' : 'Inactive' %>
+				</span>
+				<form method="POST" action="/admin/users/<%= userData.uuid %>/delete" onsubmit="return confirm('Yakin hapus user ini?')" class="inline">
+					<button type="submit" class="flex items-center gap-1 text-xs link-rose">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+							<path d="M0 0h16v16H0z" fill="none" />
+							<path fill="currentColor" d="M14 2h-4c0-1.103-.897-2-2-2S6 .897 6 2H2a.5.5 0 0 0 0 1h.54l.809 9.708A2.513 2.513 0 0 0 5.84 15h4.319a2.514 2.514 0 0 0 2.491-2.292L13.459 3h.54a.5.5 0 0 0 0-1zM8 1c.551 0 1 .449 1 1H7c0-.551.449-1 1-1m3.655 11.625A1.51 1.51 0 0 1 10.16 14H5.841a1.51 1.51 0 0 1-1.495-1.375L3.544 3h8.914l-.802 9.625zM7 5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 1 0m3 0v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 1 0" />
+						</svg>
+						Delete
+					</button>
+				</form>
+			</div>
+		  </div>
+
+		  <form method="POST" action="/admin/users/<%= userData.uuid %>" enctype="multipart/form-data" class="space-y-4">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			  <div>
+				<label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Username</label>
+				<input type="text" name="username" value="<%= userData.username %>" required class="w-full px-4 py-2 bg-form">
+			  </div>
+			  <div>
+				<label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Full Name</label>
+				<input type="text" name="full_name" value="<%= userData.full_name || '' %>" class="w-full px-4 py-2 bg-form">
+			  </div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			  <div>
+				<label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Email</label>
+				<input type="email" name="email" value="<%= userData.email %>" required class="w-full px-4 py-2 bg-form">
+			  </div>
+			  <div>
+				  <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Avatar Image</label>
+				  <div class="flex items-center gap-2">
+					<div class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-200 dark:bg-orange-900">
+					  <% if (userData.avatar) { %>
+						<img id="avatar-preview" src="<%= userData.avatar %>" alt="Avatar Preview" class="h-full w-full object-cover">
+					  <% } else { %>
+						<span id="avatar-initial" class="text-sm font-bold text-orange-700 dark:text-orange-200"><%= userData.full_name.charAt(0).toUpperCase() %></span>
+						<img id="avatar-preview" src="" alt="Avatar Preview" class="h-full w-full object-cover hidden">
+					  <% } %>
+					</div>
+					<div class="flex-1">
+					  <input type="file" name="avatar" id="avatar-input" accept="image/*" 
+							 class="w-full px-4 py-2 bg-form file:bg-gray-200 file:text-xs file:p-1 file:hover:bg-gray-300 dark:file:bg-gray-700 dark:file:hover:bg-gray-900 file:rounded file:cursor-pointer">
+					</div>
+				  </div>            
+				</div>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			  <div>
+				<label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Role</label>
+				<select name="role" class="w-full px-4 py-2 bg-form">
+				  <option value="user" <%= userData.role === 'user' ? 'selected' : '' %>>User</option>
+				  <option value="admin" <%= userData.role === 'admin' ? 'selected' : '' %>>Admin</option>
+				</select>
+			  </div>
+			  <div>
+				<label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Package</label>
+				<select name="package_id" class="w-full px-4 py-2 bg-form">
+				  <option value="">-- Select Package --</option>
+				  <% packages.forEach(function(pkg) { %>
+					<option value="<%= pkg.id %>" <%= userData.package_id == pkg.id ? 'selected' : '' %>><%= pkg.name %></option>
+				  <% }); %>
+				</select>
+			  </div>
+			</div>
+
+			<!-- Checkbox Status Modern & Estetik -->
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+			  <!-- Checkbox Active -->
+			  <label for="is_active" class="bg-form relative flex items-center justify-between p-3.5 cursor-pointer">
+				<div class="flex items-center gap-3">
+				  <div class="h-8 w-8 rounded-md bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-200">
+					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none" />
+						<g fill="none" stroke="currentColor" stroke-width="1.5">
+							<circle cx="12" cy="12" r="10" />
+							<path stroke-linecap="round" stroke-linejoin="round" d="M8.5 12.5L10.5 14.5L15.5 9.5" />
+						</g>
+					</svg>
+				  </div>
+				  <div>
+					<span class="block text-sm font-semibold">Is Active</span>
+					<span class="block text-[11px]">User account access status</span>
+				  </div>
+				</div>
+				<input type="checkbox" id="is_active" name="is_active" value="1" <%= userData.is_active ? 'checked' : '' %> class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer">
+			  </label>
+
+			  <!-- Checkbox Verified -->
+			  <label for="is_verified" class="bg-form relative flex items-center justify-between p-3.5 cursor-pointer">
+				<div class="flex items-center gap-3">
+				  <div class="h-8 w-8 rounded-md bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-200">
+					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none" />
+						<g fill="none" stroke="currentColor" stroke-width="1.5">
+							<path d="M9.78133 3.89027C10.3452 3.40974 10.6271 3.16948 10.9219 3.02859C11.6037 2.70271 12.3963 2.70271 13.0781 3.02859C13.3729 3.16948 13.6548 3.40974 14.2187 3.89027C14.4431 4.08152 14.5553 4.17715 14.6752 4.25747C14.9499 4.4416 15.2584 4.56939 15.5828 4.63344C15.7244 4.66139 15.8713 4.67312 16.1653 4.69657C16.9038 4.7555 17.273 4.78497 17.5811 4.89378C18.2936 5.14546 18.8541 5.70591 19.1058 6.41844C19.2146 6.72651 19.244 7.09576 19.303 7.83426C19.3264 8.12819 19.3381 8.27515 19.3661 8.41669C19.4301 8.74114 19.5579 9.04965 19.7421 9.32437C19.8224 9.44421 19.918 9.55642 20.1093 9.78084C20.5898 10.3447 20.8301 10.6267 20.971 10.9214C21.2968 11.6032 21.2968 12.3958 20.971 13.0776C20.8301 13.3724 20.5898 13.6543 20.1093 14.2182C19.918 14.4426 19.8224 14.5548 19.7421 14.6747C19.5579 14.9494 19.4301 15.2579 19.3661 15.5824C19.3381 15.7239 19.3264 15.8709 19.303 16.1648C19.244 16.9033 19.2146 17.2725 19.1058 17.5806C18.8541 18.2931 18.2936 18.8536 17.5811 19.1053C17.273 19.2141 16.9038 19.2435 16.1653 19.3025C15.8713 19.3259 15.7244 19.3377 15.5828 19.3656C15.2584 19.4297 14.9499 19.5574 14.6752 19.7416C14.5553 19.8219 14.4431 19.9175 14.2187 20.1088C13.6548 20.5893 13.3729 20.8296 13.0781 20.9705C12.3963 21.2963 11.6037 21.2963 10.9219 20.9705C10.6271 20.8296 10.3452 20.5893 9.78133 20.1088C9.55691 19.9175 9.44469 19.8219 9.32485 19.7416C9.05014 19.5574 8.74163 19.4297 8.41718 19.3656C8.27564 19.3377 8.12868 19.3259 7.83475 19.3025C7.09625 19.2435 6.72699 19.2141 6.41893 19.1053C5.7064 18.8536 5.14594 18.2931 4.89427 17.5806C4.78546 17.2725 4.75599 16.9033 4.69706 16.1648C4.6736 15.8709 4.66188 15.7239 4.63393 15.5824C4.56988 15.2579 4.44209 14.9494 4.25796 14.6747C4.17764 14.5548 4.08201 14.4426 3.89076 14.2182C3.41023 13.6543 3.16997 13.3724 3.02907 13.0776C2.7032 12.3958 2.7032 11.6032 3.02907 10.9214C3.16997 10.6266 3.41023 10.3447 3.89076 9.78084C4.08201 9.55642 4.17764 9.44421 4.25796 9.32437C4.44209 9.04965 4.56988 8.74114 4.63393 8.41669C4.66188 8.27515 4.6736 8.12819 4.69706 7.83426C4.75599 7.09576 4.78546 6.72651 4.89427 6.41844C5.14594 5.70591 5.7064 5.14546 6.41893 4.89378C6.72699 4.78497 7.09625 4.7555 7.83475 4.69657C8.12868 4.67312 8.27564 4.66139 8.41718 4.63344C8.74163 4.56939 9.05014 4.4416 9.32485 4.25747C9.4447 4.17715 9.55691 4.08152 9.78133 3.89027Z" />
+							<path stroke-linecap="round" stroke-linejoin="round" d="M8.5 12.5L10.5 14.5L15.5 9.5" />
+						</g>
+					</svg>
+				  </div>
+				  <div>
+					<span class="block text-sm font-semibold">Is Verified</span>
+					<span class="block text-[11px]">Verify user email</span>
+				  </div>
+				</div>
+				<input type="hidden" name="is_verified" value="0">
+					<input type="checkbox" id="is_verified" name="is_verified" value="1" <%= userData.is_verified ? 'checked' : '' %> class="h-4 w-4 rounded border-gray-200/70 cursor-pointer">
+			  </label>
+			</div>
+
+			<div class="flex items-center justify-end border-t border-gray-200/70 dark:border-gray-800/70 mt-4 pt-4 gap-2">
+			  <button type="submit" class="flex items-center gap-1 text-sm p-2 rounded-md btn-normal">
+				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16">
+					<path d="M0 0h16v16H0z" fill="none" />
+					<path fill="currentColor" d="m14.414 3.207l-1.621-1.621A2 2 0 0 0 11.379 1H3c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V4.621a2 2 0 0 0-.586-1.414M9 2v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V2zM5 14V9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5V14zm9-1c0 .551-.449 1-1 1h-1V9.5c0-.827-.673-1.5-1.5-1.5h-5C4.673 8 4 8.673 4 9.5V14H3c-.551 0-1-.449-1-1V3c0-.551.449-1 1-1h2v1.5C5 4.327 5.673 5 6.5 5h2c.827 0 1.5-.673 1.5-1.5V2h1.379c.263 0 .521.107.707.293l1.621 1.621c.186.186.293.444.293.707z" />
+				</svg>
+				Update
+			  </button>
+			</div>
+		  </form>
+		</div>
+	
+		<% if (!userData.is_verified) { %>
+			<div class="relative overflow-hidden rounded-md p-5 bg-amber-100/70 dark:bg-amber-950/60 border border-amber-200/70 dark:border-amber-900/70">
+				<div class="flex items-center justify-between pb-3 mb-4 border-b border-amber-200/50 dark:border-amber-900/50">
+					<div class="flex items-center gap-2.5">
+						<div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-200 dark:bg-amber-950 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+							</svg>
+						</div>
+						<div>
+							<h3 class="text-sm font-semibold">Email Verification</h3>
+							<p class="text-[11px]">Action required for full account access</p>
+						</div>
+					</div>
+					<span class="inline-flex items-center rounded-full bg-amber-200 dark:bg-amber-950 px-2.5 py-0.5 text-xs font-medium text-amber-700">
+						Unverified
+					</span>
+				</div>
+				<div class="bg-white dark:bg-slate-900 border border-gray-200/70 dark:border-gray-800/70 p-4 rounded-md">
+					<div class="flex items-center gap-3">
+						<div class="shrink-0 items-center justify-center rounded-lg bg-gray-200/70">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+							</svg>
+						</div>
+						<div class="min-w-0 flex-1">
+							<h6 class="truncate text-xs font-medium">
+								<%= userData.email %>
+							</h6>
+							<p class="text-[11px] leading-relaxed">
+								User can verify by clicking <span class="font-semibold">"Verify Now"</span> on their profile page to receive an OTP code.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		<% } %>
+
+				<!-- API Keys List -->
+		<div class="card p-5">
+			<div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4">
+				<div class="flex items-center gap-2">
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-200">
+						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+					</div>
+					<h3 class="text-sm font-semibold">API Keys</h3>
+				</div>
+				<span class="text-xs font-medium">
+					<%= apiKeys.length %> <%= apiKeys.length === 1 ? 'Key' : 'Keys' %>
+				</span>
+			</div>
+			<div class="divide-y divide-gray-200/70 dark:divide-gray-800/70 mt-2">
+				<% apiKeys.forEach(function(k) { %>
+				  <div class="group p-2">
+					<div class="flex items-center justify-between gap-2">
+					  <div class="flex items-center gap-2.5">
+						<h4 class="text-sm font-medium"><%= k.name %></h4>
+						<span class="inline-flex items-center gap-1 text-xs rounded-full px-2 py-0.5 <%= k.is_active ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-200 border border-emerald-100/70 dark:border-emerald-900/70' : 'bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-200 border border-rose-100/70 dark:border-rose-900/70' %>">
+						  <span class="h-1.5 w-1.5 rounded-full <%= k.is_active ? 'bg-emerald-600' : 'bg-rose-600' %>"></span>
+						  <%= k.is_active ? 'Active' : 'Inactive' %>
+						</span>
+					  </div>
+					  <span class="text-xs"><%= helpers.timeAgo(k.created_at) %></span>
+					</div>
+
+					<div class="mt-2.5 flex items-center justify-between rounded px-3 py-1.5 font-mono text-xs bg-gray-200 dark:bg-gray-800">
+					  <span class="tracking-wider"><%= k.key_value.substring(0, 25) %>...<%= k.key_value.substring(k.key_value.length - 10) %></span>
+					</div>
+
+					<div class="mt-3 grid grid-cols-3 gap-2">
+					  <div class="p-3 text-center bg-blue-100/50 dark:bg-blue-950/50 rounded-md border border-blue-100/70 dark:border-blue-950/70">
+						<span class="block text-[10px] uppercase tracking-wider">Limit</span>
+						<strong class="font-bold text-xl"><%= k.credit_limit === 0 ? 'Unlimited' : helpers.formatNumber(k.credit_limit) %></strong>
+					  </div>
+					  <div class="p-3 text-center bg-rose-100/50 dark:bg-rose-950/50 rounded-md border border-rose-100/70 dark:border-rose-950/70">
+						<span class="block text-[10px] uppercase tracking-wider">Used</span>
+						<strong class="font-bold text-xl"><%= helpers.formatNumber(k.credits_used) %></strong>
+					  </div>
+					  <div class="p-3 text-center bg-emerald-100/50 dark:bg-emerald-950/50 rounded-md border border-emerald-100/70 dark:border-emerald-950/70">
+						<span class="block text-[10px] uppercase tracking-wider">Requests</span>
+						<strong class="font-bold text-xl"><%= helpers.formatNumber(k.total_requests) %></strong>
+					  </div>
+					</div>
+				  </div>
+				<% }); %>
+
+				<% if (apiKeys.length === 0) { %>
+				  <div class="px-6 py-12 text-center">
+					<p class="text-sm font-medium">No API key found yet.</p>
+					<p class="mt-1 text-xs">Create a new API key to start using the service.</p>
+				  </div>
+				<% } %>
+			</div>
+		</div>
+	</div>
+
+	<div class="space-y-4">
+		<!-- Credit Stats Card -->
+		<div class="card p-5">
+			<div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4">
+				<h3 class="text-xs font-semibold uppercase tracking-wider">Credit Balance</h3>
+				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-200">
+					<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+					</svg>
+				</div>
+			</div>
+
+			<div class="mt-2">
+				<div class="flex items-baseline gap-2">
+					<h3 class="text-3xl font-bold tracking-tight"><%= helpers.formatNumber(creditStats.balance) %></h3>
+					<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-200 border border-blue-100/70 dark:border-blue-900/70">Credits</span>
+				</div>
+				<p class="mt-1 text-xs font-medium">≈ <%= helpers.formatCurrency(creditStats.balance * 50) %></p>
+			</div>
+
+		  <div class="relative z-10 mt-4 pt-3.5 border-t border-gray-200/70 dark:border-gray-800/70 space-y-1">
+			<div class="flex items-center justify-between text-xs">
+			  <span>Total Earned</span>
+			  <span class="font-semibold"><%= helpers.formatNumber(creditStats.totalEarned) %></span>
+			</div>
+			<div class="flex items-center justify-between text-xs">
+			  <span>Total Spent</span>
+			  <span class="font-semibold"><%= helpers.formatNumber(creditStats.totalSpent) %></span>
+			</div>
+		  </div>
+		</div>
+
+		<!-- Add Credits Form -->
+		<div class="card p-5">
+			<div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4">
+				<h3 class="text-xs font-semibold uppercase tracking-wider">Add Credits</h3>
+				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-200">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none" />
+						<g fill="currentColor">
+							<path d="M20 11.25C20.4142 11.25 20.75 11.5858 20.75 12C20.75 12.4142 20.4142 12.75 20 12.75L4 12.75C3.58579 12.75 3.25 12.4142 3.25 12C3.25 11.5858 3.58579 11.25 4 11.25L20 11.25Z" />
+							<path d="M12.7705 20C12.7705 20.4142 12.4347 20.75 12.0205 20.75C11.6063 20.75 11.2705 20.4142 11.2705 20L11.2705 4C11.2705 3.58579 11.6063 3.25 12.0205 3.25C12.4347 3.25005 12.7705 3.58582 12.7705 4L12.7705 20Z" />
+						</g>
+					</svg>
+				</div>
+			</div>
+			<form method="POST" action="/admin/users/<%= userData.uuid %>/credits" class="mt-4 space-y-4">
+				<div>
+				  <label class="mb-1.5 block text-xs font-medium">Amount Credits</label>
+				  <div class="relative">
+					<input type="number" name="amount" required placeholder="[+] add, [-] subtract" 
+					  class="w-full px-3 py-2 bg-form text-sm"
+					>
+					<p class="text-[10px] mt-1">eg: -200 or 200</p>
+				  </div>
+				</div>
+				<div>
+					<label class="mb-1.5 block text-xs font-medium">Description <span class="font-normal">(Optional)</span></label>
+					<input 
+						type="text" 
+						name="description" 
+						placeholder="eg: Monthly top-up bonus" 
+						class="w-full px-3 py-2 bg-form text-sm"
+					>
+				</div>
+				<button 
+				  type="submit" 
+				  class="w-full btn-success px-4 py-2 rounded-md font-semibold"
+				>
+				  Send to User
+				</button>
+			</form>
+		</div>
+
+		<!-- Recent Transactions -->
+		<div class="card p-5">
+			<div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+				<h3 class="text-xs font-semibold uppercase tracking-wider">Recent Transactions</h3>
+				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-200">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none" />
+						<path fill="currentColor" fill-rule="evenodd" d="M5.07868 5.06891C8.87402 1.27893 15.0437 1.31923 18.8622 5.13778C22.6824 8.95797 22.7211 15.1313 18.9262 18.9262C15.1312 22.7211 8.95793 22.6824 5.13774 18.8622C2.87389 16.5984 1.93904 13.5099 2.34047 10.5812C2.39672 10.1708 2.775 9.88377 3.18537 9.94002C3.59575 9.99627 3.88282 10.3745 3.82658 10.7849C3.4866 13.2652 4.27782 15.881 6.1984 17.8016C9.44288 21.0461 14.6664 21.0646 17.8655 17.8655C21.0646 14.6664 21.046 9.44292 17.8015 6.19844C14.5587 2.95561 9.33889 2.93539 6.13935 6.12957L6.88705 6.13333C7.30126 6.13541 7.63535 6.47288 7.63327 6.88709C7.63119 7.3013 7.29372 7.63539 6.87951 7.63331L4.33396 7.62052C3.92269 7.61845 3.58981 7.28556 3.58774 6.8743L3.57495 4.32874C3.57286 3.91454 3.90696 3.57707 4.32117 3.57498C4.73538 3.5729 5.07285 3.907 5.07493 4.32121L5.07868 5.06891ZM11.9999 7.24992C12.4141 7.24992 12.7499 7.58571 12.7499 7.99992V11.6893L15.0302 13.9696C15.3231 14.2625 15.3231 14.7374 15.0302 15.0302C14.7373 15.3231 14.2624 15.3231 13.9696 15.0302L11.2499 12.3106V7.99992C11.2499 7.58571 11.5857 7.24992 11.9999 7.24992Z" clip-rule="evenodd" />
+					</svg>
+				</div>
+			</div>
+			<div class="divide-y divide-gray-200/70 dark:divide-gray-800/70 max-h-64 overflow-y-auto">
+				<% creditStats.recentTransactions.forEach(function(tx) { %>
+					<div class="py-1 flex items-center gap-2">
+						<span class="text-[10px] uppercase tracking-wider
+						<%= tx.type === 'deduct' ? 'border-l border-rose-500 text-rose-500 pl-2' :
+							tx.type === 'add' || tx.type === 'bonus' ? 'border-l border-emerald-500 text-emerald-500 pl-2' : 'border-l border-blue-500 text-blue-500 pl-2' %>"><%= tx.type %></span>
+						<span class="text-sm font-medium <%= tx.amount > 0 ? 'text-emerald-500' : 'text-rose-500' %>"><%= tx.amount > 0 ? '+' : '' %><%= helpers.formatNumber(tx.amount) %></span>
+						<span class="text-xs ml-auto"><%= helpers.timeAgo(tx.created_at) %></span>
+					</div>
+				<% }); %>
+				<% if (!creditStats.recentTransactions || creditStats.recentTransactions.length === 0) { %>
+					<div class="px-4 text-xs text-center">No transactions yet.</div>
+				<% } %>
+			</div>
+		</div>
+
+		<div class="card p-5">
+			<div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4">
+				<h3 class="text-xs font-semibold uppercase tracking-wider">System Logs & Metadata</h3>
+				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-200">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none"></path>
+						<g fill="none" stroke="currentColor" stroke-width="1.5">
+							<path d="M19 15V11.9375C19 9.76288 17.2371 8 15.0625 8H8.9375C6.76288 8 5 9.76288 5 11.9375V15C5 18.866 8.13401 22 12 22C15.866 22 19 18.866 19 15Z"></path>
+							<path d="M16.5 8.5V7.5C16.5 5.01472 14.4853 3 12 3C9.51472 3 7.5 5.01472 7.5 7.5V8.5"></path>
+							<path stroke-linecap="round" d="M19 14H22"></path>
+							<path stroke-linecap="round" d="M5 14H2"></path>
+							<path stroke-linecap="round" d="M14.5 3.5L17 2"></path>
+							<path stroke-linecap="round" d="M9.5 3.5L7 2"></path>
+							<path stroke-linecap="round" d="M20.5 20.0002L18.5 19.2002"></path>
+							<path stroke-linecap="round" d="M20.5 7.9998L18.5 8.7998"></path>
+							<path stroke-linecap="round" d="M3.5 20.0002L5.5 19.2002"></path>
+							<path stroke-linecap="round" d="M3.5 7.9998L5.5 8.7998"></path>
+							<path stroke-linecap="round" d="M12 21.5V15"></path>
+						</g>
+					</svg>
+				</div>
+			</div>
+
+			<!-- Data List -->
+			<div class="space-y-2 text-xs mt-4">
+				<div class="flex items-center justify-between py-1>
+				  <span class="font-medium">ID</span>
+				  <span class="font-mono px-2 py-0.5 truncate max-w-[150px]">#<%= userData.id %></span>
+				</div>
+				<div class="flex items-center justify-between py-1>
+				  <span class="font-medium">UUID</span>
+				  <span class="font-mono px-2 py-0.5 truncate max-w-[150px]" title="<%= userData.uuid %>"><%= userData.uuid %></span>
+				</div>
+				<div class="flex items-center justify-between py-1>
+				  <span class="font-medium">Password Hash</span>
+				  <span class="font-mono px-2 py-0.5 truncate max-w-[150px]">••••••••••••</span>
+				</div>
+				<div class="flex items-center justify-between py-1>
+				  <span class="font-medium">Last Login IP</span>
+				  <span class="font-mono px-2 py-0.5 truncate max-w-[150px]"><%= userData.last_login_ip || '-' %></span>
+				</div>
+				<div class="flex items-center justify-between py-1>
+				  <span class="font-medium">Last Login</span>
+				  <span class="font-mono px-2 py-0.5 truncate max-w-[150px]"><%= userData.last_login ? helpers.timeAgo(userData.last_login) : 'Never' %></span>
+				</div>
+				<div class="flex items-center justify-between py-1>
+				  <span class="font-medium">Created At</span>
+				  <span class="font-mono px-2 py-0.5 truncate max-w-[150px]"><%= helpers.formatDate(userData.created_at, 'short') %></span>
+				</div>
+				<div class="flex items-center justify-between py-1>
+				  <span class="font-medium">Updated At</span>
+				  <span class="ffont-mono px-2 py-0.5 truncate max-w-[150px]"><%= userData.updated_at ? helpers.formatDate(userData.updated_at, 'short') : '-' %></span>
+				</div>
+				<% if (userData.deleted_at) { %>
+				  <div class="flex items-center justify-between py-1 text-rose-600 bg-rose-50/50 px-2 rounded-lg border border-rose-100">
+					<span class="font-medium">Deleted At</span>
+					<span class="font-mono px-2 py-0.5 truncate max-w-[150px]"><%= helpers.formatDate(userData.deleted_at, 'short') %></span>
+				  </div>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</div>
+
+<%
+pageScript = `
+<script>
+  // Avatar preview
+  document.getElementById('avatar-input').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const preview = document.getElementById('avatar-preview');
+        const initial = document.getElementById('avatar-initial');
+        
+        preview.src = e.target.result;
+        preview.classList.remove('hidden');
+        if (initial) {
+          initial.classList.add('hidden');
+        }
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Package change -> show credits info
+  const pkgSelect = document.querySelector('select[name="package_id"]');
+  const packagesData = ` + JSON.stringify(packages) + `;
+  
+  const pkgHint = document.createElement('p');
+  pkgHint.className = 'text-[10px] text-yellow-500 mt-1 hidden';
+  pkgSelect.parentNode.appendChild(pkgHint);
+
+  function updatePkgHint() {
+    const selectedId = pkgSelect.value;
+    if (selectedId && packagesData && packagesData.length) {
+      const pkg = packagesData.find(p => String(p.id) === String(selectedId));
+      if (pkg && pkg.credits_included > 0) {
+        pkgHint.textContent = 'Bonus: +' + pkg.credits_included + ' credits will be added automatically';
+        pkgHint.classList.remove('hidden');
+        return;
+      }
+    }
+    pkgHint.classList.add('hidden');
+  }
+  
+  pkgSelect.addEventListener('change', updatePkgHint);
+  updatePkgHint();
+</script>
+`;
+%>

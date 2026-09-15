@@ -1,0 +1,579 @@
+<!-- API Keys -->
+<div class="card">
+  <div class="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+    <h3 class="text-sm font-bold">List API Keys</h3>
+    <button type="button" onclick="toggleModal('createKeyModal')" class="flex items-center gap-1 px-3 py-2 text-sm rounded-md btn-normal">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			<path d="M0 0h24v24H0z" fill="none" />
+			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h6m0 0h6m-6 0v6m0-6V6" />
+		</svg>
+		Create API Key
+    </button>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+          <th class="px-4 py-2 text-left">Name</th>
+          <th class="px-4 py-2 text-left">APIKey</th>
+          <th class="px-4 py-2 text-center">Limit</th>
+          <th class="px-4 py-2 text-right">Used</th>
+          <th class="px-4 py-2 text-center">Status</th>
+          <th class="px-4 py-2 text-right">Created</th>
+          <th class="px-4 py-2 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
+        <% if (apiKeys && apiKeys.length > 0) { %>
+          <% apiKeys.forEach(function(key) { %>
+            <tr>
+              <td class="px-4 py-2">
+                <h6 class="text-sm font-medium"><%= key.name || 'Unnamed' %></h6>
+              </td>
+              <td class="px-4 py-2">
+                <div class="flex items-center gap-2">
+                  <code class="w-full text-xs font-mono bg-gray-200 dark:bg-gray-800 px-2 py-1 rounded truncate max-w-[200px]" 
+                        id="key-display-<%= key.id %>" 
+                        data-full-key="<%= (key.key_value || '').replace(/"/g, '&quot;') %>">
+                    <%= key.key_value ? key.key_value.substring(0, 8) + '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' : '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' %>
+                  </code>
+                  
+                  <button type="button" class="hover:text-blue-500" onclick="toggleKey(<%= key.id %>)" title="Show/Hide key">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  </button>
+
+                  <button type="button" class="hover:text-blue-500" onclick="copyKey(<%= key.id %>)" title="Copy API Key">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                  </button>
+				  
+				  <button type="button" class="hover:text-blue-500" onclick="toggleStats(<%= key.id %>)" title="Stats">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none" />
+						<path fill="currentColor" d="m16 11.78l4.24-7.33l1.73 1l-5.23 9.05l-6.51-3.75L5.46 19H22v2H2V3h2v14.54L9.5 8z" />
+					</svg>
+                  </button>
+				  
+                  <button type="button" class="hover:text-blue-500" onclick="openScopesModal(<%= key.id %>, '<%= (key.name || '').replace(/'/g, "\\'") %>')" title="Scopes">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none" />
+						<path fill="currentColor" fill-rule="evenodd" d="M18 8v2.605c1.15.33 2 1.39 2 2.645v6A2.755 2.755 0 0 1 17.25 22H6.75A2.755 2.755 0 0 1 4 19.25v-6c0-1.26.85-2.315 2-2.645V8c0-3.31 2.69-6 6-6s6 2.69 6 6m-1.5 0c0-2.48-2.02-4.5-4.5-4.5S7.5 5.52 7.5 8v2.5h9zm.75 12.5c.69 0 1.25-.56 1.25-1.25v-6c0-.69-.56-1.25-1.25-1.25H6.75c-.69 0-1.25.56-1.25 1.25v6c0 .69.56 1.25 1.25 1.25zM12 14c.83 0 1.5.67 1.5 1.5c0 .55-.305 1.03-.75 1.29v1.71h-1.5v-1.71a1.49 1.49 0 0 1-.75-1.29c0-.83.67-1.5 1.5-1.5" clip-rule="evenodd" />
+					</svg>
+                  </button>
+                </div>
+              </td>
+              <td class="px-4 py-2 text-sm text-center font-mono">
+                <%= key.credit_limit > 0 ? helpers.formatNumber(key.credit_limit) : 'Unlimited' %>
+              </td>
+              <td class="px-4 py-2 text-sm text-right font-mono"><span class="text-rose-500"><%= helpers.formatNumber(key.credits_used || 0) %></span><span class="text-[10px]">/cr</span></td>
+              <td class="px-4 py-2 text-center">
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium <%= helpers.statusBadgeClass(key.is_active ? 'active' : 'inactive') %>">
+                  <%= key.is_active ? 'Active' : 'Inactive' %>
+                </span>
+              </td>
+              <td class="px-4 py-2 text-xs text-right whitespace-nowrap"><%= helpers.formatDate(key.created_at, 'date') %></td>
+              <td class="px-4 py-2 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <button type="button" onclick="editKey('<%= key.id %>')" class="link-amber text-sm">Edit</button>
+                  <form method="POST" action="/user/api-keys/<%= key.id %>/delete" onsubmit="return confirm('Delete this API key? This cannot be undone.')" class="inline">
+                    <button type="submit" class="link-rose text-sm">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <tr id="stats-row-<%= key.id %>" class="hidden">
+              <td colspan="7" class="px-4 py-3 bg-gray-50 dark:bg-gray-800/50">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="text-xs font-semibold uppercase tracking-wider">Usage Stats - <%= key.name || 'Unnamed' %></h4>
+                  <div class="flex gap-2">
+                    <button type="button" onclick="loadStats(<%= key.id %>, 'daily')" class="text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300" data-period="daily">7 Days</button>
+                    <button type="button" onclick="loadStats(<%= key.id %>, 'weekly')" class="text-xs px-2 py-1 rounded bg-gray-200 dark:bg-gray-700" data-period="weekly">4 Weeks</button>
+                    <button type="button" onclick="loadStats(<%= key.id %>, 'monthly')" class="text-xs px-2 py-1 rounded bg-gray-200 dark:bg-gray-700" data-period="monthly">6 Months</button>
+                  </div>
+                </div>
+                <div class="h-32">
+                  <canvas id="chart-<%= key.id %>"></canvas>
+                </div>
+              </td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr><td colspan="7" class="px-6 py-12 text-sm text-center">No API keys found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="dynamicFlashContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+<!-- Create Key Modal -->
+<div id="createKeyModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 card-modal">
+    <div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+      <h3 class="text-sm font-semibold">Create API Key</h3>
+      <button type="button" onclick="toggleModal('createKeyModal')" class="rounded-full p-1.5 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-rose-500">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form method="POST" action="/user/api-keys/create" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Name</label>
+        <input type="text" name="name" placeholder="My API Key" required class="w-full bg-form px-4 py-2 rounded">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Credit Limit (0 = unlimited, uses user balance)</label>
+        <input type="number" name="credit_limit" value="0" min="0" class="w-full bg-form px-4 py-2 rounded">
+      </div>
+	  <div class="flex items-center justify-end">
+		  <button type="submit" class="flex items-center gap-1 btn-normal px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<g fill="none" stroke="currentColor" stroke-width="1.5">
+					<path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z"></path>
+					<path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22"></path>
+					<path stroke-linecap="round" d="M7 8H13"></path>
+				</g>
+			</svg>
+			Create API Key
+		  </button>
+	  </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Key Modal -->
+<div id="editKeyModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 card-modal">
+    <div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+      <h3 class="text-sm font-semibold">Edit API Key</h3>
+      <button type="button" onclick="toggleModal('editKeyModal')" class="rounded-full p-1.5 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-rose-500">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="editKeyForm" method="POST" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Name</label>
+        <input type="text" name="name" id="ek_name" required class="w-full bg-form px-4 py-2 rounded">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Credit Limit (0 = unlimited)</label>
+        <input type="number" name="credit_limit" id="ek_limit" min="0" class="w-full bg-form px-4 py-2 rounded">
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" name="is_active" id="ek_active" class="h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+        <label for="ek_active" class="text-sm">Active</label>
+      </div>
+	  <div class="flex items-center justify-end">
+		  <button type="submit" class="flex items-center gap-1 btn-normal px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<g fill="none" stroke="currentColor" stroke-width="1.5">
+					<path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z"></path>
+					<path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22"></path>
+					<path stroke-linecap="round" d="M7 8H13"></path>
+				</g>
+			</svg>
+			Update API Key
+		  </button>
+	  </div>
+    </form>
+  </div>
+</div>
+
+<!-- Scopes Modal -->
+<div id="scopesModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 card-modal">
+    <div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+      <h3 class="text-sm font-semibold">API Key Scopes (<span class="text-xs mt-1" id="scopesKeyName"></span>)</h3>
+    </div>
+    <form id="scopesForm" method="POST">
+      <div id="scopesList" class="space-y-4"></div>
+      <button type="button" onclick="addScopeRow()" class="mb-2 mt-4 flex items-center gap-1 text-xs link">
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+			<path d="M0 0h24v24H0z" fill="none"></path>
+			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h6m0 0h6m-6 0v6m0-6V6"></path>
+		</svg>
+        Add Scope
+      </button>
+      <div class="flex justify-end gap-2 pt-4 border-t border-gray-200/70 dark:border-gray-800/70">
+		<button type="button" onclick="toggleModal('scopesModal')" class="flex items-center gap-1 btn-failed px-4 py-2 rounded-md">
+			<svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+			Cancel
+		</button>
+        <button type="submit" class="flex items-center gap-1 btn-normal px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<g fill="none" stroke="currentColor" stroke-width="1.5">
+					<path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z"></path>
+					<path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22"></path>
+					<path stroke-linecap="round" d="M7 8H13"></path>
+				</g>
+			</svg>
+			Save Scopes
+		</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<% 
+  pageScript = `
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    var keysData = ` + JSON.stringify(apiKeys || []) + `;
+
+    function toggleModal(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.toggle('hidden');
+    }
+
+    function toggleKey(keyId) {
+      var el = document.getElementById('key-display-' + keyId);
+      if (!el) return;
+
+      var fullKey = el.getAttribute('data-full-key');
+      if (!fullKey) return;
+      
+      if (el.getAttribute('data-shown') === 'true') {
+        el.textContent = fullKey.substring(0, 8) + '\\u2022\\u2022\\u2022\\u2022\\u2022\\u2022\\u2022\\u2022';
+        el.setAttribute('data-shown', 'false');
+      } else {
+        el.textContent = fullKey;
+        el.setAttribute('data-shown', 'true');
+      }
+    }
+
+    function showFlashSuccess(message) {
+      var container = document.getElementById('dynamicFlashContainer');
+      if (!container) return;
+
+      var alertDiv = document.createElement('div');
+      alertDiv.className = 'flash-alert pointer-events-auto shadow-lg transition-opacity duration-500 rounded-md bg-green-50 border border-green-200/70 p-3 flex items-center gap-2 opacity-0';
+      alertDiv.innerHTML = '<svg class="h-5 w-5 text-green-400 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><p class="text-sm text-green-700">' + message + '</p>';
+
+      container.appendChild(alertDiv);
+      setTimeout(function() { alertDiv.classList.remove('opacity-0'); }, 10);
+      setTimeout(function() {
+        alertDiv.classList.add('opacity-0');
+        setTimeout(function() { alertDiv.remove(); }, 500);
+      }, 3000);
+    }
+
+    function copyKey(keyId) {
+      var el = document.getElementById('key-display-' + keyId);
+      if (!el) return;
+
+      var fullKey = el.getAttribute('data-full-key');
+      if (!fullKey) return;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullKey).then(function() {
+          showFlashSuccess('API key copied to clipboard!');
+        }).catch(function() {
+          fallbackCopy(fullKey);
+        });
+      } else {
+        fallbackCopy(fullKey);
+      }
+    }
+
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showFlashSuccess('API key copied to clipboard!');
+      } catch (e) {
+        showFlashSuccess('Key: ' + text);
+      }
+      document.body.removeChild(ta);
+    }
+
+    function editKey(keyId) {
+      var key = null;
+      for (var i = 0; i < keysData.length; i++) {
+        if (keysData[i].id == keyId) { key = keysData[i]; break; }
+      }
+      if (!key) return;
+      document.getElementById('editKeyForm').action = '/user/api-keys/' + key.id + '/edit';
+      document.getElementById('ek_name').value = key.name || '';
+      document.getElementById('ek_limit').value = key.credit_limit || 0;
+      document.getElementById('ek_active').checked = Boolean(key.is_active);
+      toggleModal('editKeyModal');
+    }
+
+    var charts = {};
+
+    function toggleStats(keyId) {
+      var row = document.getElementById('stats-row-' + keyId);
+      if (!row) return;
+      row.classList.toggle('hidden');
+      if (!row.classList.contains('hidden')) {
+        loadStats(keyId, 'daily');
+      }
+    }
+
+    function loadStats(keyId, period) {
+      var canvas = document.getElementById('chart-' + keyId);
+      if (!canvas) return;
+
+      var btns = canvas.closest('td').querySelectorAll('button[data-period]');
+      btns.forEach(function(btn) {
+        if (btn.getAttribute('data-period') === period) {
+          btn.className = 'text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300';
+        } else {
+          btn.className = 'text-xs px-2 py-1 rounded bg-gray-200 dark:bg-gray-700';
+        }
+      });
+
+      fetch('/user/api-keys/' + keyId + '/stats')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var labels = [];
+          var values = [];
+
+          if (period === 'daily') {
+            var dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            var today = new Date();
+            var days = [];
+            for (var i = 6; i >= 0; i--) {
+              var d = new Date(today);
+              d.setDate(d.getDate() - i);
+              var dateStr = d.toISOString().split('T')[0];
+              var found = data.daily.find(function(r) { return r.date === dateStr || new Date(r.date).toISOString().split('T')[0] === dateStr; });
+              days.push({ label: dayNames[d.getDay()] + ' ' + d.getDate(), value: found ? found.requests : 0 });
+            }
+            labels = days.map(function(d) { return d.label; });
+            values = days.map(function(d) { return d.value; });
+          } else if (period === 'weekly') {
+            data.weekly.forEach(function(r) {
+              labels.push('Week ' + r.week_start);
+              values.push(r.requests);
+            });
+          } else {
+            data.monthly.forEach(function(r) {
+              labels.push(r.month);
+              values.push(r.requests);
+            });
+          }
+
+          renderChart(keyId, labels, values);
+        })
+        .catch(function(err) {
+          console.error('Stats error:', err);
+        });
+    }
+
+    function renderChart(keyId, labels, values) {
+      var canvas = document.getElementById('chart-' + keyId);
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+
+      if (charts[keyId]) {
+        charts[keyId].destroy();
+      }
+
+      var isDark = document.documentElement.classList.contains('dark');
+      var gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+      var textColor = isDark ? '#9CA3AF' : '#6B7280';
+
+      charts[keyId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Requests',
+            data: values,
+            backgroundColor: isDark ? 'rgba(59,130,246,0.5)' : 'rgba(59,130,246,0.7)',
+            borderColor: isDark ? 'rgba(59,130,246,0.8)' : 'rgba(59,130,246,1)',
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: gridColor },
+              ticks: { color: textColor, font: { size: 10 } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: textColor, font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+	var allApis = [];
+    var currentScopesKeyId = null;
+
+    function openScopesModal(keyId, keyName) {
+      currentScopesKeyId = keyId;
+
+      document.getElementById('scopesKeyName').textContent = keyName;
+
+      document.getElementById('scopesForm').action =
+        '/user/api-keys/' + keyId + '/scopes';
+
+      document.getElementById('scopesList').innerHTML =
+        '<p class="text-xs">Loading...</p>';
+
+      toggleModal('scopesModal');
+
+      fetch('/user/api-keys/' + keyId + '/scopes')
+        .then(function(r) {
+          return r.json();
+        })
+        .then(function(data) {
+          allApis = data.apis || [];
+          var scopes = data.scopes || [];
+
+          document.getElementById('scopesList').innerHTML = '';
+
+          if (scopes.length === 0) {
+            addScopeRow();
+          } else {
+            scopes.forEach(function(s) {
+              addScopeRow(
+                s.api_id,
+                s.allowed_methods.split(',')
+              );
+            });
+          }
+        })
+        .catch(function(err) {
+          console.error('Load scopes error:', err);
+
+          document.getElementById('scopesList').innerHTML =
+            '<p class="text-xs text-red-500">Failed to load scopes</p>';
+        });
+    }
+    
+    function addScopeRow(apiId, methods) {
+      var container = document.getElementById('scopesList');
+      var idx = container.children.length;
+
+      var apiOptions = '<option value="">-- Select API --</option>';
+
+      allApis.forEach(function(api) {
+        var selected = api.id == apiId ? 'selected' : '';
+
+        apiOptions +=
+          '<option value="' + api.id + '" ' +
+          selected + '>' +
+          api.name +
+          '</option>';
+      });
+
+      var methodChecks = [
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE',
+        'PATCH'
+      ].map(function(m) {
+
+        var checked =
+          (!methods || methods.includes(m))
+            ? 'checked'
+            : '';
+
+        var name =
+          'scopes[api_' + (apiId || '__NEW' + idx) + ']';
+
+        var disabled =
+          !apiId ? 'disabled' : '';
+
+        return '<label class="inline-flex items-center gap-1 text-xs">' +
+          '<input ' +
+            'type="checkbox" ' +
+            'name="' + name + '" ' +
+            'value="' + m + '" ' +
+            checked + ' ' +
+            'class="scope-method" ' +
+            'data-idx="' + idx + '" ' +
+            'onchange="updateScopeName(this)" ' +
+            disabled +
+          '> ' +
+          m +
+          '</label>';
+
+      }).join(' ');
+
+      var row = document.createElement('div');
+
+      row.className =
+        'flex flex-col lg:flex-row lg:items-center gap-2';
+
+      row.innerHTML =
+        '<select ' +
+          'name="scope_apis[]" ' +
+          'onchange="onScopeApiChange(this, ' + idx + ')" ' +
+          'class="w-full flex-1 bg-form p-2 text-sm scope-api-select" ' +
+          'data-idx="' + idx + '">' +
+
+          apiOptions +
+
+        '</select>' +
+
+        // Membungkus checkbox dan button dalam 1 div
+        '<div class="flex items-center gap-2">' +
+
+          '<div ' +
+            'class="flex items-center gap-2 methods-group" ' +
+            'data-idx="' + idx + '">' +
+
+            methodChecks +
+
+          '</div>' +
+
+          '<button ' +
+            'type="button" ' +
+            'onclick="this.parentElement.parentElement.remove()" ' +
+            'class="rounded-full p-1.5 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-rose-500" ' +
+            'title="Remove">' +
+
+            '<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>' +
+
+          '</button>' +
+
+        '</div>';
+
+      container.appendChild(row);
+    }
+
+    function onScopeApiChange(select, idx) {
+      var apiId = select.value;
+
+      var checks = document.querySelectorAll(
+        '.scope-method[data-idx="' + idx + '"]'
+      );
+
+      checks.forEach(function(c) {
+        c.name = apiId
+          ? 'scopes[api_' + apiId + ']'
+          : 'scopes[__NEW' + idx + ']';
+
+        c.disabled = !apiId;
+
+        if (!apiId) {
+          c.checked = false;
+        }
+      });
+    }
+  </script>
+  `;
+%>

@@ -1,0 +1,517 @@
+<%
+pageScript = `
+<script>
+  // Referral settings section is auto-rendered from admin_settings table
+</script>
+`;
+%>
+<!-- Settings -->
+<div class="space-y-6">
+
+  <!-- ==================== GENERAL SETTINGS ==================== -->
+  <div class="card p-5">
+    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
+      <h3 class="text-xl font-bold">General Settings</h3>
+	  <p class="text-sm">Manage your core preferences.</p>
+    </div>
+    <form method="POST" action="/admin/settings" enctype="multipart/form-data" class="space-y-4">
+		<% 
+		  const allowedKeys = [
+			'app_name', 
+			'default_credits', 
+			'credit_value_rp', 
+			'global_rate_limit', 
+			'registration_enabled', 
+			'maintenance_mode', 
+			'new_user_bonus_enabled', 
+			'auth_captcha_enabled', 
+			'notifications_enabled', 
+			'notifications_poll_interval'
+		  ];
+
+		  const filteredSettings = settings.filter(s => allowedKeys.includes(s.setting_key));
+		  
+		  const formSettings = filteredSettings.filter(s => s.setting_type !== 'bool');
+		  const checkboxSettings = filteredSettings.filter(s => s.setting_type === 'bool');
+		%>
+
+		<div class="space-y-4">
+		  <% if (formSettings.length > 0) { %>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			  <% formSettings.forEach(function(s) { %>
+				<div class="flex flex-col gap-1.5">
+				  <label class="block text-xs font-semibold">
+					<%= s.description || s.setting_key %>
+				  </label>
+				  <% if (s.setting_type === 'int') { %>
+					<input type="number" name="<%= s.setting_key %>" value="<%= s.parsed %>" 
+					  class="w-full px-4 py-2 text-sm bg-form">
+				  <% } else { %>
+					<input type="text" name="<%= s.setting_key %>" value="<%= s.setting_value %>" 
+					  class="w-full px-4 py-2 text-sm bg-form">
+				  <% } %>
+				</div>
+			  <% }); %>
+			</div>
+		  <% } %>
+
+		  <% if (checkboxSettings.length > 0) { %>
+			<div>
+			  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+				<% checkboxSettings.forEach(function(s) { %>
+				  <div class="flex flex-col gap-1.5">
+				    <label class="block text-xs font-semibold">
+					  <%= s.description || s.setting_key %>
+					</label>
+					<div class="flex items-center gap-2.5 pt-1">
+					  <input type="checkbox" name="<%= s.setting_key %>" <%= s.parsed ? 'checked' : '' %> 
+						class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+					  <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+						<%= s.parsed ? 'Enabled' : 'Disabled' %>
+					  </span>
+					</div>
+				  </div>
+				<% }); %>
+			  </div>
+			</div>
+		  <% } %>
+		</div>
+
+      <!-- ==================== CREDIT BONUS SETTINGS ==================== -->
+      <div class="mt-12">
+	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
+		  <h3 class="text-xl font-bold">Credit Bonus System</h3>
+		  <p class="text-sm">Automatically grant bonus credits when a verified user's balance drops below the threshold. Only verified accounts are eligible.</p>
+		</div>
+
+		<%
+		  const bonusMainOn = settings.find(s => s.setting_key === 'credit_bonus_enabled');
+		  const bonusThresholdSetting = settings.find(s => s.setting_key === 'credit_bonus_threshold');
+	
+		  const bonusTiers = [
+		    { key: 'daily',   label: 'Daily Bonus',   desc: 'Granted when 1-6 days have passed since last threshold crossing' },
+		    { key: 'weekly',  label: 'Weekly Bonus',  desc: 'Granted when 7-29 days have passed since last threshold crossing' },
+		    { key: 'monthly', label: 'Monthly Bonus', desc: 'Granted when 30+ days have passed since last threshold crossing' },
+		  ];
+		%>
+
+		<div class="space-y-4">
+		  <!-- Main toggle + threshold -->
+		  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+		    <% if (bonusMainOn) { %>
+		    <div class="flex flex-col gap-1.5">
+		      <label class="block text-xs font-semibold"><%= bonusMainOn.description %></label>
+		      <div class="flex items-center gap-2.5 pt-1">
+		        <input type="checkbox" name="credit_bonus_enabled" <%= bonusMainOn.parsed ? 'checked' : '' %>
+		          class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+		        <span class="text-sm font-medium"><%= bonusMainOn.parsed ? 'Enabled' : 'Disabled' %></span>
+		      </div>
+		    </div>
+		    <% } %>
+		    <% if (bonusThresholdSetting) { %>
+		    <div class="flex flex-col gap-1.5">
+		      <label class="block text-xs font-semibold"><%= bonusThresholdSetting.description %></label>
+		      <input type="number" name="credit_bonus_threshold" value="<%= bonusThresholdSetting.parsed %>" min="1"
+		        class="w-full px-4 py-2 text-sm bg-form">
+		    </div>
+		    <% } %>
+		  </div>
+
+		  <!-- Tier cards -->
+		  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+		    <% bonusTiers.forEach(function(tier) { %>
+		      <%
+		        const toggleKey = 'credit_bonus_' + tier.key + '_enabled';
+		        const amountKey = 'credit_bonus_' + tier.key;
+		        const toggleSetting = settings.find(s => s.setting_key === toggleKey);
+		        const amountSetting = settings.find(s => s.setting_key === amountKey);
+		      %>
+		      <div class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 space-y-3 bg-gray-50/50 dark:bg-gray-900/30">
+		        <div class="flex items-center justify-between">
+		          <span class="text-sm font-bold"><%= tier.label %></span>
+		          <% if (toggleSetting) { %>
+		            <label class="relative inline-flex items-center cursor-pointer">
+		              <input type="checkbox" name="<%= toggleKey %>" <%= toggleSetting.parsed ? 'checked' : '' %>
+		                class="sr-only peer">
+		              <div class="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+		            </label>
+		          <% } %>
+		        </div>
+		        <p class="text-[11px] text-gray-500"><%= tier.desc %></p>
+		        <% if (amountSetting) { %>
+		        <div class="flex flex-col gap-1">
+		          <label class="text-[10px] font-semibold uppercase tracking-wider">Bonus Amount</label>
+		          <div class="flex items-center gap-1">
+		            <span class="text-sm font-bold">+</span>
+		            <input type="number" name="<%= amountKey %>" value="<%= amountSetting.parsed %>" min="0"
+		              class="w-18 px-3 py-1.5 text-sm bg-form rounded border border-gray-200/70 dark:border-gray-800/70">
+		            <span class="text-xs">credits</span>
+		          </div>
+		        </div>
+		        <% } %>
+		      </div>
+		    <% }); %>
+		  </div>
+
+		  <div class="mt-3 p-3 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-200/70 dark:border-blue-800/70">
+		    <p class="text-xs text-blue-700 dark:text-blue-300">
+		      <strong>How it works:</strong> When a verified user's credit balance drops below the threshold, the system calculates how long since their last threshold crossing and grants the appropriate tier. Cooldown prevents repeated bonus abuse. Disable a tier to skip it — the user will only receive the next enabled tier. Bonus is automatic, no claim needed.
+		    </p>
+		  </div>
+		</div>
+      </div>
+
+      <!-- Bank Account Settings -->
+      <div class="mt-12">
+	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
+		  <h3 class="text-xl font-bold">Bank Account (Manual Transfer)</h3>
+		  <p class="text-sm">Provide manual transfer payment details.</p>
+		</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <% settings.forEach(function(s) { %>
+            <% if (s.setting_key.startsWith('bank_')) { %>
+              <div>
+				<label class="block text-xs font-semibold"><%= s.description || s.setting_key %></label>
+                <input type="text" name="<%= s.setting_key %>" value="<%= s.setting_value %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="<%= s.description %>">
+              </div>
+            <% } %>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- SMTP Email Settings -->
+      <div class="mt-12">
+	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
+		  <h3 class="text-xl font-bold">SMTP Email Settings</h3>
+		  <p class="text-sm">Configure SMTP for email verification and notifications.</p>
+		</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% settings.forEach(function(s) { %>
+            <% if (s.setting_key.startsWith('smtp_')) { %>
+              <div>
+				<label class="block text-xs font-semibold"><%= s.description || s.setting_key %></label>
+                <% if (s.setting_key === 'smtp_password') { %>
+                  <input type="password" name="<%= s.setting_key %>" value="<%= s.setting_value %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="••••••••">
+                <% } else { %>
+                  <input type="text" name="<%= s.setting_key %>" value="<%= s.setting_value %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="<%= s.description %>">
+                <% } %>
+              </div>
+            <% } %>
+          <% }); %>
+        </div>
+        <div class="mt-4 flex items-center gap-3">
+          <input type="email" id="testSmtpEmail" placeholder="Test destination email (leave blank = from email)" class="flex-1 max-w-md px-4 py-2 text-sm bg-form rounded-md border border-gray-200/70 dark:border-gray-800/70">
+          <button type="button" id="testSmtpBtn" onclick="testSmtp()" class="flex items-center gap-2 btn-success rounded-md px-4 py-2 text-sm whitespace-nowrap">
+            <span id="testSmtpLabel">Send Test</span>
+            <svg id="testSmtpIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom Package Settings -->
+      <div class="mt-12">
+        <h3 class="text-xl font-bold">Custom Package Pricing</h4>
+        <p class="text-xs mb-4">Configure rate limit pricing for custom packages. Price = (steps above min) × price per step.</p>
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 border-t pt-4 border-gray-200/70 dark:border-gray-800/70">
+		  <% settings.forEach(function(s) { %>
+			<% if (s.setting_key.startsWith('custom_package_')) { %>
+			  <div>
+				<label class="block text-xs font-semibold">
+				<% 
+				  let labelText = (s.description || s.setting_key);
+				  labelText = labelText.replace(/^custom\s*package[\s:]*/i, '');
+				%>
+				<label class="block text-xs font-semibold capitalize">
+				  <%= labelText %>
+				</label>
+				<input type="number" name="<%= s.setting_key %>" value="<%= s.parsed %>" class="w-full px-4 py-2 text-sm bg-form">
+			  </div>
+			<% } %>
+		  <% }); %>
+		</div>
+      </div>
+
+      <!-- ==================== REFERRAL SETTINGS ==================== -->
+      <div class="mt-12">
+		<div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
+		  <h3 class="text-xl font-bold">Referral Program</h3>
+		  <p class="text-sm">Configure the referral system. Users earn credits for each successful referral.</p>
+		</div>
+		<% 
+		  const referralFiltered = settings.filter(s => 
+			s.setting_key.startsWith('referral_') || s.setting_key.startsWith('new_referral_')
+		  );
+
+		  const referralFormSettings = referralFiltered.filter(s => s.setting_type !== 'bool');
+		  const referralCheckboxSettings = referralFiltered.filter(s => s.setting_type === 'bool');
+		%>
+		<div class="space-y-4">
+		  <% if (referralCheckboxSettings.length > 0) { %>
+			<div>
+			  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<% referralCheckboxSettings.forEach(function(s) { %>
+				  <div class="flex flex-col gap-1.5">
+					<label class="block text-xs font-semibold">
+					  <%= s.description || s.setting_key %>
+					</label>
+					<div class="flex items-center gap-2.5 pt-1">
+					  <input type="checkbox" name="<%= s.setting_key %>" <%= s.parsed ? 'checked' : '' %> 
+						class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+					  <span class="text-sm font-medium">
+						<%= s.parsed ? 'Enabled' : 'Disabled' %>
+					  </span>
+					</div>
+				  </div>
+				<% }); %>
+			  </div>
+			</div>
+		  <% } %>
+
+		  <% if (referralFormSettings.length > 0) { %>
+			<div>
+			  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 <%= referralCheckboxSettings.length > 0 ? 'pt-4' : '' %>">
+				<% referralFormSettings.forEach(function(s) { %>
+				  <div class="flex flex-col gap-1.5">
+					<label class="block text-xs font-semibold">
+					  <%= s.description || s.setting_key %>
+					</label>
+					<% if (s.setting_type === 'int') { %>
+					  <input type="number" name="<%= s.setting_key %>" value="<%= s.parsed %>" 
+						class="w-full px-4 py-2 text-sm bg-form">
+					<% } else { %>
+					  <textarea name="<%= s.setting_key %>" rows="1" 
+						class="w-full px-4 py-2 text-sm bg-form"><%= s.setting_value %></textarea>
+					<% } %>
+				  </div>
+				<% }); %>
+			  </div>
+			</div>
+		  <% } %>
+		</div>
+      </div>
+
+      <!-- ==================== SITE IDENTITY ==================== -->
+      <div class="mt-12">
+		<div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
+		  <h3 class="text-xl font-bold">Site Identity</h3>
+		  <p class="text-sm">Configure your website branding — logo, favicon, and display name.</p>
+		</div>
+        <div class="space-y-4">
+
+          <!-- Logo & Favicon Row -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Logo -->
+            <div>
+              <label class="block text-xs font-semibold">Website Logo</label>
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-lg border border-gray-200/70 dark:border-gray-800/70 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden flex-shrink-0">
+                  <% if (settingsMap.site_logo) { %>
+                    <img src="<%= settingsMap.site_logo %>" alt="Logo" class="w-full h-full object-contain">
+                  <% } else { %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  <% } %>
+                </div>
+                <div class="flex-1">
+                  <input type="file" name="site_logo" accept="image/*" class="w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 dark:file:bg-indigo-900/30 dark:file:text-indigo-400 hover:file:bg-indigo-100">
+                  <p class="text-[10px] mt-1">Recommended: 200×200px, PNG/SVG</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Favicon -->
+            <div>
+              <label class="block text-xs font-semibold">Favicon</label>
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded border border-gray-200/70 dark:border-gray-800/70 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden flex-shrink-0">
+                  <% if (settingsMap.site_favicon) { %>
+                    <img src="<%= settingsMap.site_favicon %>" alt="Favicon" class="w-full h-full object-contain">
+                  <% } else { %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+                  <% } %>
+                </div>
+                <div class="flex-1">
+                  <input type="file" name="site_favicon" accept="image/*" class="w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 dark:file:bg-indigo-900/30 dark:file:text-indigo-400 hover:file:bg-indigo-100">
+                  <p class="text-[10px] mt-1">Recommended: 32×32px or 16×16px ICO/PNG</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Site Name & Description -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold">Site Title</label>
+              <input type="text" name="site_title" value="<%= settingsMap.site_title || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="My Awesome Website">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold">Site Description</label>
+              <input type="text" name="site_description" value="<%= settingsMap.site_description || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="A brief description of your website">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold">Site Keywords</label>
+            <input type="text" name="site_keywords" value="<%= settingsMap.site_keywords || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="api, gateway, developer, saas">
+            <p class="text-[10px] mt-1">Comma-separated keywords for your site</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SEO SETTINGS ==================== -->
+      <div class="mt-12">
+		<div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
+		  <h3 class="text-xl font-bold">SEO Settings</h3>
+		  <p class="text-sm">Control how your site appears in search engines and social media.</p>
+		</div>
+        <div class="space-y-4">
+
+          <!-- Meta Tags -->
+          <div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold">Meta Title</label>
+                <input type="text" name="seo_meta_title" value="<%= settingsMap.seo_meta_title || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="My Website - Best API Gateway">
+                <p class="text-[10px] mt-1">Recommended: 50-60 characters. If empty, falls back to Site Title.</p>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold">Meta Description</label>
+                <textarea name="seo_meta_description" rows="3" class="w-full px-4 py-2 text-sm bg-form resize-none" placeholder="A comprehensive API gateway platform for developers..."><%= settingsMap.seo_meta_description || '' %></textarea>
+                <p class="text-[10px] mt-1">Recommended: 150-160 characters. If empty, falls back to Site Description.</p>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold">Meta Keywords</label>
+                <input type="text" name="seo_meta_keywords" value="<%= settingsMap.seo_meta_keywords || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="api, gateway, rest, developer tools">
+                <p class="text-[10px] mt-1">Comma-separated. If empty, falls back to Site Keywords.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Open Graph -->
+          <div class="mt-9">
+            <div class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold">OG Title</label>
+                  <input type="text" name="og_title" value="<%= settingsMap.og_title || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="My Website">
+                  <p class="text-[10px] mt-1">Title shown when shared on social media. Falls back to Meta Title.</p>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold">OG URL</label>
+                  <input type="url" name="og_url" value="<%= settingsMap.og_url || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="https://example.com">
+                  <p class="text-[10px] mt-1">Canonical URL for social sharing. Falls back to site URL.</p>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold">OG Description</label>
+                <textarea name="og_description" rows="3" class="w-full px-4 py-2 text-sm bg-form" placeholder="Description shown when shared on social media..."><%= settingsMap.og_description || '' %></textarea>
+                <p class="text-[10px] mt-1">Description shown when shared on social media. Falls back to Meta Description.</p>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold">OG Image</label>
+                <div class="flex items-center gap-4">
+                  <div class="w-32 h-20 rounded-lg border border-gray-200/70 dark:border-gray-800/70 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden flex-shrink-0">
+                    <% if (settingsMap.site_og_image) { %>
+                      <img src="<%= settingsMap.site_og_image %>" alt="OG Image" class="w-full h-full object-cover">
+                    <% } else { %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    <% } %>
+                  </div>
+                  <div class="flex-1">
+                    <input type="file" name="site_og_image" accept="image/*" class="w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 dark:file:bg-indigo-900/30 dark:file:text-indigo-400 hover:file:bg-indigo-100">
+                    <p class="text-[10px] mt-1">Recommended: 1200×630px for best social media display</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEO Preview -->
+          <div class="mt-9 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 border border-gray-200/70 dark:border-gray-800/70">
+            <h5 class="text-xs font-bold uppercase tracking-wider mb-3">Search Preview</h5>
+            <div class="space-y-1">
+              <p class="text-blue-700 dark:text-blue-400 text-base font-medium truncate">
+                <%= settingsMap.seo_meta_title || settingsMap.site_title || settingsMap.app_name || 'Your Page Title' %>
+              </p>
+              <p class="text-green-700 dark:text-green-500 text-xs">
+                <%= baseUrl %>
+              </p>
+              <p class="text-gray-600 dark:text-gray-400 text-xs line-clamp-2">
+                <%= settingsMap.seo_meta_description || settingsMap.site_description || 'Your meta description will appear here...' %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end mt-6">
+        <button type="submit" class="flex items-center gap-1 text-sm p-2 rounded-md btn-normal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16"><path d="M0 0h16v16H0z" fill="none"></path><path fill="currentColor" d="m14.414 3.207l-1.621-1.621A2 2 0 0 0 11.379 1H3c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V4.621a2 2 0 0 0-.586-1.414M9 2v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V2zM5 14V9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5V14zm9-1c0 .551-.449 1-1 1h-1V9.5c0-.827-.673-1.5-1.5-1.5h-5C4.673 8 4 8.673 4 9.5V14H3c-.551 0-1-.449-1-1V3c0-.551.449-1 1-1h2v1.5C5 4.327 5.673 5 6.5 5h2c.827 0 1.5-.673 1.5-1.5V2h1.379c.263 0 .521.107.707.293l1.621 1.621c.186.186.293.444.293.707z"></path></svg>
+          Save All Settings
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<%
+pageScript = `
+      <script>
+      function showFlash(type, message) {
+        let container = document.getElementById('smtpFlashContainer');
+        if (!container) {
+          container = document.createElement('div');
+          container.id = 'smtpFlashContainer';
+          container.className = 'fixed bottom-5 right-5 z-50 flex flex-col gap-3 pointer-events-none';
+          document.body.appendChild(container);
+        }
+        const isErr = type === 'error';
+        const bg = isErr ? 'bg-red-50' : 'bg-green-50';
+        const border = isErr ? 'border-red-200/70' : 'border-green-200/70';
+        const text = isErr ? 'text-red-700' : 'text-green-700';
+        const iconColor = isErr ? 'text-red-400' : 'text-green-400';
+        const iconPath = isErr
+          ? '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>'
+          : '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>';
+
+        const el = document.createElement('div');
+        el.className = 'pointer-events-auto shadow-lg transition-opacity duration-500 rounded-md ' + bg + ' border ' + border + ' p-3 flex items-center gap-2';
+        el.innerHTML = '<svg class="h-5 w-5 ' + iconColor + ' shrink-0" viewBox="0 0 20 20" fill="currentColor">' + iconPath + '</svg><p class="text-sm ' + text + '">' + message + '</p>';
+        container.appendChild(el);
+
+        setTimeout(() => { el.style.opacity = '0'; }, 4000);
+        setTimeout(() => { el.remove(); }, 4500);
+      }
+
+      async function testSmtp() {
+        const btn = document.getElementById('testSmtpBtn');
+        const label = document.getElementById('testSmtpLabel');
+        const icon = document.getElementById('testSmtpIcon');
+        const emailInput = document.getElementById('testSmtpEmail');
+
+        // Loading state
+        btn.disabled = true;
+        label.textContent = 'Sending...';
+        icon.outerHTML = '<svg id="testSmtpIcon" class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>';
+
+        try {
+          const body = {};
+          if (emailInput.value.trim()) body.email = emailInput.value.trim();
+
+          const res = await fetch('/admin/settings/test-smtp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          const data = await res.json();
+          showFlash(data.success ? 'success' : 'error', data.message);
+        } catch (err) {
+          showFlash('error', 'Request failed: ' + err.message);
+        }
+
+        // Restore button
+        btn.disabled = false;
+        label.textContent = 'Send Test';
+        document.getElementById('testSmtpIcon').outerHTML = '<svg id="testSmtpIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>';
+      }
+      </script>
+`;
+%>

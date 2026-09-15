@@ -1,0 +1,576 @@
+<%
+pageHead = `
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+`;
+%>
+
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-4">
+  <!-- Credit Balance -->
+  <div class="card p-5">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+        <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider">Credit Balance</h4>
+        <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(userData.credit_balance) %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Keys -->
+  <div class="card p-5">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
+        <svg class="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider">API Keys</h4>
+        <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(apiKeys.length) %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Requests (30d) -->
+  <div class="card p-5">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
+        <svg class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider">Requests (30d)</h4>
+        <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(stats.total_requests) %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credits Used (30d) -->
+  <div class="card p-5">
+    <div class="flex items-center gap-4">
+      <div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
+        <svg class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 8v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wider">Credits Used (30d)</h4>
+        <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(stats.total_credits_used) %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bonus Status Card -->
+<% if (bonusInfo && bonusInfo.enabled && userData.is_verified) { %>
+<div class="card p-5 mb-4">
+  <div class="flex items-center gap-4">
+    <div class="p-3 bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 rounded-xl">
+      <svg class="h-5 w-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v13m0-13V6a4 4 0 00-4-4 4 4 0 00-4 4v2h8zm0 0V6a4 4 0 014-4 4 4 0 014 4v2h-8zm-8 0h16a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 012-2z"/></svg>
+    </div>
+    <div class="flex-1">
+      <div class="flex items-center gap-2">
+        <h4 class="text-xs font-semibold uppercase tracking-wider">Credit Bonus</h4>
+        <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">ACTIVE</span>
+      </div>
+      <div class="mt-1 flex items-baseline gap-3">
+        <div>
+          <span class="text-[10px] text-gray-500">Threshold</span>
+          <p class="text-sm font-bold">&lt; <%= bonusInfo.threshold %> credits</p>
+        </div>
+        <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+        <div>
+          <span class="text-[10px] text-gray-500">Daily</span>
+          <% if (bonusInfo.tiers.daily > 0) { %>
+            <p class="text-sm font-bold">+<%= bonusInfo.tiers.daily %></p>
+          <% } else { %>
+            <p class="text-sm font-bold text-gray-300">OFF</p>
+          <% } %>
+        </div>
+        <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+        <div>
+          <span class="text-[10px] text-gray-500">Weekly</span>
+          <% if (bonusInfo.tiers.weekly > 0) { %>
+            <p class="text-sm font-bold">+<%= bonusInfo.tiers.weekly %></p>
+          <% } else { %>
+            <p class="text-sm font-bold text-gray-300">OFF</p>
+          <% } %>
+        </div>
+        <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+        <div>
+          <span class="text-[10px] text-gray-500">Monthly</span>
+          <% if (bonusInfo.tiers.monthly > 0) { %>
+            <p class="text-sm font-bold">+<%= bonusInfo.tiers.monthly %></p>
+          <% } else { %>
+            <p class="text-sm font-bold text-gray-300">OFF</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <% if (bonusInfo.isBelowThreshold) { %>
+      <div class="text-right">
+        <span class="text-[10px] text-orange-500 font-medium">Below threshold</span>
+        <% if (bonusInfo.nextBonusAt) { %>
+          <p class="text-xs text-gray-500">Next bonus: <%= bonusInfo.nextBonusAt.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) %> <%= bonusInfo.nextBonusAt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) %></p>
+        <% } else { %>
+          <p class="text-xs text-green-500 font-medium">Bonus tersedia!</p>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>
+<% } %>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+  <!-- Request Trends -->
+  <div class="card p-5">
+    <h3 class="text-sm font-bold mb-4">Request Trends (30d)</h3>
+    <div class="h-[220px]">
+      <canvas id="requestChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Method Breakdown -->
+  <div class="card p-5">
+    <h3 class="text-sm font-bold mb-4">Method Breakdown</h3>
+    <div class="h-[220px]">
+      <canvas id="methodChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Status Distribution -->
+  <div class="card p-5">
+    <h3 class="text-sm font-bold mb-4">Status Distribution</h3>
+    <div class="h-[220px]">
+      <canvas id="statusChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Middle Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+  <!-- Top APIs -->
+  <div class="card">
+    <h3 class="text-sm font-bold p-5">Top APIs</h3>
+    <div class="max-h-[280px] min-h-[280px] overflow-x-auto overflow-y-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+            <th class="px-4 py-2 text-left">API</th>
+            <th class="px-4 py-2 text-right">Requests</th>
+            <th class="px-4 py-2 text-right">Avg Time</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
+          <% if (topApis && topApis.length > 0) { %>
+            <% topApis.forEach(function(api) { %>
+              <tr>
+                <td class="px-4 py-2">
+                  <h6 class="text-sm font-medium"><%= api.name || '-' %></h6>
+                  <% if (api.slug) { %><div class="text-[10px] font-mono">/<%= api.slug %></div><% } %>
+                </td>
+                <td class="px-4 py-2 text-sm font-medium text-right"><%= helpers.formatNumber(api.count) %></td>
+                <td class="px-4 py-2 text-xs text-right
+                  <%= api.avg_time > 1000 ? 'text-rose-500 font-medium' :
+                      api.avg_time > 500 ? 'text-amber-500 font-medium' :
+                      'text-emerald-500 font-medium' %>"><%= Math.round(api.avg_time) %>ms</td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr><td colspan="3" class="px-6 py-8 text-sm text-center">No data found.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Top Routes -->
+  <div class="card">
+    <h3 class="text-sm font-bold p-5">Top Routes</h3>
+    <div class="max-h-[280px] min-h-[280px] overflow-x-auto overflow-y-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+            <th class="px-4 py-2 text-left">Route</th>
+            <th class="px-4 py-2 text-center">Method</th>
+            <th class="px-4 py-2 text-right">Requests</th>
+            <th class="px-4 py-2 text-right">Avg Time</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
+          <% if (topRoutes && topRoutes.length > 0) { %>
+            <% topRoutes.forEach(function(route) { %>
+              <tr>
+                <td class="px-4 py-2 text-xs font-mono max-w-[200px] truncate">
+					/<%= route.slug || '-' %><%= route.path || '-' %>
+				</td>
+                <td class="px-4 py-2 text-center">
+                  <span class="text-[10px] font-bold uppercase
+                    <%= route.method === 'GET' ? 'text-emerald-500' :
+                        route.method === 'POST' ? 'text-blue-500' :
+                        route.method === 'PUT' ? 'text-yellow-500' :
+                        route.method === 'DELETE' ? 'text-rose-500' :
+                        route.method === 'PATCH' ? 'text-purple-500' :
+                        '' %>"><%= route.method %></span>
+                </td>
+                <td class="px-4 py-2 text-sm font-medium text-right"><%= helpers.formatNumber(route.count) %></td>
+                <td class="px-4 py-2 text-xs text-right
+                  <%= route.avg_time > 1000 ? 'text-rose-500 font-medium' :
+                      route.avg_time > 500 ? 'text-amber-500 font-medium' :
+                      'text-emerald-500 font-medium' %>"><%= Math.round(route.avg_time) %>ms</td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr><td colspan="4" class="px-6 py-8 text-sm text-center">No data found.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+  <!-- Recent Activity -->
+  <div class="card">
+    <div class="flex items-center justify-between p-5">
+      <h3 class="text-sm font-bold">Recent Activity</h3>
+      <a href="/user/logs" class="link text-xs">View All</a>
+    </div>
+    <div class="max-h-[280px] min-h-[280px] overflow-x-auto overflow-y-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+            <th class="px-4 py-2 text-left">API</th>
+            <th class="px-4 py-2 text-center">Method</th>
+            <th class="px-4 py-2 text-center">Status</th>
+            <th class="px-4 py-2 text-right">Time</th>
+            <th class="px-4 py-2 text-right">Duration</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
+          <% if (recentLogs && recentLogs.length > 0) { %>
+            <% recentLogs.forEach(function(log) { %>
+              <tr>
+                <td class="px-4 py-2">
+                  <h6 class="text-sm"><%= log.api_name || '-' %></h6>
+                  <% if (log.api_slug) { %><div class="text-[10px] font-mono">/<%= log.api_slug %></div><% } %>
+                </td>
+                <td class="px-4 py-2 text-center">
+                  <span class="text-[10px] font-bold uppercase
+                    <%= log.method === 'GET' ? 'text-emerald-500' :
+                        log.method === 'POST' ? 'text-blue-500' :
+                        log.method === 'PUT' ? 'text-yellow-500' :
+                        log.method === 'DELETE' ? 'text-rose-500' :
+                        log.method === 'PATCH' ? 'text-purple-500' :
+                        '' %>"><%= log.method %></span>
+                </td>
+                <td class="px-4 py-2 text-center">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium <%= helpers.statusBadgeClass(
+                    log.response_status >= 200 && log.response_status < 300 ? 'success' :
+                    log.response_status >= 400 ? 'error' : 'pending'
+                  ) %>">
+                    <%= log.response_status %>
+                  </span>
+                </td>
+                <td class="px-4 py-2 text-xs text-right whitespace-nowrap"><%= helpers.formatDate(log.created_at, 'datetime') %></td>
+                <td class="px-4 py-2 text-xs text-right
+                  <%= log.response_time_ms > 1000 ? 'text-rose-500 font-medium' :
+                      log.response_time_ms > 500 ? 'text-amber-500 font-medium' :
+                      'text-emerald-500 font-medium' %>"><%= log.response_time_ms || '-' %>ms</td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr><td colspan="5" class="px-6 py-8 text-sm text-center">No data found.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="card">
+    <div class="flex items-center justify-between p-5">
+      <h3 class="text-sm font-bold">Recent Transactions</h3>
+      <a href="/user/credits" class="link text-xs">View All</a>
+    </div>
+    <div class="max-h-[280px] min-h-[280px] overflow-x-auto overflow-y-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+            <th class="px-4 py-2 text-center">Type</th>
+            <th class="px-4 py-2 text-right">Amount</th>
+            <th class="px-4 py-2 text-right">Balance</th>
+            <th class="px-4 py-2 text-left">Description</th>
+            <th class="px-4 py-2 text-right">Time</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
+          <% if (recentTransactions && recentTransactions.length > 0) { %>
+            <% recentTransactions.forEach(function(tx) { %>
+              <tr>
+                <td class="px-4 py-2 text-center">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium <%= helpers.statusBadgeClass(tx.type) %>">
+                    <%= tx.type.charAt(0).toUpperCase() + tx.type.slice(1) %>
+                  </span>
+                </td>
+                <td class="px-4 py-2 text-sm font-medium text-right <%= tx.amount > 0 ? 'text-emerald-500' : 'text-rose-500' %>">
+                  <%= tx.amount > 0 ? '+' : '' %><%= helpers.formatNumber(tx.amount) %>
+                </td>
+                <td class="px-4 py-2 text-sm text-right"><%= helpers.formatNumber(tx.balance_after) %></td>
+                <td class="px-4 py-2 text-xs max-w-[150px] truncate"><%= tx.description %></td>
+                <td class="px-4 py-2 text-xs text-right whitespace-nowrap"><%= helpers.formatDate(tx.created_at, 'datetime') %></td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr><td colspan="5" class="px-6 py-8 text-sm text-center">No data found.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<%
+pageScript = `
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      function formatNumber(num) {
+        if (num === null || num === undefined) return '0';
+        const n = Number(num);
+        if (isNaN(n)) return '0';
+        if (n >= 1000000) {
+          const formatted = (n / 1000000).toFixed(1);
+          return (formatted.endsWith('.0') ? parseInt(formatted) : formatted) + 'M';
+        }
+        if (n >= 1000) {
+          const formatted = (n / 1000).toFixed(1);
+          return (formatted.endsWith('.0') ? parseInt(formatted) : formatted) + 'k';
+        }
+        return new Intl.NumberFormat('id-ID').format(n);
+      }
+
+      function showNoData(canvas) {
+        if (!canvas) return;
+        canvas.style.display = 'none';
+        canvas.parentElement.innerHTML = '<div class="h-full flex items-center justify-center text-sm">No data found.</div>';
+      }
+
+      const canvas = document.getElementById('requestChart');
+      if (canvas) {
+        const rawData = ${JSON.stringify(daily || [])};
+        const hasData = rawData.some(function (item) {
+          return Number(item.requests) > 0;
+        });
+
+        if (!hasData) {
+          showNoData(canvas);
+        } else {
+          const days = [];
+          for (let i = 29; i >= 0; i--) {
+            const date = new Date();
+            date.setHours(0, 0, 0, 0);
+            date.setDate(date.getDate() - i);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            days.push(year + '-' + month + '-' + day);
+          }
+
+          const dataMap = {};
+          rawData.forEach(function (item) {
+            dataMap[item.date] = Number(item.requests) || 0;
+          });
+
+          const labels = days.map(function (date) {
+            const parts = date.split('-');
+            return parts[2] + ' ' + new Date(
+              Number(parts[0]),
+              Number(parts[1]) - 1,
+              Number(parts[2])
+            ).toLocaleDateString('en-EN', { month: 'short' });
+          });
+
+          const values = days.map(function (date) {
+            return dataMap[date] || 0;
+          });
+
+          const ctx = canvas.getContext('2d');
+          const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+          gradient.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
+          gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+          new Chart(canvas, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Requests',
+                data: values,
+                borderColor: '#3b82f6',
+                backgroundColor: gradient,
+                borderWidth: 2.5,
+                tension: 0.35,
+                fill: true,
+                pointRadius: 0,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: '#3b82f6',
+                pointHoverBorderColor: '#ffffff',
+                pointHoverBorderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              interaction: { mode: 'index', intersect: false },
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  backgroundColor: '#0f172a',
+                  titleFont: { size: 12, family: 'Inter' },
+                  bodyFont: { size: 12, family: 'Inter' },
+                  displayColors: false,
+                  padding: 10,
+                  cornerRadius: 8,
+                  callbacks: {
+                    label: function (context) {
+                      return '  ' + formatNumber(context.raw) + ' requests';
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  border: { display: false },
+                  ticks: {
+                    maxTicksLimit: 8,
+                    color: '#94a3b8',
+                    font: { size: 10, family: 'Inter' }
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                  border: { display: false },
+                  grid: { color: '#f1f5f9', drawTicks: false },
+                  ticks: {
+                    color: '#94a3b8',
+                    precision: 0,
+                    padding: 8,
+                    font: { size: 10, family: 'Inter' },
+                    callback: function (value) {
+                      return formatNumber(value);
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      const methodCanvas = document.getElementById('methodChart');
+      if (methodCanvas) {
+        const methodData = ${JSON.stringify(methodStats || { labels: [], counts: [] })};
+        const hasData = Array.isArray(methodData.labels) &&
+          Array.isArray(methodData.counts) &&
+          methodData.labels.length > 0 &&
+          methodData.counts.some(function (count) {
+            return Number(count) > 0;
+          });
+
+        if (!hasData) {
+          showNoData(methodCanvas);
+        } else {
+          const methodColors = methodData.labels.map(function (m) {
+            return m === 'GET' ? '#22c55e' :
+              m === 'POST' ? '#3b82f6' :
+              m === 'PUT' ? '#eab308' :
+              m === 'DELETE' ? '#ef4444' :
+              m === 'PATCH' ? '#a855f7' : '#94a3b8';
+          });
+
+          new Chart(methodCanvas, {
+            type: 'doughnut',
+            data: {
+              labels: methodData.labels,
+              datasets: [{
+                data: methodData.counts,
+                backgroundColor: methodColors,
+                borderWidth: 2,
+                borderColor: '#ffffff'
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  backgroundColor: '#0f172a',
+                  padding: 10,
+                  cornerRadius: 8,
+                  callbacks: {
+                    label: function (context) {
+                      return ' ' + context.label + ': ' + formatNumber(context.raw) + ' requests';
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+
+      const statusCanvas = document.getElementById('statusChart');
+      if (statusCanvas) {
+        const statusData = ${JSON.stringify(statusStats || { labels: [], counts: [] })};
+        const hasData = Array.isArray(statusData.labels) &&
+          Array.isArray(statusData.counts) &&
+          statusData.labels.length > 0 &&
+          statusData.counts.some(function (count) {
+            return Number(count) > 0;
+          });
+
+        if (!hasData) {
+          showNoData(statusCanvas);
+        } else {
+          const statusColors = statusData.labels.map(function (s) {
+            const code = Number(s);
+            if (code >= 200 && code < 300) return '#22c55e';
+            if (code >= 300 && code < 400) return '#3b82f6';
+            if (code >= 400 && code < 500) return '#eab308';
+            if (code >= 500) return '#ef4444';
+            return '#94a3b8';
+          });
+
+          new Chart(statusCanvas, {
+            type: 'doughnut',
+            data: {
+              labels: statusData.labels,
+              datasets: [{
+                data: statusData.counts,
+                backgroundColor: statusColors,
+                borderWidth: 2,
+                borderColor: '#ffffff'
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  backgroundColor: '#0f172a',
+                  padding: 10,
+                  cornerRadius: 8,
+                  callbacks: {
+                    label: function (context) {
+                      return ' Status ' + context.label + ': ' + formatNumber(context.raw) + ' requests';
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+    });
+  </script>
+`;
+%>

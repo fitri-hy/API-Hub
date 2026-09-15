@@ -1,0 +1,220 @@
+<!-- Packages Table -->
+<div class="card">
+  <div class="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+	<div>
+	  <h3 class="text-sm font-bold">List Packages</h3>
+  	  <p class="mt-0.5 text-xs font-medium">Available subscription plans.</p>
+	</div>
+    <button type="button" onclick="toggleModal('createPackageModal')" class="flex items-center gap-1 text-sm px-4 py-2 rounded-md btn-normal">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			<path d="M0 0h24v24H0z" fill="none" />
+			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h6m0 0h6m-6 0v6m0-6V6" />
+		</svg>
+	  Create Package
+    </button>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+          <th class="px-4 py-2 text-left">Package</th>
+          <th class="px-4 py-2 text-right">Price</th>
+          <th class="px-4 py-2 text-right">Credits</th>
+          <th class="px-4 py-2 text-center">Limit</th>
+          <th class="px-4 py-2 text-center">Sort</th>
+          <th class="px-4 py-2 text-center">Status</th>
+          <th class="px-4 py-2 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
+        <% packages.forEach(function(pkg) { %>
+          <tr>
+            <td class="px-4 py-2">
+              <div>
+                <h6 class="text-sm font-medium"><%= pkg.name %></h6>
+                <p class="text-xs font-mono">/<%= pkg.slug %></p>
+              </div>
+            </td>
+            <td class="px-4 py-2 text-sm font-medium text-right"><%= helpers.formatCurrency(pkg.price) %><span class="text-xs text-gray-500 font-normal"></span></td>
+            <td class="px-4 py-2 text-sm font-medium text-right font-mono"><%= helpers.formatNumber(pkg.credits_included) %></td>
+            <td class="px-4 py-2 text-xs text-center font-mono"><%= pkg.rate_limit_per_minute %> req/min</td>
+            <td class="px-4 py-2 text-xs text-center font-mono"><%= pkg.sort_order %></td>
+            <td class="px-4 py-2 text-center">
+				<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium <%= helpers.statusBadgeClass(pkg.is_active ? 'active' : 'inactive') %>">
+					<%= pkg.is_active ? 'Active' : 'Inactive' %>
+				</span>
+            </td>
+            <td class="px-4 py-2 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <button type="button" onclick="editPackage('<%= pkg.id %>')" class="link-amber text-sm">Edit</button>
+                <form method="POST" action="/admin/packages/<%= pkg.id %>/delete" onsubmit="return confirm('Delete this package?')" class="inline">
+                  <button type="submit" class="link-rose text-sm">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+        <% if (packages.length === 0) { %>
+          <tr><td colspan="7" class="px-6 py-12 text-sm text-gray-400 text-center">Tidak ada package ditemukan</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Create Package Modal -->
+<div id="createPackageModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 card-modal">
+    <div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+      <h3 class="text-sm font-semibold">Create Package</h3>
+      <button type="button" onclick="toggleModal('createPackageModal')" class="rounded-full p-1.5 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-rose-500">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form method="POST" action="/admin/packages" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Name *</label>
+          <input type="text" name="name" placeholder="Basic" required class="w-full bg-form px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Slug</label>
+          <input type="text" name="slug" placeholder="auto-generated" class="w-full bg-form px-4 py-2">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Description</label>
+        <textarea name="description" rows="2" placeholder="Suitable for beginners" class="w-full bg-form px-4 py-2"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Price (IDR)</label>
+          <input type="number" name="price" value="0" min="0" class="w-full bg-form px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Credits</label>
+          <input type="number" name="credits_included" value="0" min="0" class="w-full bg-form px-4 py-2">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Rate Limit/min</label>
+          <input type="number" name="rate_limit_per_minute" value="100" min="1" class="w-full bg-form px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Sort Order</label>
+          <input type="number" name="sort_order" value="0" min="0" class="w-full bg-form px-4 py-2">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Features (JSON array)</label>
+        <textarea name="features" rows="3" placeholder='["Priority Support", "Custom Domain", "Analytics"]' class="w-full bg-form px-4 py-2 font-mono"></textarea>
+      </div>
+	  <div class="flex items-center justify-end">
+		  <button type="submit" class="flex items-center gap-1 btn-normal px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<g fill="none" stroke="currentColor" stroke-width="1.5">
+					<path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z"></path>
+					<path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22"></path>
+					<path stroke-linecap="round" d="M7 8H13"></path>
+				</g>
+			</svg>Create Package
+		  </button>
+	  </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Package Modal -->
+<div id="editPackageModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 card-modal">
+    <div class="flex items-center justify-between border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+      <h3 class="text-sm font-semibold">Edit Package</h3>
+      <button type="button" onclick="toggleModal('editPackageModal')" class="rounded-full p-1.5 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-rose-500">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="editPackageForm" method="POST" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Name</label>
+        <input type="text" name="name" id="ep_name" required class="w-full bg-form px-4 py-2">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Description</label>
+        <textarea name="description" id="ep_desc" rows="2" class="w-full bg-form px-4 py-2"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Price (IDR)</label>
+          <input type="number" name="price" id="ep_price" min="0" class="w-full bg-form px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Credits</label>
+          <input type="number" name="credits_included" id="ep_credits" min="0" class="w-full bg-form px-4 py-2">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Rate Limit/min</label>
+          <input type="number" name="rate_limit_per_minute" id="ep_rate" min="1" class="w-full bg-form px-4 py-2">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Sort Order</label>
+          <input type="number" name="sort_order" id="ep_sort" min="0" class="w-full bg-form px-4 py-2">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5">Features (JSON array)</label>
+        <textarea name="features" id="ep_features" rows="3" class="w-full bg-form px-4 py-2 font-mono"></textarea>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" name="is_active" id="ep_active" class="h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+        <label for="ep_active" class="text-sm">Active</label>
+      </div>
+	  <div class="flex items-center justify-end">
+		  <button type="submit" class="flex items-center gap-1 btn-normal px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<g fill="none" stroke="currentColor" stroke-width="1.5">
+					<path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z"></path>
+					<path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22"></path>
+					<path stroke-linecap="round" d="M7 8H13"></path>
+				</g>
+			</svg>
+			Update Package
+		  </button>
+		</div>
+    </form>
+  </div>
+</div>
+
+<% 
+pageScript = `
+<script>
+  const packagesData = ` + JSON.stringify(packages) + `;
+
+  function toggleModal(id) { 
+    document.getElementById(id).classList.toggle('hidden'); 
+  }
+
+  function editPackage(pkgId) {
+    const pkg = packagesData.find(p => p.id == pkgId);
+    if (!pkg) return;
+    
+    document.getElementById('editPackageForm').action = '/admin/packages/' + pkg.id;
+    document.getElementById('ep_name').value = pkg.name || '';
+    document.getElementById('ep_desc').value = pkg.description || '';
+    document.getElementById('ep_price').value = pkg.price || 0;
+    document.getElementById('ep_credits').value = pkg.credits_included || 0;
+    document.getElementById('ep_rate').value = pkg.rate_limit_per_minute || 100;
+    document.getElementById('ep_sort').value = pkg.sort_order || 0;
+    document.getElementById('ep_features').value = pkg.features || '';
+    document.getElementById('ep_active').checked = Boolean(pkg.is_active);
+    
+    toggleModal('editPackageModal');
+  }
+</script>
+`;
+%>

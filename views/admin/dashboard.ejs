@@ -1,0 +1,933 @@
+<%
+pageHead = `
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+`;
+%>
+
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-4">
+	<!-- Total Users -->
+	<div class="card flex flex-col justify-between p-5">
+		<div class="flex items-start justify-between">
+			<div>
+				<h6 class="whitespace-nowrap text-xs font-semibold uppercase racking-wider">Total Users</h6>
+				<h2 class="mt-2 text-2xl font-bold tracking-tight"><%= helpers.formatNumber(stats.users) %></h2>
+			</div>
+			<div class="flex h-10 w-10 items-center justify-center rounded-md bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-200">
+				<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+				</svg>
+			</div>
+		</div>
+		<div class="mt-2 flex flex-col text-xs">
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" d="M12 17V11" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 8H12.0001" />
+					</g>
+				</svg>
+				<%= stats.activeApis %> Active APIs
+			</div>
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" d="M12 17V11" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 8H12.0001" />
+					</g>
+				</svg>
+				<%= stats.activeKeys %> Active Keys
+			</div>
+		</div>
+	</div>
+
+	<!-- Total Requests -->
+	<div class="card flex flex-col justify-between p-5">
+		<div class="flex items-start justify-between">
+			<div>
+				<h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Total Requests</h6>
+				<h2 class="mt-2 text-2xl font-bold tracking-tight"><%= helpers.formatNumber(stats.totalRequests) %></h2>
+			</div>
+			<div class="flex h-10 w-10 items-center justify-center rounded-md bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-200">
+				<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+				</svg>
+			</div>
+		</div>
+		<div class="mt-2 flex flex-col text-xs">
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" d="M12 17V11" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 8H12.0001" />
+					</g>
+				</svg>
+				Last 30 days
+			</div>
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" d="M12 17V11" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 8H12.0001" />
+					</g>
+				</svg>
+				<%= stats.todayRequests %> Today
+			</div>
+		</div>
+	</div>
+
+	<!-- Success Rate -->
+	<div class="card flex flex-col justify-between p-5">
+		<div class="flex items-start justify-between">
+			<div>
+				<h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Success Rate</h6>
+				<h2 class="mt-2 text-2xl font-bold tracking-tight"><%= stats.successRate %>%</h2>
+			</div>
+			<div class="flex h-10 w-10 items-center justify-center rounded-md bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-200">
+				<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+				</svg>
+			</div>
+		</div>
+		<div class="mt-2 flex flex-col text-xs">
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" d="M12 17V11" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 8H12.0001" />
+					</g>
+				</svg>
+				Avg <%= stats.avgResponseTime %>ms
+			</div>
+			<div class="flex items-center gap-4">
+				<div class="flex items-center gap-1 text-emerald-500">
+					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none" />
+						<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M22 7L14.6203 14.3347C13.6227 15.3263 13.1238 15.822 12.5051 15.822C11.8864 15.8219 11.3876 15.326 10.3902 14.3342L10.1509 14.0962C9.15254 13.1035 8.65338 12.6071 8.03422 12.6074C7.41506 12.6076 6.91626 13.1043 5.91867 14.0977L2 18M16.4179 7H22V12.5458" />
+					</svg>
+					<%= stats.minResponseTime %>ms
+				</div>
+				<div class="flex items-center gap-1 text-rose-500">
+					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+						<path d="M0 0h24v24H0z" fill="none" />
+						<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M22 18L14.6203 10.6653C13.6227 9.67375 13.1238 9.17795 12.5051 9.17802C11.8864 9.17809 11.3876 9.674 10.3902 10.6658L10.1509 10.9038C9.15254 11.8965 8.65338 12.3929 8.03422 12.3926C7.41506 12.3924 6.91626 11.8957 5.91867 10.9023L2 7M16.4179 18H22V12.4542" />
+					</svg>
+					<%= stats.maxResponseTime %>ms
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Credits -->
+	<div class="card flex flex-col justify-between p-5">
+		<div class="flex items-start justify-between">
+			<div>
+				<h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Credits</h6>
+				<h2 class="mt-2 text-2xl font-bold tracking-tight"><%= helpers.formatNumber(stats.totalBalance) %></h2>
+			</div>
+			<div class="flex h-10 w-10 items-center justify-center rounded-md bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-200">
+				<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+				</svg>
+			</div>
+		</div>
+		<div class="mt-2 flex flex-col text-xs">
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" d="M12 17V11" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 8H12.0001" />
+					</g>
+				</svg>
+				Total Balance
+			</div>
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" d="M12 17V11" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 8H12.0001" />
+					</g>
+				</svg>
+				<%= stats.totalCreditAccounts %> accounts
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+	<!-- Requests Results -->
+	<div class="card flex flex-col justify-between p-5">
+		<div class="mb-2 flex items-center justify-between">
+			<h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Requests Results</h6>
+			<div class="flex h-10 w-10 items-center justify-center rounded-md bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-200">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<path d="M22 12C22 13.3132 21.7413 14.6136 21.2388 15.8268C20.7362 17.0401 19.9997 18.1425 19.0711 19.0711C18.1425 19.9997 17.0401 20.7362 15.8268 21.2388C14.6136 21.7413 13.3132 22 12 22C10.6868 22 9.38642 21.7413 8.17317 21.2388C6.95991 20.7362 5.85752 19.9997 4.92893 19.0711C4.00035 18.1425 3.26375 17.0401 2.7612 15.8268C2.25866 14.6136 2 13.3132 2 12C2 10.6868 2.25866 9.38642 2.76121 8.17316C3.26375 6.95991 4.00035 5.85752 4.92893 4.92893C5.85752 4.00035 6.95991 3.26375 8.17317 2.7612C9.38642 2.25866 10.6868 2 12 2C13.3132 2 14.6136 2.25866 15.8268 2.76121C17.0401 3.26375 18.1425 4.00035 19.0711 4.92893C19.9997 5.85752 20.7362 6.95991 21.2388 8.17317C21.7413 9.38642 22 10.6868 22 12L22 12Z" />
+						<path d="M16 12C16 13.3132 15.8965 14.6136 15.6955 15.8268C15.4945 17.0401 15.1999 18.1425 14.8284 19.0711C14.457 19.9997 14.016 20.7362 13.5307 21.2388C13.0454 21.7413 12.5253 22 12 22C11.4747 22 10.9546 21.7413 10.4693 21.2388C9.98396 20.7362 9.54301 19.9997 9.17157 19.0711C8.80014 18.1425 8.5055 17.0401 8.30448 15.8268C8.10346 14.6136 8 13.3132 8 12C8 10.6868 8.10346 9.38642 8.30448 8.17316C8.5055 6.95991 8.80014 5.85752 9.17157 4.92893C9.54301 4.00035 9.98396 3.26375 10.4693 2.7612C10.9546 2.25866 11.4747 2 12 2C12.5253 2 13.0454 2.25866 13.5307 2.76121C14.016 3.26375 14.457 4.00035 14.8284 4.92893C15.1999 5.85752 15.4945 6.95991 15.6955 8.17317C15.8965 9.38642 16 10.6868 16 12L16 12Z" />
+						<path stroke-linecap="round" d="M2 12H22" />
+					</g>
+				</svg>
+			</div>
+		</div>
+		<div class="flex items-end gap-2">
+			<h2 class="text-2xl font-bold tracking-tight"><%= helpers.formatNumber(stats.todayRequests) %></h2>
+		</div>
+		<div class="mt-2 text-xs text-gray-500 flex items-center gap-4">
+			<div class="flex items-center gap-2 text-emerald-500">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M8.5 12.5L10.5 14.5L15.5 9.5" />
+					</g>
+				</svg>
+				<%= stats.todaySuccess %> success
+			</div>
+			<div class="flex items-center gap-2 text-rose-500">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-width="1.5">
+						<circle cx="12" cy="12" r="10" />
+						<path stroke-linecap="round" d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" />
+					</g>
+				</svg>
+				<%= stats.todayFailed %> failed
+			</div>
+		</div>
+	</div>
+  
+	<!-- Active APIs -->
+	<div class="card flex flex-col justify-between p-5">
+		<div class="mb-2 flex items-center justify-between">
+			<h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Active APIs</h6>
+			<div class="flex h-10 w-10 items-center justify-center rounded-md bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-200">
+				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+				</svg>
+			</div>
+		</div>
+		<div class="flex items-end gap-1">
+			<h2 class="text-2xl font-bold tracking-tight"><%= stats.activeApis %></h2>
+			<span class="mb-0.5 text-xs">/ <%= stats.totalApis %> total</span>
+		</div>
+		<div class="mt-2 text-xs flex items-center gap-4">
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5">
+						<path d="M15.5777 3.38197L17.5777 4.43152C19.7294 5.56066 20.8052 6.12523 21.4026 7.13974C22 8.15425 22 9.41667 22 11.9415V12.0585C22 14.5833 22 15.8458 21.4026 16.8603C20.8052 17.8748 19.7294 18.4393 17.5777 19.5685L15.5777 20.618C13.8221 21.5393 12.9443 22 12 22C11.0557 22 10.1779 21.5393 8.42229 20.618L6.42229 19.5685C4.27063 18.4393 3.19479 17.8748 2.5974 16.8603C2 15.8458 2 14.5833 2 12.0585V11.9415C2 9.41667 2 8.15425 2.5974 7.13974C3.19479 6.12523 4.27063 5.56066 6.42229 4.43152L8.42229 3.38197C10.1779 2.46066 11.0557 2 12 2C12.9443 2 13.8221 2.46066 15.5777 3.38197Z" />
+						<path d="M21 7.5L12 12M12 12L3 7.5M12 12V21.5" />
+					</g>
+				</svg>
+				<%= stats.activePackages %> packages
+			</div>
+			<div class="flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M8.85996 19.3261L7.61956 20.5665C7.30164 20.8844 6.85645 21.0406 6.4096 20.9909L4.32101 20.7589C4.09834 20.7341 3.89072 20.6343 3.73229 20.4759L3.52408 20.2677C3.36566 20.1093 3.26587 19.9017 3.24113 19.679L3.00906 17.5904C2.95941 17.1435 3.11558 16.6984 3.43349 16.3804L7.14558 12.6684C7.41492 12.399 7.49906 12 7.40432 11.6311C6.8169 9.34366 7.41866 6.81385 9.20961 5.02291C11.9068 2.3257 16.2799 2.3257 18.9771 5.02291C21.6743 7.72013 21.6743 12.0932 18.9771 14.7904C17.1861 16.5813 14.6563 17.1831 12.3689 16.5957C12 16.5009 11.6013 16.5848 11.3319 16.8541L8.85996 19.3261ZM8.85996 19.3261L7.11091 17.5962M12.5858 8.58579C13.3668 7.80474 14.6332 7.80474 15.4142 8.58579C16.1953 9.36683 16.1953 10.6332 15.4142 11.4142C14.6332 12.1953 13.3668 12.1953 12.5858 11.4142C11.8047 10.6332 11.8047 9.36683 12.5858 8.58579Z" />
+				</svg>
+				<%= stats.activeKeys %> keys
+			</div>
+		</div>
+	</div>
+
+	<!-- Avg Response Time -->
+	<div class="card flex flex-col justify-between p-5">
+		<div class="mb-2 flex items-center justify-between">
+			<h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Avg Response Time</h6>
+			<div class="flex h-10 w-10 items-center justify-center rounded-md bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-200">
+				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3"/>
+					<circle cx="12" cy="12" r="9"/>
+				</svg>
+			</div>
+		</div>
+		<div class="flex items-end gap-2">
+			<h2 class="text-2xl font-bold tracking-tight"><%= stats.avgResponseTime %></h2>
+			<span class="mb-0.5 text-xs">ms</span>
+		</div>
+		<div class="text-xs flex items-center gap-4">
+			<div class="flex items-center gap-1 text-emerald-500">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M22 7L14.6203 14.3347C13.6227 15.3263 13.1238 15.822 12.5051 15.822C11.8864 15.8219 11.3876 15.326 10.3902 14.3342L10.1509 14.0962C9.15254 13.1035 8.65338 12.6071 8.03422 12.6074C7.41506 12.6076 6.91626 13.1043 5.91867 14.0977L2 18M16.4179 7H22V12.5458" />
+				</svg>
+				<%= stats.minResponseTime %>ms
+			</div>
+			<div class="flex items-center gap-1 text-rose-500">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none" />
+					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M22 18L14.6203 10.6653C13.6227 9.67375 13.1238 9.17795 12.5051 9.17802C11.8864 9.17809 11.3876 9.674 10.3902 10.6658L10.1509 10.9038C9.15254 11.8965 8.65338 12.3929 8.03422 12.3926C7.41506 12.3924 6.91626 11.8957 5.91867 10.9023L2 7M16.4179 18H22V12.4542" />
+				</svg>
+				<%= stats.maxResponseTime %>ms
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+	<!-- Request Trends Chart -->
+	<div class="card p-5 flex min-h-[380px] flex-col lg:col-span-2">
+		<div class="mb-5 flex shrink-0 items-start justify-between">
+			<div>
+				<h3 class="text-sm font-semibold">Request Trends (30d)</h3>
+				<p class="mt-0.5 text-xs">Request volume per day</p>
+			</div>
+			<div class="text-right">
+				<h4 class="text-lg font-bold tracking-tight"><%= helpers.formatNumber(stats.totalRequests) %></h4>
+				<p class="text-[10px] font-semibold uppercase tracking-wider">Total Volume</p>
+			</div>
+		</div>
+		<div class="relative min-h-0 flex-1">
+			<canvas id="requestTrendChart"></canvas>
+		</div>
+	</div>
+
+	<!-- Method Breakdown -->
+	<div class="card flex flex-col p-5">
+		<div class="mb-4">
+			<h3 class="text-sm font-semibold tracking-tight">Method Breakdown</h3>
+			<p class="mt-1 text-xs">Distribusi HTTP method</p>
+		</div>
+
+		<% if (methodStats.length > 0) { %>
+			<div class="flex items-center justify-center" style="height: 190px">
+				<canvas id="methodChart"></canvas>
+			</div>
+
+			<div class="mt-4">
+				<% methodStats.forEach(function(m) { %>
+					<% var methodClass =
+						m.method === 'GET' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400' :
+						m.method === 'POST' ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400' :
+						m.method === 'PUT' ? 'bg-yellow-50 text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-400' :
+						m.method === 'DELETE' ? 'bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400' :
+						'bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+					%>
+
+					<div class="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 dark:bg-gray-900/60">
+						<span class="inline-flex rounded-md px-2 py-1 text-[10px] font-bold <%= methodClass %>">
+							<%= m.method %>
+						</span>
+						<span class="text-xs font-semibold">
+							<%= helpers.formatNumber(m.count) %>
+						</span>
+					</div>
+				<% }); %>
+			</div>
+		<% } else { %>
+			<div class="flex min-h-[250px] flex-col items-center justify-center text-center">
+				<p class="text-xs font-medium">No data available</p>
+				<p class="mt-1 text-[11px]">The data will appear here.</p>
+			</div>
+		<% } %>
+	</div>
+</div>
+
+<div class="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+	<!-- Status Code Distribution -->
+	<div class="card p-5">
+		<div class="mb-4 flex items-center justify-between">
+			<div>
+				<h3 class="text-sm font-semibold tracking-tight">Status Code Distribution</h3>
+				<p class="mt-1 text-xs">Request distribution by response status</p>
+			</div>
+		</div>
+		<% if (statusStats.length > 0) { %>
+			<div class="space-y-4">
+				<% var maxCount = statusStats[0].count; %>
+				<% statusStats.forEach(function(s) { %>
+					<% var pct = (s.count / maxCount * 100); %>
+					<% var statusClass =
+						s.response_status >= 200 && s.response_status < 300
+							? 'bg-emerald-500 text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 dark:text-emerald-400'
+							: s.response_status >= 400 && s.response_status < 500
+							? 'bg-yellow-500 text-yellow-600 bg-yellow-50 dark:bg-yellow-500/10 dark:text-yellow-400'
+							: s.response_status >= 500
+							? 'bg-rose-500 text-rose-600 bg-rose-50 dark:bg-rose-500/10 dark:text-rose-400'
+							: 'bg-gray-500 text-gray-600 bg-gray-50 dark:bg-gray-800 dark:text-gray-400';
+					%>
+					<div class="group">
+						<div class="mb-2 flex items-center justify-between gap-3">
+							<div class="flex items-center gap-2">
+								<span class="inline-flex min-w-12 items-center justify-center rounded-md px-2 py-1 text-[10px] font-bold <%= statusClass.split(' ').slice(1).join(' ') %>">
+									<%= s.response_status %>
+								</span>
+								<span class="text-xs text-gray-500 dark:text-gray-400">
+									<%= s.response_status >= 200 && s.response_status < 300 ? 'Success' :
+										s.response_status >= 400 && s.response_status < 500 ? 'Client Error' :
+										s.response_status >= 500 ? 'Server Error' : 'Other' %>
+								</span>
+							</div>
+							<span class="text-xs font-semibold">
+								<%= helpers.formatNumber(s.count) %>
+							</span>
+						</div>
+						<div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
+							<div
+								class="h-full rounded-full <%= statusClass.split(' ')[0] %>"
+								style="width: <%= pct %>%"
+							></div>
+						</div>
+					</div>
+				<% }); %>
+			</div>
+		<% } else { %>
+			<div class="flex min-h-40 flex-col items-center justify-center text-center">
+				<p class="text-xs font-medium">No data available</p>
+				<p class="mt-1 text-[11px]">The data will appear here.</p>
+			</div>
+		<% } %>
+	</div>
+
+	<!-- Credit Transactions -->
+	<div class="card p-5">
+		<div class="mb-4">
+			<h3 class="text-sm font-semibold tracking-tight">Credit Transactions</h3>
+			<p class="mt-1 text-xs">Credit activity over the last 30 days</p>
+		</div>
+		<% if (creditTxStats.length > 0) { %>
+			<div class="space-y-2">
+				<% var maxTotal = Math.max(...creditTxStats.map(t => Math.abs(Number(t.total)))); %>
+				<% creditTxStats.forEach(function(tx) { %>
+					<% var pct = maxTotal > 0 ? (Math.abs(Number(tx.total)) / maxTotal * 100) : 0; %>
+					<% var typeClass =
+						tx.type === 'add' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400' :
+						tx.type === 'deduct' ? 'bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400' :
+						tx.type === 'purchase' ? 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400' :
+						tx.type === 'bonus' ? 'bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400' :
+						tx.type === 'refund' ? 'bg-yellow-50 text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-400' :
+						'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+					%>
+					<div class="dark:border-gray-800">
+						<div class="mb-1 flex items-center justify-between gap-1">
+							<span class="inline-flex text-[10px] font-bold uppercase <%= typeClass %>">
+								<%= tx.type === 'add' ? 'Add' :
+									tx.type === 'deduct' ? 'Deduct' :
+									tx.type === 'purchase' ? 'Purchase' :
+									tx.type === 'bonus' ? 'Bonus' :
+									tx.type === 'refund' ? 'Refund' :
+									tx.type %>
+							</span>
+							<div class="flex items-center gap-4 text-xs">
+								<span>
+									<%= helpers.formatNumber(tx.count) %> tx
+								</span>
+								<span class="font-semibold <%= Number(tx.total) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' %>">
+									<%= Number(tx.total) > 0 ? '+' : '' %><%= helpers.formatNumber(tx.total) %>
+								</span>
+							</div>
+						</div>
+						<div class="h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
+							<div class="h-full rounded-full <%= tx.type === 'add' ? 'bg-emerald-500' : tx.type === 'deduct' ? 'bg-rose-500' : tx.type === 'purchase' ? 'bg-blue-500' : tx.type === 'bonus' ? 'bg-purple-500' : tx.type === 'refund' ? 'bg-yellow-500' : 'bg-gray-500' %>" style="width: <%= pct %>%"></div>
+						</div>
+					</div>
+				<% }); %>
+			</div>
+		<% } else { %>
+			<div class="flex min-h-40 flex-col items-center justify-center text-center">
+				<p class="text-xs font-medium">No data available</p>
+				<p class="mt-1 text-[11px]">The data will appear here.</p>
+			</div>
+		<% } %>
+	</div>
+</div>
+
+<div class="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+	<!-- Top Users by Credit Usage -->
+	<div class="card overflow-hidden">
+		<div class="px-4 py-2">
+			<h3 class="text-sm font-semibold tracking-tight">Top Users by Credit Usage</h3>
+			<p class="mt-1 text-xs">User with the highest credit usage in 30 days</p>
+		</div>
+		<div class="overflow-x-auto">
+			<table class="w-full">
+				<thead>
+					<tr class="border-b border-gray-200/70 bg-gray-50/70 text-[10px] font-semibold uppercase tracking-wider text-gray-500 dark:border-gray-800/70 dark:bg-gray-900/50 dark:text-gray-400">
+						<th class="px-4 py-2 text-left">User</th>
+						<th class="px-4 py-2 text-right">Req</th>
+						<th class="px-4 py-2 text-right">Credit</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+					<% if (topUsers.length > 0) { %>
+						<% topUsers.forEach(function(u, i) { %>
+							<tr>
+								<td class="px-4 py-2 w-full flex-1">
+									<div class="flex items-center gap-3">
+										<span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-800 text-[10px] font-bold">
+											<%= i + 1 %>
+										</span>
+										<div class="min-w-0">
+											<div class="truncate text-sm font-medium">
+												<%= u.username %>
+											</div>
+											<div class="truncate text-[11px]">
+												<%= u.email %>
+											</div>
+										</div>
+									</div>
+								</td>
+								<td class="px-4 py-2 text-right text-sm font-medium text-emerald-500">
+									<%= helpers.formatNumber(u.requests) %>
+								</td>
+								<td class="px-4 py-2 text-right text-sm font-medium text-rose-500">
+									<%= helpers.formatNumber(u.total_credits) %>
+								</td>
+							</tr>
+						<% }); %>
+					<% } else { %>
+						<tr>
+							<td colspan="3" class="px-4 py-12 text-center">
+								<div class="flex flex-col items-center justify-center">
+									<p class="text-xs font-medium">No data available</p>
+									<p class="mt-1 text-[11px]">The data will appear here.</p>
+								</div>
+							</td>
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- Top APIs by Usage -->
+	<div class="card overflow-hidden">
+		<div class="px-4 py-2">
+			<h3 class="text-sm font-semibold tracking-tight">Top APIs by Usage</h3>
+			<p class="mt-1 text-xs">Most used APIs (30d)</p>
+		</div>
+		<div class="overflow-x-auto">
+			<table class="w-full">
+				<thead>
+					<tr class="border-b border-gray-200/70 bg-gray-50/70 text-[10px] font-semibold uppercase tracking-wider text-gray-500 dark:border-gray-800/70 dark:bg-gray-900/50 dark:text-gray-400">
+						<th class="px-4 py-2 text-left">API</th>
+						<th class="px-4 py-2 text-right">Requests</th>
+						<th class="px-4 py-2 text-right">Avg</th>
+						<th class="px-4 py-2 text-right">Credits</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+					<% if (topApis.length > 0) { %>
+					<% topApis.forEach(function(a, i) { %>
+					<tr class="hover:bg-slate-50/70">
+						<td class="px-4 py-2">
+							<div class="flex items-center gap-3">
+								<span class="text-xs font-bold w-5">#<%= i + 1 %></span>
+								<div>
+									<div class="text-sm font-medium"><%= a.name %></div>
+									<div class="text-[10px] font-mono">/<%= a.slug %></div>
+								</div>
+							</div>
+						</td>
+						<td class="px-4 py-2 text-sm text-right text-emerald-500"><%= helpers.formatNumber(a.requests) %></td>
+						<td class="px-4 py-2 text-sm text-right text-blue-500"><%= Math.round(a.avg_time) %>ms</td>
+						<td class="px-4 py-2 text-sm font-medium text-right text-rose-500"><%= helpers.formatNumber(a.credits) %></td>
+					</tr>
+					<% }); %>
+					<% } else { %>
+					<tr>
+						<td colspan="3" class="px-4 py-12 text-center">
+							<div class="flex flex-col items-center justify-center">
+								<p class="text-xs font-medium">No data available</p>
+								<p class="mt-1 text-[11px]">The data will appear here.</p>
+							</div>
+						</td>
+					</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+	<!-- Top Routes -->
+	<div class="card flex flex-col overflow-hidden lg:col-span-2">
+		<div class="px-4 py-2">
+			<h3 class="text-sm font-semibold tracking-tight">Top Routes</h3>
+			<p class="mt-1 text-xs">Most frequently accessed API routes in the last 30 days</p>
+		</div>
+
+		<div class="overflow-x-auto">
+			<table class="w-full min-w-[600px]">
+				<thead>
+					<tr class="border-b border-gray-200/70 bg-gray-50/70 text-[10px] font-semibold uppercase tracking-wider dark:border-gray-800 dark:bg-gray-900/50">
+						<th class="px-4 py-2 text-left">Path</th>
+						<th class="px-4 py-2 text-center">Method</th>
+						<th class="px-4 py-2 text-right">Hits</th>
+						<th class="px-4 py-2 text-right">Avg</th>
+					</tr>
+				</thead>
+
+				<tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+					<% if (topRoutes.length > 0) { %>
+						<% topRoutes.forEach(function(r, i) { %>
+							<tr>
+								<td class="px-4 py-2">
+									<div class="flex items-center gap-3">
+										<span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-800 text-[10px] font-bold">
+											<%= i + 1 %>
+										</span>
+										<span class="truncate font-mono text-xs font-medium text-gray-700 dark:text-gray-300">
+											<%= r.path || '-' %>
+										</span>
+									</div>
+								</td>
+
+								<td class="px-4 py-2 text-center">
+									<span class="inline-flex rounded-md px-2 py-1 text-[10px] font-bold uppercase
+										<%= r.method === 'GET' ? 'text-emerald-500' :
+											r.method === 'POST' ? 'text-blue-500' :
+											r.method === 'PUT' ? 'text-yellow-500' :
+											r.method === 'DELETE' ? 'text-rose-500' :
+											'' %>">
+										<%= r.method %>
+									</span>
+								</td>
+
+								<td class="px-4 py-2 text-right">
+									<span class="text-sm font-semibold text-amber-500">
+										<%= helpers.formatNumber(r.count) %>
+									</span>
+								</td>
+
+								<td class="px-4 py-2 text-right">
+									<span class="text-sm font-medium text-blue-500">
+										<%= Math.round(r.avg_time) %> ms
+									</span>
+								</td>
+							</tr>
+						<% }); %>
+					<% } else { %>
+						<tr>
+							<td colspan="4" class="px-5 py-12 text-center">
+								<div class="flex flex-col items-center justify-center">
+									<p class="text-xs font-medium">No data available</p>
+									<p class="mt-1 text-[11px]">The data will appear here.</p>
+								</div>
+							</td>
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- Recent Activity Feed -->
+	<div class="card flex flex-col overflow-hidden">
+		<div class="px-4 py-2 mb-4 flex items-center justify-between">
+			<div>
+				<h3 class="text-sm font-semibold tracking-tight">Recent Activity</h3>
+				<p class="mt-1 text-xs">Latest system activity</p>
+			</div>
+			<a href="/admin/system-logs" class="text-xs link">View all</a>
+		</div>
+
+		<div class="max-h-[310px] space-y-1 overflow-y-auto pr-1 px-2">
+			<% if (recentActivity && recentActivity.length > 0) { %>
+				<% recentActivity.forEach(function(log) { %>
+					<% var action = String(log.action || '').toLowerCase(); %>
+					<div class="group flex items-start gap-2 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-900/60">
+						<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md
+							<%= action.includes('delete') ? 'bg-rose-100 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400' :
+								action.includes('create') ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400' :
+								action.includes('update') ? 'bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400' :
+								action.includes('login') ? 'bg-purple-100 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400' :
+								action.includes('clear') ? 'bg-orange-100 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400' :
+								'bg-gray-200 text-gray-500 dark:bg-gray-800 dark:text-gray-400' %>">
+							<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+							</svg>
+						</div>
+
+						<div class="min-w-0 flex-1 py-0.5">
+							<p class="truncate text-xs font-semibold">
+								<%= log.action || 'System activity' %>
+							</p>
+							<p class="mt-1 truncate text-[11px]">
+								<%= log.username || 'System' %>
+								<span class="mx-1">·</span>
+								<%= helpers.timeAgo(log.created_at) %>
+							</p>
+						</div>
+					</div>
+				<% }); %>
+			<% } else { %>
+				<div class="flex min-h-40 flex-col items-center justify-center text-center">
+					<p class="text-xs font-medium">No data available</p>
+					<p class="mt-1 text-[11px]">The data will appear here.</p>
+				</div>
+			<% } %>
+		</div>
+	</div>
+
+	<!-- Recent Requests -->
+	<div class="card flex flex-col overflow-hidden lg:col-span-2">
+		<div class="flex items-center justify-between px-4 py-2 mb-4">
+			<div>
+				<h3 class="text-sm font-semibold tracking-tight">Recent Requests</h3>
+				<p class="mt-1 text-xs">Latest API request</p>
+			</div>
+			<a href="/admin/logs" class="text-xs link">
+				See all
+			</a>
+		</div>
+		<div class="overflow-x-auto">
+			<table class="w-full">
+				<thead>
+					<tr class="text-[10px] font-semibold uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+						<th class="px-4 py-2 text-left">User</th>
+						<th class="px-4 py-2 text-left">API</th>
+						<th class="px-4 py-2 text-left">Method</th>
+						<th class="px-4 py-2 text-left">Status</th>
+						<th class="px-4 py-2 text-left">Time</th>
+						<th class="px-4 py-2 text-right">Duration</th>
+					</tr>
+				</thead>
+
+				<tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+					<% if (recentLogs && recentLogs.length > 0) { %>
+						<% recentLogs.forEach(function(log) { %>
+							<tr>
+								<td class="px-4 py-2">
+									<span class="text-sm font-medium">
+										<%= log.username || '-' %>
+									</span>
+								</td>
+
+								<td class="max-w-[220px] px-4 py-2">
+									<span class="block truncate text-xs" title="<%= log.api_name || '-' %>">
+										<%= log.api_name || '-' %>
+									</span>
+								</td>
+
+								<td class="px-4 py-2">
+									<span class="inline-flex px-2 py-1 text-[10px] font-bold uppercase tracking-wide
+										<%= log.method === 'GET' ? 'text-emerald-500' :
+											log.method === 'POST' ? 'text-blue-500' :
+											log.method === 'PUT' ? 'text-yellow-500' :
+											log.method === 'DELETE' ? 'text-rose-500' :
+											'' %>">
+										<%= log.method %>
+									</span>
+								</td>
+
+								<td class="px-4 py-2">
+									<span class="inline-flex px-2 py-1 text-[10px] font-bold
+										<%= log.response_status >= 200 && log.response_status < 300 ? 'text-emerald-500' :
+											log.response_status >= 400 && log.response_status < 500 ? 'text-yellow-500' :
+											'text-rose-500' %>">
+										<%= log.response_status %>
+									</span>
+								</td>
+
+								<td class="px-4 py-2 text-xs">
+									<%= helpers.timeAgo(log.created_at) %>
+								</td>
+
+								<td class="px-4 py-2 text-right">
+									<span class="text-xs font-semibold
+										<%= log.response_time_ms > 1000 ? 'text-rose-600 dark:text-rose-400' :
+											log.response_time_ms > 500 ? 'text-yellow-600 dark:text-yellow-400' :
+											'text-emerald-600 dark:text-emerald-400' %>">
+										<%= log.response_time_ms %> ms
+									</span>
+								</td>
+							</tr>
+						<% }); %>
+					<% } else { %>
+						<tr>
+							<td colspan="6" class="px-5 py-12 text-center">
+								<div class="flex flex-col items-center justify-center">
+									<p class="text-xs font-medium">No data available</p>
+									<p class="mt-1 text-[11px]">The data will appear here.</p>
+								</div>
+							</td>
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<%
+pageScript = `
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const canvas = document.getElementById('requestTrendChart');
+      if (!canvas) return;
+
+      const rawData = ${JSON.stringify(chartData || [])};
+      const days = [];
+
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        date.setDate(date.getDate() - i);
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        days.push(year + '-' + month + '-' + day);
+      }
+
+      const dataMap = {};
+      rawData.forEach(function (item) {
+        dataMap[item.date] = Number(item.requests) || 0;
+      });
+
+      const labels = days.map(function (date) {
+        const parts = date.split('-');
+        return parts[2] + ' ' + new Date(
+          Number(parts[0]),
+          Number(parts[1]) - 1,
+          Number(parts[2])
+        ).toLocaleDateString('en-EN', {
+          month: 'short'
+        });
+      });
+
+      const values = days.map(function (date) {
+        return dataMap[date] || 0;
+      });
+
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
+      gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+      new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Requests',
+            data: values,
+            borderColor: '#3b82f6',
+            backgroundColor: gradient,
+            borderWidth: 2.5,
+            tension: 0.35,
+            fill: true,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: '#3b82f6',
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleFont: { size: 12, family: 'Inter' },
+              bodyFont: { size: 12, family: 'Inter' },
+              displayColors: false,
+              padding: 10,
+              cornerRadius: 8,
+              callbacks: {
+                label: function (context) {
+                  return '  ' + new Intl.NumberFormat('id-ID').format(context.raw) + ' requests';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                maxTicksLimit: 8,
+                color: '#94a3b8',
+                font: { size: 10, family: 'Inter' }
+              }
+            },
+            y: {
+              beginAtZero: true,
+              border: { display: false },
+              grid: { color: '#f1f5f9', drawTicks: false },
+              ticks: {
+                color: '#94a3b8',
+                precision: 0,
+                padding: 8,
+                font: { size: 10, family: 'Inter' },
+                callback: function (value) {
+                  return new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(value);
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Method Breakdown Donut Chart
+      const methodCanvas = document.getElementById('methodChart');
+      if (methodCanvas) {
+        const methodData = ${JSON.stringify(methodStats || [])};
+        const methodLabels = methodData.map(m => m.method);
+        const methodCounts = methodData.map(m => m.count);
+        const methodColors = methodData.map(m =>
+          m.method === 'GET' ? '#22c55e' :
+          m.method === 'POST' ? '#3b82f6' :
+          m.method === 'PUT' ? '#eab308' :
+          m.method === 'DELETE' ? '#ef4444' :
+          m.method === 'PATCH' ? '#a855f7' : '#94a3b8'
+        );
+
+        new Chart(methodCanvas, {
+          type: 'doughnut',
+          data: {
+            labels: methodLabels,
+            datasets: [{
+              data: methodCounts,
+              backgroundColor: methodColors,
+              borderWidth: 2,
+              borderColor: '#ffffff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#0f172a',
+                padding: 10,
+                cornerRadius: 8,
+                callbacks: {
+                  label: function(context) {
+                    return ' ' + context.label + ': ' + context.raw + ' requests';
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
+`;
+%>

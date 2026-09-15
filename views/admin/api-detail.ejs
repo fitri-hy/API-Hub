@@ -1,0 +1,231 @@
+<!-- Admin API Detail -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+  <div class="lg:col-span-2 space-y-4">
+    <div class="card p-5">
+      <div class="flex items-center justify-between mb-4">
+		<div class="flex items-center gap-4">
+			<a href="/admin/apis" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
+					<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</a>
+			<div>
+			  <h3 class="text-base font-semibold"><%= api.name %></h3>
+			  <p class="text-xs font-mono">/<%= api.slug %>/* · v<%= api.version %></p>
+			</div>
+		</div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full <%= helpers.statusBadgeClass(api.status) %>"><%= api.status %></span>
+          <a href="/admin/apis/<%= api.id %>/edit" class="flex items-center gap-1 btn-normal px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 640 640">
+				<path d="M0 0h640v640H0z" fill="none" />
+				<path fill="currentColor" d="m505 122.9l12.1 12.1c9.4 9.4 9.4 24.6 0 33.9L488 198.1L441.9 152l29.1-29.1c9.4-9.4 24.6-9.4 33.9 0zM273.8 320.2L408 185.9l46.1 46.1l-134.3 134.2c-2.9 2.9-6.5 5-10.4 6.1L250.9 389l16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM437.1 89L239.8 286.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L551 202.9c28.1-28.1 28.1-73.7 0-101.8L538.9 89c-28.1-28.1-73.7-28.1-101.8 0M152 128c-48.6 0-88 39.4-88 88v272c0 48.6 39.4 88 88 88h272c48.6 0 88-39.4 88-88V376c0-13.3-10.7-24-24-24s-24 10.7-24 24v112c0 22.1-17.9 40-40 40H152c-22.1 0-40-17.9-40-40V216c0-22.1 17.9-40 40-40h112c13.3 0 24-10.7 24-24s-10.7-24-24-24z" />
+			</svg>
+			Edit
+		  </a>
+        </div>
+      </div>
+      <p class="text-xs p-4 rounded-md bg-slate-100 dark:bg-slate-900 min-h-[100px] border border-gray-200/70 dark:border-gray-800/70"><%= api.description || 'No description' %></p>
+      <div class="grid grid-cols-4 gap-2 mt-4">
+        <div class="p-3 text-center bg-blue-100/50 dark:bg-blue-950/50 rounded-md border border-blue-100/70 dark:border-blue-950/70">
+          <p class="text-lg font-bold text-blue-500"><%= api.credit_cost %></p>
+          <p class="text-[10px]">Credits / Req</p>
+        </div>
+        <div class="p-3 text-center bg-rose-100/50 dark:bg-rose-950/50 rounded-md border border-rose-100/70 dark:border-rose-950/70">
+          <p class="text-lg font-bold text-rose-500"><%= api.rate_limit_per_minute %></p>
+          <p class="text-[10px]">Rate / min</p>
+        </div>
+        <div class="p-3 text-center bg-amber-100/50 dark:bg-amber-950/50 rounded-md border border-amber-100/70 dark:border-amber-950/70">
+          <p class="text-lg font-bold text-amber-500"><%= routes.length %></p>
+          <p class="text-[10px]">Routes</p>
+        </div>
+        <div class="p-3 text-center bg-emerald-100/50 dark:bg-emerald-950/50 rounded-md border border-emerald-100/70 dark:border-emerald-950/70">
+          <p class="text-lg font-bold text-emerald-500"><%= helpers.formatNumber(api.total_requests || 0) %></p>
+          <p class="text-[10px]">Requests</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Routes List (read-only) -->
+    <div class="card p-5">
+      <div class="border-b pb-4 border-gray-200/70 dark:border-gray-800/70 flex items-center justify-between">
+        <h3 class="text-sm font-semibold">Routes (<%= routes.length %>)</h3>
+        <a href="/admin/apis/<%= api.id %>/edit" class="flex items-center gap-1 text-sm link">
+			Manage
+			<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M18 15V6H9"></path>
+			</svg>
+		</a>
+      </div>
+      <div class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
+        <% routes.forEach(function(r) { %>
+			<div class="flex items-center gap-4 rounded-xl py-2">
+				<span class="inline-flex rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide <%= helpers.methodBadgeClass(r.method) %>">
+					<%= r.method %>
+				</span>
+				<span class="min-w-0 flex-1 truncate font-mono text-xs">
+					<%= r.path %>
+				</span>
+				<span class="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[10px] font-medium <%= helpers.statusBadgeClass(r.is_active ? 'active' : 'inactive') %>">
+					<span class="h-1.5 w-1.5 rounded-full <%= r.is_active ? 'bg-emerald-500' : 'bg-rose-500' %>"></span>
+					<%= r.is_active ? 'Active' : 'Off' %>
+				</span>
+			</div>
+        <% }); %>
+        <% if (routes.length === 0) { %>
+          <div class="flex items-center justify-center gap-2 px-4 pt-4 text-sm text-center text-center text-sm">
+			No route yet. 
+			<a href="/admin/apis/<%= api.id %>/edit" class="flex items-center gap-1 text-sm text-blue-500 hover:text-blue-600 hover:underline">
+				<span>Add one now</span>
+				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none"></path>
+					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M18 15V6H9"></path>
+				</svg>
+			</a>
+			</div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Recent Logs -->
+	<div class="card p-5">
+		<div class="border-b pb-4 border-gray-200/70 dark:border-gray-800/70 flex items-center justify-between">
+			<h3 class="text-sm font-semibold">Recent Requests</h3>
+		</div>
+		<div class="max-h-96 overflow-y-auto divide-y divide-gray-200/70 dark:divide-gray-800/70">
+			<% logs.slice(0, 20).forEach(function(log) { %>
+				<div class="flex items-center gap-2 py-2 hover:bg-gray-50/70 dark:hover:bg-gray-800/40">
+					<span class="inline-flex shrink-0 rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide <%= helpers.methodBadgeClass(log.method) %>">
+						<%= log.method %>
+					</span>
+					<span class="w-full min-w-0 flex-1 truncate font-mono text-xs text-gray-700 dark:text-gray-300" title="<%= log.path %>">
+						<%= log.path %>
+					</span>
+					<span class="inline-flex shrink-0 text-[10px] font-semibold <%= log.is_success ? 'border-emerald-200/70 bg-emerald-50 text-emerald-500 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400' : 'border-rose-200/70 bg-rose-50 text-rose-500 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400' %>">
+						<%= log.response_status %>
+					</span>
+					<span class="w-14 shrink-0 text-right text-[10px]">
+						<%= log.response_time_ms || 0 %>ms
+					</span>
+					<span class="hidden w-20 shrink-0 text-right text-[10px] sm:block">
+						<%= helpers.timeAgo(log.created_at) %>
+					</span>
+				</div>
+			<% }); %>
+
+			<% if (logs.length === 0) { %>
+				<div class="px-4 py-10 text-center text-xs text-gray-500 dark:text-gray-400">
+					No requests yet.
+				</div>
+			<% } %>
+		</div>
+	</div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="space-y-4">
+    <div class="card p-5">
+	  <div class="border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+		<h3 class="text-xs font-semibold uppercase tracking-wider">Info</h3>
+	  </div>
+      <div class="space-y-2 text-sm">
+        <div class="flex items-center justify-between">
+		  <span class="font-medium">Created</span>
+		  <span class="font-mono"><%= helpers.formatDate(api.created_at, 'short') %></span>
+		</div>
+        <div class="flex items-center justify-between">
+		  <span class="font-medium">Updated</span>
+		  <span class="font-mono"><%= helpers.formatDate(api.created_at, 'short') %></span>
+		</div>
+        <div class="flex items-center justify-between">
+		  <span class="font-medium">Auth</span>
+		  <span class="font-mono"><%= api.auth_required ? 'Required' : 'Public' %></span>
+		</div>
+        <div class="flex items-center justify-between">
+		  <span class="font-medium">Listed</span>
+		  <span class="font-mono"><%= api.is_public ? 'Public' : 'Private' %></span>
+		</div>
+      </div>
+    </div>
+    <div class="card p-5">
+	  <div class="border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+        <h3 class="text-xs font-semibold uppercase tracking-wider">Stats (30d)</h3>
+      </div>
+      <div class="space-y-1.5 text-sm">
+        <div class="flex justify-between"><span>Total Requests</span><span class="font-mono"><%= helpers.formatNumber(stats?.overview?.total_requests || 0) %></span></div>
+        <div class="flex justify-between"><span>Success</span><span class="font-mono"><%= helpers.formatNumber(stats?.overview?.successful || 0) %></span></div>
+        <div class="flex justify-between"><span>Failed</span><span class="font-mono"><%= helpers.formatNumber(stats?.overview?.failed || 0) %></span></div>
+        <div class="flex justify-between"><span>Credits Used</span><span class="font-mono"><%= helpers.formatNumber(stats?.overview?.total_credits_used || 0) %></span></div>
+        <div class="flex justify-between"><span>Avg Response</span><span class="font-mono"><%= Math.round(stats?.overview?.avg_response_time || 0) %>ms</span></div>
+        <div class="flex justify-between"><span>Min / Max</span><span class="font-mono"><%= Math.round(stats?.overview?.min_response_time || 0) %>/<%= Math.round(stats?.overview?.max_response_time || 0) %>ms</span></div>
+      </div>
+
+      <% if (stats?.methods && stats.methods.length > 0) { %>
+      <div class="border-t border-gray-200/70 dark:border-gray-800/70 pt-2 mt-2">
+        <p class="text-sm mb-2">By Method</p>
+        <div class="space-y-1">
+          <% stats.methods.forEach(function(m) { %>
+            <div class="flex items-center justify-between text-xs">
+              <span class="inline-flex px-1.5 py-0.5 rounded text-[9px] font-bold uppercase <%= helpers.methodBadgeClass(m.method) %>"><%= m.method %></span>
+              <div class="flex items-center gap-1">
+                <span class="font-mono"><%= Math.round(m.avg_time || 0) %>ms</span>
+			    <span>(<%= helpers.formatNumber(m.count) %>)</span>
+			  </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
+
+      <% if (stats?.statusCodes && stats.statusCodes.length > 0) { %>
+      <div class="border-t border-gray-200/70 dark:border-gray-800/70 pt-2 mt-2">
+        <p class="text-sm mb-2">By Status</p>
+        <div class="space-y-1">
+          <% stats.statusCodes.forEach(function(s) { %>
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-mono <%= s.response_status >= 200 && s.response_status < 300 ? 'text-emerald-600' : s.response_status >= 400 ? 'text-rose-600' : 'text-amber-600' %>"><%= s.response_status %></span>
+              <span><%= helpers.formatNumber(s.count) %></span>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
+
+		<% if (stats?.topRoutes && stats.topRoutes.length > 0) { %>
+		  <div class="border-t border-gray-200/70 dark:border-gray-800/70 pt-2 mt-2">
+			<p class="text-sm mb-2">Top Routes</p>
+			<div class="space-y-1.5">
+			  <% stats.topRoutes.forEach(function(tr) { %>
+				<div class="text-xs flex justify-between gap-4">
+				  <div class="flex items-center gap-1.5">
+					<span class="inline-flex px-1.5 py-0.5 rounded text-[9px] font-bold uppercase <%= helpers.methodBadgeClass(tr.method) %>"><%= tr.method %></span>
+					<span class="font-mono truncate"><%= tr.path || '/' %></span>
+				  </div>
+				  <div class="flex items-center gap-1">
+					<span><%= Math.round(tr.avg_time || 0) %>ms</span>
+					<span>(<%= helpers.formatNumber(tr.count) %>)</span>
+				  </div>
+				</div>
+			  <% }); %>
+			</div>
+		  </div>
+		<% } %>
+    </div>
+    <div class="card p-5">
+	  <div class="border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
+		<h3 class="text-xs font-semibold uppercase tracking-wider">Endpoint</h3>
+	  </div>
+	  <div class="border-l-4 text-xs border-blue-500 dark:border-blue-600">
+		<span class="truncate px-2">/gateway/<strong><%= api.slug %></strong>/*</span>
+	  </div>
+	  <a href="/gateway/<%= api.slug %>/docs" class="mt-6 flex items-center justify-center gap-1 text-xs link">
+		<span>View Full Docs</span>
+		<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+			<path d="M0 0h24v24H0z" fill="none"></path>
+			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M18 15V6H9"></path>
+		</svg>
+	  </a>
+    </div>
+  </div>
+</div>
