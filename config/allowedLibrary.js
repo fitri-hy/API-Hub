@@ -1,8 +1,13 @@
 /**
  * Centralized allowed libraries for sandboxed handler execution.
  * Used by gatewayController.js and playgroundController.js.
+ *
+ * ESM modules are pre-loaded at startup (via loadEsm()) and cached
+ * so handler code can use `import('cheerio')` inside the VM sandbox
+ * without needing --experimental-vm-modules.
  */
 
+// ── CJS modules (require) ──────────────────────────────────────
 const allowedInternal = {
   'script': require('../script'),
   'script/concurrency': require('../script/concurrency'),
@@ -26,6 +31,7 @@ const allowedCjs = {
   'axios': 'axios',
 };
 
+// ── ESM modules (import) ───────────────────────────────────────
 const allowedEsm = [
   'node-fetch', 'axios', 'cheerio', 'dayjs', 'moment',
   'lodash', 'ramda', 'mathjs', 'currency.js',
@@ -33,4 +39,36 @@ const allowedEsm = [
   'dotenv', 'form-data', 'querystring',
 ];
 
-module.exports = { allowedInternal, allowedCjs, allowedEsm };
+// ── Pre-loaded ESM cache ────────────────────────────────────────
+const esmCache = {};
+let esmLoaded = false;
+
+async function loadEsm() {
+  if (esmLoaded) return esmCache;
+
+  await Promise.allSettled(
+    allowedEsm.map(async (name) => {
+      try {
+        const mod = await import(name);
+        esmCache[name] = mod.default || mod;
+      } catch {
+        // Module not installed — skip silently
+      }
+    })
+  );
+
+  esmLoaded = true;
+  return esmCache;
+}
+
+function getEsm() {
+  return esmCache;
+}
+
+module.exports = {
+  allowedInternal,
+  allowedCjs,
+  allowedEsm,
+  loadEsm,
+  getEsm,
+};

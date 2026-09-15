@@ -9,7 +9,7 @@ const User = require('../models/User');
 const Credit = require('../models/Credit');
 const RequestLog = require('../models/RequestLog');
 const RateLimiter = require('../middleware/rateLimiter');
-const { allowedInternal, allowedCjs, allowedEsm } = require('../config/allowedLibrary');
+const { allowedInternal, allowedCjs, allowedEsm, getEsm } = require('../config/allowedLibrary');
 
 const gatewayController = {
   async handleRequest(req, res) {
@@ -299,23 +299,35 @@ async function executeHandler(code, context) {
       throw new Error(`Module not allowed: ${name}. Use import() for ESM modules.`);
     },
 
-    import: async (specifier) => {
-      const mod = allowedEsm.find(m => specifier === m || specifier.startsWith(m + '/'));
-      if (!mod) throw new Error(`Module not allowed: ${specifier}. Allowed: ${allowedEsm.join(', ')}`);
+    // __import__ is used by transformed handler code (import() cannot be overridden in VM)
+    __import__: async (specifier) => {
+      const preloaded = getEsm();
+      const match = allowedEsm.find(m => specifier === m || specifier.startsWith(m + '/'));
+      if (!match) throw new Error(`Module not allowed: ${specifier}. Allowed: ${allowedEsm.join(', ')}`);
+      if (preloaded[match]) return preloaded[match];
       return import(specifier);
     },
 
     httpGet: async (url, options = {}) => {
       const https = require('https');
       const http = require('http');
+      const { URL } = require('url');
       return new Promise((resolve, reject) => {
-        const client = url.startsWith('https') ? https : http;
+        const parsed = new URL(url);
+        const client = parsed.protocol === 'https:' ? https : http;
         const timeout = options.timeout || 10000;
-        client.get(url, { timeout }, (res) => {
+        const headers = Object.assign({
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }, options.headers || {});
+        const reqOpts = { hostname: parsed.hostname, port: parsed.port, path: parsed.pathname + parsed.search, method: options.method || 'GET', headers, timeout };
+        const req = client.request(reqOpts, (res) => {
           let data = '';
           res.on('data', chunk => data += chunk);
           res.on('end', () => { try { resolve(JSON.parse(data)); } catch { resolve(data); } });
-        }).on('error', reject);
+        });
+        req.on('error', reject);
+        req.on('timeout', () => { req.destroy(); reject(new Error('Request timeout')); });
+        req.end();
       });
     }
   };
@@ -600,8 +612,11 @@ async function executeHandler(code, context) {
     }
   }
 
+  // Transform handler code: replace import() with __import__() (native import cannot be overridden in VM)
+  const transformedCode = code.replace(/\bimport\s*\(/g, '__import__(');
+
   const vmContext = vm.createContext(sandbox);
-  const wrappedCode = `(async () => { ${code} })()`;
+  const wrappedCode = `(async () => { ${transformedCode} })()`;
   // Use 120s VM timeout — actual task concurrency is controlled by script/ limiters
   const script = new vm.Script(wrappedCode, { timeout: 120_000 });
   const result = await script.runInContext(vmContext, { timeout: 120_000 });

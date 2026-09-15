@@ -1,5 +1,10 @@
 require('dotenv').config();
 
+// Pre-load ESM modules for VM sandbox (cheerio, node-fetch, etc.)
+require('./config/allowedLibrary').loadEsm().then(() => {
+  console.log('[ESM] Pre-loaded ESM modules for sandbox');
+}).catch(() => {});
+
 const http = require('http');
 const { Server } = require('socket.io');
 const app = require('./app');

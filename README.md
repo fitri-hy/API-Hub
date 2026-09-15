@@ -27,9 +27,9 @@ Platform API gateway lengkap dengan admin panel, user dashboard, credit system, 
 
 | Layer | Technology |
 |-------|-----------|
-| Runtime | Node.js |
+| Runtime | Node.js v20+ |
 | Framework | Express.js |
-| Database | MySQL (mysql2) |
+| Database | MariaDB 10.4+ (mysql2) |
 | Template | EJS |
 | Styling | Tailwind CSS 4 |
 | Auth | express-session + bcrypt |
@@ -47,6 +47,7 @@ saas-gateway/
 ├── .env                      # Environment config
 │
 ├── config/                   # Konfigurasi
+│   ├── allowedLibrary.js     # Allowed CJS/ESM modules + pre-loaded cache
 │   ├── constants.js          # App-wide constants
 │   ├── database.js           # MySQL connection pool
 │   ├── db-init.js            # Database initializer
@@ -229,19 +230,59 @@ Client Request
 
 ---
 
-## 🧩 Script Modules
+## 🧩 Modules & Sandbox
 
-Handler code bisa akses FFmpeg dan yt-dlp via sandbox:
+Handler code bisa akses berbagai module via sandbox:
+
+### CJS Modules (require)
 
 ```js
-// Dalam handler_code
+const { v4: uuid } = require('uuid');
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+```
+
+### ESM Modules (import)
+
+```js
+// import() otomatis ditransform oleh controller
+const cheerio = await import('cheerio');
+const axios = (await import('axios')).default;
+const dayjs = (await import('dayjs')).default;
+```
+
+> **Note:** `import()` di handler code otomatis ditransform ke `__import__()` oleh controller sebelum dieksekusi di VM. Module di-load saat server startup dari `allowedLibrary.js`.
+
+### Internal Modules
+
+```js
+// FFmpeg & yt-dlp
 const { ffmpeg, ytdl } = require('script');
 
-// yt-dlp: get video info
-const info = await ytdl.getBasicInfo('https://youtube.com/watch?v=xxx');
+// QR Code
+const qr = require('qrcode');
 
-// FFmpeg: convert audio
-await ffmpeg.convert(inputPath, outputPath, { format: 'mp3', audioBitrate: '192k' });
+// Canvas
+const canvas = require('canvas');
+```
+
+### HTTP Helper
+
+```js
+// GET request (otomatis kirim User-Agent)
+const html = await httpGet('https://example.com');
+
+// GET dengan headers custom
+const data = await httpGet('https://api.github.com', {
+  headers: { 'Accept': 'application/json' }
+});
+
+// POST dengan body
+const result = await httpGet('https://api.example.com', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'test' })
+});
 ```
 
 **Installer:**
@@ -257,7 +298,7 @@ npm run scripts:setup    # Auto-install
 
 | Dokumen | Deskripsi |
 |---------|-----------|
-| [USAGE.md](USAGE.md) | Panduan lengkap menulis handler_code |
+| [USAGE.md](USAGE.md) | Panduan lengkap menulis handler_code (sandbox, modules, contoh) |
 
 ---
 
@@ -283,6 +324,32 @@ npm run scripts:setup    # Auto-install
 | `SCRIPT_YTDLP_CONCURRENCY` | 3 | Max concurrent yt-dlp tasks |
 | `SCRIPT_FFMPEG_TIMEOUT` | 300000 | FFmpeg timeout (ms) |
 | `SCRIPT_YTDLP_TIMEOUT` | 600000 | yt-dlp timeout (ms) |
+
+---
+
+## 📝 Handler Code Quick Reference
+
+```js
+// Return success
+return { status: 200, data: { message: 'OK' } };
+
+// Return error
+return { status: 400, data: { error: 'Bad request' } };
+
+// Auto-wrap (status default 200)
+return { name: 'test' };
+
+// Database query
+const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+
+// Import ESM module
+const cheerio = await import('cheerio');
+
+// HTTP request
+const data = await httpGet('https://api.example.com');
+```
+
+See [USAGE.md](USAGE.md) for full documentation.
 
 ---
 

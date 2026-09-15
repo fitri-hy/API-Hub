@@ -4,7 +4,7 @@ const Api = require('../models/Api');
 const ApiRoute = require('../models/ApiRoute');
 const PlaygroundSession = require('../models/PlaygroundSession');
 const fileTtl = require('../script/fileTtl');
-const { allowedInternal, allowedCjs, allowedEsm } = require('../config/allowedLibrary');
+const { allowedInternal, allowedCjs, allowedEsm, getEsm } = require('../config/allowedLibrary');
 
 const playgroundController = {
   async init(req, res) {
@@ -339,21 +339,34 @@ async function executeHandler(code, context) {
       if (allowedInternal[name]) return allowedInternal[name];
       throw new Error(`Module not allowed: ${name}`);
     },
-    import: async (specifier) => {
-      const mod = allowedEsm.find(m => specifier === m || specifier.startsWith(m + '/'));
-      if (!mod) throw new Error(`Module not allowed: ${specifier}`);
+    // __import__ is used by transformed handler code (import() cannot be overridden in VM)
+    __import__: async (specifier) => {
+      const preloaded = getEsm();
+      const match = allowedEsm.find(m => specifier === m || specifier.startsWith(m + '/'));
+      if (!match) throw new Error(`Module not allowed: ${specifier}`);
+      if (preloaded[match]) return preloaded[match];
       return import(specifier);
     },
     httpGet: async (url, options = {}) => {
       const https = require('https');
       const http = require('http');
+      const { URL } = require('url');
       return new Promise((resolve, reject) => {
-        const client = url.startsWith('https') ? https : http;
-        client.get(url, { timeout: options.timeout || 10000 }, (res) => {
+        const parsed = new URL(url);
+        const client = parsed.protocol === 'https:' ? https : http;
+        const timeout = options.timeout || 10000;
+        const headers = Object.assign({
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }, options.headers || {});
+        const reqOpts = { hostname: parsed.hostname, port: parsed.port, path: parsed.pathname + parsed.search, method: options.method || 'GET', headers, timeout };
+        const req = client.request(reqOpts, (res) => {
           let data = '';
           res.on('data', chunk => data += chunk);
           res.on('end', () => { try { resolve(JSON.parse(data)); } catch { resolve(data); } });
-        }).on('error', reject);
+        });
+        req.on('error', reject);
+        req.on('timeout', () => { req.destroy(); reject(new Error('Request timeout')); });
+        req.end();
       });
     }
   };
@@ -482,6 +495,72 @@ async function executeHandler(code, context) {
     cleanup: (filePath) => { try { fs.unlinkSync(filePath); } catch {} }
   };
 
+  // Puppeteer helpers (browser automation) — same as gatewayController
+  sandbox.browser = {
+    screenshot: async (url, options = {}) => {
+      const puppeteer = require('../script/puppeteer');
+      return await puppeteer.screenshot(url, null, {
+        width: options.width || 1280,
+        height: options.height || 720,
+        fullPage: options.fullPage || false,
+        format: options.format || 'png',
+        quality: options.quality,
+        selector: options.selector,
+        delay: options.delay || 0,
+        userAgent: options.userAgent,
+        waitUntil: options.waitUntil,
+        navigateTimeout: options.navigateTimeout
+      });
+    },
+    toPdf: async (url, options = {}) => {
+      const puppeteer = require('../script/puppeteer');
+      return await puppeteer.toPdf(url, null, {
+        format: options.format || 'A4',
+        landscape: options.landscape || false,
+        printBackground: options.printBackground !== false,
+        scale: options.scale || 1,
+        margin: options.margin,
+        headerTemplate: options.headerTemplate,
+        footerTemplate: options.footerTemplate,
+        delay: options.delay || 0,
+        waitUntil: options.waitUntil,
+        navigateTimeout: options.navigateTimeout
+      });
+    },
+    getContent: async (url, options = {}) => {
+      const puppeteer = require('../script/puppeteer');
+      return await puppeteer.getContent(url, {
+        selector: options.selector || 'body',
+        format: options.format || 'text',
+        userAgent: options.userAgent,
+        delay: options.delay || 0,
+        waitSelectors: options.waitSelectors,
+        waitUntil: options.waitUntil,
+        navigateTimeout: options.navigateTimeout
+      });
+    },
+    renderHtml: async (html, options = {}) => {
+      const puppeteer = require('../script/puppeteer');
+      return await puppeteer.renderHtml(html, null, {
+        width: options.width || 1280,
+        height: options.height || 720,
+        format: options.format || 'png',
+        quality: options.quality,
+        fullPage: options.fullPage || false,
+        styles: options.styles
+      });
+    },
+    evaluate: async (url, script, options = {}) => {
+      const puppeteer = require('../script/puppeteer');
+      return await puppeteer.evaluate(url, script, {
+        args: options.args,
+        delay: options.delay || 0,
+        waitUntil: options.waitUntil,
+        navigateTimeout: options.navigateTimeout
+      });
+    }
+  };
+
   const blocked = ['process.', 'child_process', 'fs.', 'eval(', 'Function(', '__dirname', '__filename'];
   for (const pattern of blocked) {
     if (code.includes(pattern)) throw new Error(`Blocked: ${pattern}`);
@@ -496,8 +575,11 @@ async function executeHandler(code, context) {
     }
   }
 
+  // Transform handler code: replace import() with __import__() (native import cannot be overridden in VM)
+  const transformedCode = code.replace(/\bimport\s*\(/g, '__import__(');
+
   const vmContext = vm.createContext(sandbox);
-  const wrappedCode = `(async () => { ${code} })()`;
+  const wrappedCode = `(async () => { ${transformedCode} })()`;
   const script = new vm.Script(wrappedCode, { timeout: 10000 });
   const result = await script.runInContext(vmContext, { timeout: 10000 });
 

@@ -217,13 +217,23 @@ const pathLib = require('path');
 
 ### import() — ESM
 
+Handler code bisa langsung pakai `import()` syntax. Controller otomatis transform `import()` → `__import__()` sebelum dieksekusi di VM. Semua ESM module di-load saat server startup.
+
 ```js
-const axios = (await import('axios')).default;
+// langsung pakai import() — otomatis ditransform oleh controller
 const cheerio = await import('cheerio');
+const axios = (await import('axios')).default;
 const dayjs = (await import('dayjs')).default;
 const _ = await import('lodash');
 const { v4: uuid } = await import('uuid');
 ```
+
+**Kenapa ditransform?**
+Node.js `vm` module tidak bisa override `import()` keyword — selalu panggil native Node loader yang butuh flag `--experimental-vm-modules`. Controller mengganti `import(` → `__import__(` secara otomatis supaya module di-load dari pre-loaded cache.
+
+**⚠️ Penting:**
+- Jangan panggil `import()` dari dynamic string — harus static string
+- `require()` tidak ditransform, tetap jalan normal
 
 **Daftar ESM yang diizinkan:**
 `node-fetch`, `axios`, `cheerio`, `dayjs`, `moment`, `lodash`, `ramda`, `mathjs`, `currency.js`, `fast-xml-parser`, `xml2js`, `he`, `uuid`, `bcryptjs`, `dotenv`, `form-data`, `querystring`
@@ -259,11 +269,13 @@ __filename   → path file
 
 **Module yang tidak diizinkan** (via require/import) akan throw error.
 
+**Note:** `import()` di handler code akan ditransform otomatis menjadi `__import__()` oleh controller. Jangan gunakan `loadModule()` — gunakan `import()` biasa.
+
 ---
 
 ## 9. HTTP Helper: `httpGet`
 
-Fungsi built-in untuk GET request (tanpa perlu require axios):
+Fungsi built-in untuk HTTP request (tanpa perlu require axios). Otomatis kirim `User-Agent` header (diperlukan untuk GitHub, dll).
 
 ```js
 // GET JSON
@@ -275,7 +287,32 @@ const result = await httpGet('https://slow-api.com/data', { timeout: 15000 });
 
 // GET yang return non-JSON (otomatis return string)
 const html = await httpGet('https://example.com');
+
+// GET dengan custom headers
+const data = await httpGet('https://api.example.com', {
+  headers: { 'Authorization': 'Bearer token123', 'Accept': 'application/json' }
+});
+
+// POST dengan body
+const result = await httpGet('https://api.example.com/create', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'test' })
+});
 ```
+
+**Options:**
+
+| Option | Default | Deskripsi |
+|--------|---------|-----------|
+| `timeout` | 10000 | Request timeout (ms) |
+| `headers` | `{ 'User-Agent': '...' }` | Custom headers (di-merge dengan default User-Agent) |
+| `method` | `'GET'` | HTTP method |
+
+**Note:**
+- `User-Agent` header otomatis ditambahkan (required untuk GitHub, TikTok, dll)
+- Response otomatis parse JSON, jika gagal return raw string
+- Untuk POST/PUT/DELETE, gunakan `method` + `body` di options
 
 ---
 
@@ -487,6 +524,8 @@ return {
 };
 ```
 
+**Note:** `httpGet` otomatis kirim `User-Agent` header, jadi bisa scrape GitHub, TikTok, dll tanpa error 403.
+
 ### GET Data dengan Axios + Pagination
 
 ```js
@@ -637,18 +676,17 @@ if (rows[0].role !== 'admin') {
 
 ## 16. Contoh: Scrape & Return Structured Data
 
-### Scraper dengan Cheerio + Axios
+### Scraper dengan Cheerio + httpGet
 
 ```js
-const axios = (await import('axios')).default;
 const cheerio = await import('cheerio');
 
 const url = req.query.url;
 if (!url) return { status: 400, data: { error: 'url is required' } };
 
 try {
-  const { data: html } = await axios.get(url, {
-    headers: { 'User-Agent': 'Mozilla/5.0' },
+  const html = await httpGet(url, {
+    headers: { 'Accept': 'text/html,application/xhtml+xml' },
     timeout: 15000
   });
 
@@ -681,7 +719,6 @@ try {
 ### TikTok Info Scraper
 
 ```js
-const axios = (await import('axios')).default;
 const cheerio = await import('cheerio');
 
 const url = req.query.url;
@@ -690,9 +727,8 @@ if (!url || !url.includes('tiktok.com')) {
 }
 
 try {
-  const { data: html } = await axios.get(url, {
+  const html = await httpGet(url, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
       'Accept': 'text/html,application/xhtml+xml',
       'Accept-Language': 'en-US,en;q=0.9'
     },
@@ -1081,7 +1117,7 @@ try {
 
 ---
 
-## 19. Ringkasan: Pola Return
+## 20. Ringkasan: Pola Return
 
 ```js
 // ✅ Berhasil
@@ -1107,7 +1143,7 @@ return 'string';                 // → status 200, data "string"
 
 ---
 
-## 20. Cheat Sheet Cepat
+## 21. Cheat Sheet Cepat
 
 | Kebutuhan | Kode |
 |-----------|------|
@@ -1119,6 +1155,8 @@ return 'string';                 // → status 200, data "string"
 | Hash password | `require('bcryptjs').hash(pw, 12)` |
 | UUID | `helpers.uuid()` |
 | Fetch API | `await httpGet(url)` atau `axios` |
+| Fetch + headers | `await httpGet(url, { headers: { ... } })` |
+| POST request | `await httpGet(url, { method: 'POST', body: ... })` |
 | Scrape HTML (statik) | `cheerio.load(html)` |
 | Scrape HTML (dinamis) | `await browser.getContent(url, { delay: 2000 })` |
 | Screenshot URL | `await browser.screenshot(url, { width: 1280 })` |
