@@ -32,7 +32,7 @@ const gatewayController = {
         });
       }
 
-      const apiKeyStr = req.headers['x-api-key'] || req.query.api_key;
+      const apiKeyStr = req.headers['x-api-key'];
       if (!apiKeyStr) {
         return res.status(401).json({
           success: false,

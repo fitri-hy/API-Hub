@@ -10,7 +10,13 @@ module.exports = (app) => {
   const sessionMaxAge =
     Number(process.env.SESSION_MAX_AGE) || 24 * 60 * 60 * 1000;
 
+  const sessionName = process.env.SESSION_COOKIE_NAME || 'sgw.sid';
+
+  // Use MemoryStore (default) — explicit for clarity
+  const sessionStore = new session.MemoryStore();
+
   const sessionMiddleware = session({
+    store: sessionStore,
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
@@ -20,12 +26,15 @@ module.exports = (app) => {
       maxAge: sessionMaxAge,
       sameSite: process.env.SESSION_SAME_SITE || 'lax'
     },
-    name: process.env.SESSION_COOKIE_NAME || 'sgw.sid'
+    name: sessionName
   });
 
   app.use(sessionMiddleware);
   app.use(flash());
 
-  // Share session middleware with Socket.IO
+  // Share session config with Socket.IO (middleware + store + secret + name)
   app.set('sessionMiddleware', sessionMiddleware);
+  app.set('sessionStore', sessionStore);
+  app.set('sessionSecret', sessionSecret);
+  app.set('sessionName', sessionName);
 };

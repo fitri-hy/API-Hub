@@ -9,10 +9,15 @@ const { allowedInternal, allowedCjs, allowedEsm, getEsm } = require('../config/a
 const playgroundController = {
   async init(req, res) {
     try {
-      const ua = req.headers['user-agent'] || '';
-      if (!ua.includes('Mozilla') && !ua.includes('Chrome') && !ua.includes('Firefox') && !ua.includes('Safari')) {
-        return res.status(403).json({ error: 'Browser required to access Playground' });
-      }
+	  const ua = req.headers['user-agent'] || '';
+
+	  const isBrowser = /\bMozilla\/5\.0\b/i.test(ua) && /(Chrome|Chromium|Firefox|Safari|Edg|OPR)\//i.test(ua);
+
+	  if (!isBrowser) {
+	    return res.status(403).json({
+	  	  error: 'Browser required to access Playground'
+	    });
+	  }
 
       const ip = req.ip || req.connection.remoteAddress;
       const userId = req.session.userId;

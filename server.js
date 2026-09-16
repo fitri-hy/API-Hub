@@ -18,7 +18,11 @@ const server = http.createServer(app);
 // Socket.IO Setup
 // ============================================================
 const io = new Server(server, {
-  cors: { origin: '*', methods: ['GET', 'POST'] },
+  cors: {
+    origin: process.env.CORS_SOCKET || 'http://localhost:3000',
+    credentials: process.env.CORS_CREDENTIALS === 'true'
+  },
+  methods: ['GET', 'POST'],
   pingTimeout: 60000,
   pingInterval: 25000
 });
@@ -26,21 +30,74 @@ const io = new Server(server, {
 // Share io with Express routes via app.locals
 app.set('io', io);
 
-// Socket.IO middleware — use session from Express
+// Socket.IO middleware — load session directly from the store
+// This replaces the fragile fakeRes hack with proper session loading.
+// Session store, secret, and cookie name are shared from config/session.js.
 const sessionMiddleware = app.get('sessionMiddleware');
+const sessionStore = app.get('sessionStore');
+const sessionSecret = app.get('sessionSecret');
+const sessionCookieName = app.get('sessionName');
+
 if (sessionMiddleware) {
   io.use((socket, next) => {
-    // express-session needs res.writeHead/res.end stubs to work
-    const fakeRes = {
-      writeHead: () => fakeRes,
-      end: () => fakeRes,
-      getHeader: () => null,
-      setHeader: () => fakeRes,
-      removeHeader: () => fakeRes,
-      status: () => fakeRes,
-      redirect: () => fakeRes
-    };
-    sessionMiddleware(socket.request, fakeRes, next);
+    // Parse the cookie header from the handshake
+    const rawCookie = socket.handshake.headers?.cookie || '';
+    const unsign = require('cookie-signature').unsign;
+    const parseCookie = require('cookie').parse;
+
+    // Extract and unsign the session ID
+    let sid = null;
+    const cookies = parseCookie(rawCookie);
+    const signedCookieVal = cookies[sessionCookieName];
+
+    if (signedCookieVal && sessionSecret) {
+      sid = unsign(signedCookieVal, sessionSecret);
+    } else if (signedCookieVal) {
+      // No secret available — use raw (less safe, but functional)
+      sid = signedCookieVal;
+    }
+
+    if (!sid) {
+      return next(new Error('No session ID in socket handshake'));
+    }
+
+    if (!sessionStore) {
+      return next(new Error('Session store not configured'));
+    }
+
+    // Load session directly from the store (no fakeRes needed)
+    sessionStore.get(sid, (err, sess) => {
+      if (err) {
+        console.error('[Socket.IO] Session store read error:', err.message);
+        return next(new Error('Session load failed'));
+      }
+
+      if (!sess) {
+        return next(new Error('Session not found'));
+      }
+
+      // Attach session to the request
+      socket.request.session = sess;
+      socket.request.sessionID = sid;
+
+      // Provide save method that commits back to the store
+      socket.request.session.save = (cb) => {
+        sessionStore.set(sid, sess, (saveErr) => {
+          if (saveErr) console.error('[Socket.IO] Session save error:', saveErr.message);
+          if (cb) cb(saveErr);
+        });
+      };
+
+      // Provide destroy method
+      socket.request.session.destroy = (cb) => {
+        sessionStore.destroy(sid, (delErr) => {
+          if (delErr) console.error('[Socket.IO] Session destroy error:', delErr.message);
+          if (cb) cb(delErr);
+        });
+      };
+
+      next();
+    });
   });
 }
 
