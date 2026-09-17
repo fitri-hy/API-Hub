@@ -652,6 +652,7 @@ const adminController = {
               credit_bonus_weekly_enabled, credit_bonus_weekly,
               credit_bonus_monthly_enabled, credit_bonus_monthly,
               bank_name, bank_account_number, bank_account_name,
+              payment_method_transfer_enabled, payment_method_qris_enabled,
               custom_package_rate_limit_min, custom_package_rate_limit_max, custom_package_rate_limit_step, custom_package_rate_limit_price_per_step,
               smtp_host, smtp_port, smtp_encryption, smtp_username, smtp_password, smtp_from_email, smtp_from_name,
               site_title, site_description, site_keywords,
@@ -672,6 +673,9 @@ const adminController = {
         bank_name: bank_name || 'Bank BCA',
         bank_account_number: bank_account_number || '',
         bank_account_name: bank_account_name || '',
+        // Payment Methods
+        payment_method_transfer_enabled: payment_method_transfer_enabled === 'on' ? 'true' : 'false',
+        payment_method_qris_enabled: payment_method_qris_enabled === 'on' ? 'true' : 'false',
         custom_package_rate_limit_min: String(parseInt(custom_package_rate_limit_min) || 50),
         custom_package_rate_limit_max: String(parseInt(custom_package_rate_limit_max) || 500),
         custom_package_rate_limit_step: String(parseInt(custom_package_rate_limit_step) || 50),
@@ -731,6 +735,13 @@ const adminController = {
         const oldOgImage = await AdminSettings.get('site_og_image');
         if (oldOgImage) await deleteSiteImage(oldOgImage);
         settingsData.site_og_image = `/uploads/site/${files.site_og_image[0].filename}`;
+      }
+
+      // QRIS image upload
+      if (files.qris_image && files.qris_image[0]) {
+        const oldQris = await AdminSettings.get('qris_image');
+        if (oldQris) await deleteSiteImage(oldQris);
+        settingsData.qris_image = `/uploads/site/${files.qris_image[0].filename}`;
       }
 
       await AdminSettings.setMany(settingsData);

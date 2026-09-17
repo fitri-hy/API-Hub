@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 17 Sep 2026 pada 10.55
+-- Waktu pembuatan: 17 Sep 2026 pada 11.38
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -41,54 +41,57 @@ CREATE TABLE `admin_settings` (
 --
 
 INSERT INTO `admin_settings` (`id`, `setting_key`, `setting_value`, `setting_type`, `description`, `updated_at`) VALUES
-(1, 'app_name', 'API Hub', 'string', 'Application name', '2026-09-17 15:53:16'),
-(2, 'default_credits', '350', 'int', 'Default credits for new users', '2026-09-17 15:53:16'),
-(3, 'credit_value_rp', '12', 'int', 'Value of 1 credit in IDR', '2026-09-17 15:53:16'),
-(4, 'global_rate_limit', '20', 'int', 'Default rate limit per minute', '2026-09-17 15:53:16'),
-(5, 'registration_enabled', 'true', 'bool', 'Allow new registrations', '2026-09-17 15:53:16'),
-(6, 'maintenance_mode', 'false', 'bool', 'Enable maintenance mode', '2026-09-17 15:53:16'),
+(1, 'app_name', 'API Hub', 'string', 'Application name', '2026-09-17 16:09:29'),
+(2, 'default_credits', '350', 'int', 'Default credits for new users', '2026-09-17 16:09:29'),
+(3, 'credit_value_rp', '12', 'int', 'Value of 1 credit in IDR', '2026-09-17 16:09:29'),
+(4, 'global_rate_limit', '20', 'int', 'Default rate limit per minute', '2026-09-17 16:09:29'),
+(5, 'registration_enabled', 'true', 'bool', 'Allow new registrations', '2026-09-17 16:09:29'),
+(6, 'maintenance_mode', 'false', 'bool', 'Enable maintenance mode', '2026-09-17 16:09:29'),
 (31, 'new_user_bonus_enabled', 'true', 'bool', 'Enable bonus credits for new users', '2026-09-01 12:05:18'),
-(70, 'bank_name', 'Bank BCA', 'string', 'Bank name for transfers', '2026-09-17 15:53:16'),
-(71, 'bank_account_number', '1234567890', 'string', 'Bank account number', '2026-09-17 15:53:16'),
-(72, 'bank_account_name', 'PT. API Hub Group', 'string', 'Bank account holder name', '2026-09-17 15:53:16'),
-(73, 'custom_package_rate_limit_min', '20', 'int', 'Custom package: minimum rate limit per minute', '2026-09-17 15:53:16'),
-(74, 'custom_package_rate_limit_max', '500', 'int', 'Custom package: maximum rate limit per minute', '2026-09-17 15:53:16'),
-(75, 'custom_package_rate_limit_step', '1', 'int', 'Custom package: rate limit step size', '2026-09-17 15:53:16'),
-(76, 'custom_package_rate_limit_price_per_step', '172', 'int', 'Custom package: price per rate limit step in IDR', '2026-09-17 15:53:16'),
-(207, 'site_title', 'One API Key for Everything', 'string', 'Website display title', '2026-09-17 15:53:16'),
-(208, 'site_description', 'Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.', 'string', 'Website short description', '2026-09-17 15:53:16'),
-(209, 'site_keywords', 'API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration', 'string', 'Website keywords (comma-separated)', '2026-09-17 15:53:16'),
+(70, 'bank_name', 'Bank BCA', 'string', 'Bank name for transfers', '2026-09-17 16:09:29'),
+(71, 'bank_account_number', '1234567890', 'string', 'Bank account number', '2026-09-17 16:09:29'),
+(72, 'bank_account_name', 'PT. API Hub Group', 'string', 'Bank account holder name', '2026-09-17 16:09:29'),
+(73, 'custom_package_rate_limit_min', '20', 'int', 'Custom package: minimum rate limit per minute', '2026-09-17 16:09:29'),
+(74, 'custom_package_rate_limit_max', '500', 'int', 'Custom package: maximum rate limit per minute', '2026-09-17 16:09:29'),
+(75, 'custom_package_rate_limit_step', '1', 'int', 'Custom package: rate limit step size', '2026-09-17 16:09:29'),
+(76, 'custom_package_rate_limit_price_per_step', '172', 'int', 'Custom package: price per rate limit step in IDR', '2026-09-17 16:09:29'),
+(207, 'site_title', 'One API Key for Everything', 'string', 'Website display title', '2026-09-17 16:09:29'),
+(208, 'site_description', 'Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.', 'string', 'Website short description', '2026-09-17 16:09:29'),
+(209, 'site_keywords', 'API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration', 'string', 'Website keywords (comma-separated)', '2026-09-17 16:09:29'),
 (210, 'site_logo', '/uploads/site/logo-9b538ca331f08b08f6b1b29eceedde1e.webp', 'string', 'Website logo image path', '2026-09-04 07:54:29'),
 (211, 'site_favicon', '/uploads/site/favicon-5ddcccd3f1b2eb95ed4980b09a14ac15.webp', 'string', 'Website favicon image path', '2026-09-04 07:54:29'),
-(212, 'seo_meta_title', 'API Hub', 'string', 'HTML meta title for SEO', '2026-09-17 15:53:16'),
-(213, 'seo_meta_description', 'Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.', 'string', 'HTML meta description for SEO', '2026-09-17 15:53:16'),
-(214, 'seo_meta_keywords', 'API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration', 'string', 'HTML meta keywords for SEO', '2026-09-17 15:53:16'),
-(215, 'og_title', 'One API Key for Everything', 'string', 'Open Graph title for social sharing', '2026-09-17 15:53:16'),
-(216, 'og_description', 'One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.', 'string', 'Open Graph description for social sharing', '2026-09-17 15:53:16'),
-(217, 'og_url', 'http://localhost:3000', 'string', 'Open Graph canonical URL', '2026-09-17 15:53:16'),
+(212, 'seo_meta_title', 'API Hub', 'string', 'HTML meta title for SEO', '2026-09-17 16:09:29'),
+(213, 'seo_meta_description', 'Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.', 'string', 'HTML meta description for SEO', '2026-09-17 16:09:29'),
+(214, 'seo_meta_keywords', 'API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration', 'string', 'HTML meta keywords for SEO', '2026-09-17 16:09:29'),
+(215, 'og_title', 'One API Key for Everything', 'string', 'Open Graph title for social sharing', '2026-09-17 16:09:29'),
+(216, 'og_description', 'One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.', 'string', 'Open Graph description for social sharing', '2026-09-17 16:09:29'),
+(217, 'og_url', 'http://localhost:3000', 'string', 'Open Graph canonical URL', '2026-09-17 16:09:29'),
 (218, 'site_og_image', '/uploads/site/og-image-9938038e9d8dd524300f961aa1d21771.jpg', 'string', 'Open Graph image path', '2026-09-04 07:54:29'),
-(266, 'referral_enabled', 'true', 'bool', 'Enable referral program for users', '2026-09-17 15:53:16'),
-(267, 'referral_credit_amount', '200', 'int', 'Credits awarded to referrer for each successful referral', '2026-09-17 15:53:16'),
-(268, 'referral_description', 'Invite friends and earn credits for each successful registration!', '', 'Description shown to users about the referral program', '2026-09-17 15:53:16'),
-(269, 'new_referral_credit_amount', '100', 'int', 'Credits awarded to new user who registers with a referral code', '2026-09-17 15:53:16'),
-(270, 'auth_captcha_enabled', 'false', 'bool', 'Enable captcha on login & register forms', '2026-09-17 15:53:16'),
-(271, 'notifications_enabled', 'true', 'bool', 'Enable notification system', '2026-09-17 15:53:16'),
+(266, 'referral_enabled', 'true', 'bool', 'Enable referral program for users', '2026-09-17 16:09:29'),
+(267, 'referral_credit_amount', '200', 'int', 'Credits awarded to referrer for each successful referral', '2026-09-17 16:09:29'),
+(268, 'referral_description', 'Invite friends and earn credits for each successful registration!', '', 'Description shown to users about the referral program', '2026-09-17 16:09:29'),
+(269, 'new_referral_credit_amount', '100', 'int', 'Credits awarded to new user who registers with a referral code', '2026-09-17 16:09:29'),
+(270, 'auth_captcha_enabled', 'false', 'bool', 'Enable captcha on login & register forms', '2026-09-17 16:09:29'),
+(271, 'notifications_enabled', 'true', 'bool', 'Enable notification system', '2026-09-17 16:09:29'),
 (272, 'notifications_poll_interval', '30', 'int', 'Notification polling interval in seconds', '2026-09-13 07:41:24'),
-(273, 'smtp_host', '', 'string', 'SMTP Host (e.g. smtp.gmail.com)', '2026-09-17 15:53:16'),
-(274, 'smtp_port', '465', 'int', 'SMTP Port (e.g. 587 for TLS, 465 for SSL)', '2026-09-17 15:53:16'),
-(275, 'smtp_encryption', 'ssl', 'string', 'SMTP Encryption (tls, ssl, or none)', '2026-09-17 15:53:16'),
-(276, 'smtp_username', '', 'string', 'SMTP Username', '2026-09-17 15:53:16'),
-(277, 'smtp_password', '', 'string', 'SMTP Password', '2026-09-17 15:53:16'),
-(278, 'smtp_from_email', '', 'string', 'From Email Address', '2026-09-17 15:53:16'),
-(279, 'smtp_from_name', 'API Hub', 'string', 'From Name', '2026-09-17 15:53:16'),
-(280, 'credit_bonus_enabled', 'false', 'bool', 'Enable automatic credit bonus when balance drops below threshold', '2026-09-17 15:53:16'),
-(281, 'credit_bonus_threshold', '5', 'int', 'Credit balance threshold to trigger bonus (e.g. 5 = bonus when balance < 5)', '2026-09-17 15:53:16'),
-(282, 'credit_bonus_daily', '50', 'int', 'Bonus credits for daily tier (1-6 days since last threshold)', '2026-09-17 15:53:16'),
-(283, 'credit_bonus_weekly', '75', 'int', 'Bonus credits for weekly tier (7-29 days since last threshold)', '2026-09-17 15:53:16'),
-(284, 'credit_bonus_monthly', '150', 'int', 'Bonus credits for monthly tier (30+ days since last threshold)', '2026-09-17 15:53:16'),
-(287, 'credit_bonus_daily_enabled', 'true', 'bool', 'Enable daily bonus tier', '2026-09-17 15:53:16'),
-(289, 'credit_bonus_weekly_enabled', 'true', 'bool', 'Enable weekly bonus tier', '2026-09-17 15:53:16'),
-(291, 'credit_bonus_monthly_enabled', 'true', 'bool', 'Enable monthly bonus tier', '2026-09-17 15:53:16');
+(273, 'smtp_host', '', 'string', 'SMTP Host (e.g. smtp.gmail.com)', '2026-09-17 16:09:29'),
+(274, 'smtp_port', '465', 'int', 'SMTP Port (e.g. 587 for TLS, 465 for SSL)', '2026-09-17 16:09:29'),
+(275, 'smtp_encryption', 'ssl', 'string', 'SMTP Encryption (tls, ssl, or none)', '2026-09-17 16:09:29'),
+(276, 'smtp_username', '', 'string', 'SMTP Username', '2026-09-17 16:09:29'),
+(277, 'smtp_password', '', 'string', 'SMTP Password', '2026-09-17 16:09:29'),
+(278, 'smtp_from_email', '', 'string', 'From Email Address', '2026-09-17 16:09:29'),
+(279, 'smtp_from_name', 'API Hub', 'string', 'From Name', '2026-09-17 16:09:29'),
+(280, 'credit_bonus_enabled', 'false', 'bool', 'Enable automatic credit bonus when balance drops below threshold', '2026-09-17 16:09:29'),
+(281, 'credit_bonus_threshold', '5', 'int', 'Credit balance threshold to trigger bonus (e.g. 5 = bonus when balance < 5)', '2026-09-17 16:09:29'),
+(282, 'credit_bonus_daily', '50', 'int', 'Bonus credits for daily tier (1-6 days since last threshold)', '2026-09-17 16:09:29'),
+(283, 'credit_bonus_weekly', '75', 'int', 'Bonus credits for weekly tier (7-29 days since last threshold)', '2026-09-17 16:09:29'),
+(284, 'credit_bonus_monthly', '150', 'int', 'Bonus credits for monthly tier (30+ days since last threshold)', '2026-09-17 16:09:29'),
+(287, 'credit_bonus_daily_enabled', 'true', 'bool', 'Enable daily bonus tier', '2026-09-17 16:09:29'),
+(289, 'credit_bonus_weekly_enabled', 'true', 'bool', 'Enable weekly bonus tier', '2026-09-17 16:09:29'),
+(291, 'credit_bonus_monthly_enabled', 'true', 'bool', 'Enable monthly bonus tier', '2026-09-17 16:09:29'),
+(550, 'payment_method_transfer_enabled', 'true', 'bool', 'Enable Manual Bank Transfer payment method', '2026-09-17 16:09:29'),
+(551, 'payment_method_qris_enabled', 'true', 'bool', 'Enable QRIS Static payment method', '2026-09-17 16:09:29'),
+(552, 'qris_image', '/uploads/site/qris-b013b2169fbac7aadeb17630e28bac3a.png', 'string', 'QRIS QR code image path', '2026-09-17 16:09:29');
 
 -- --------------------------------------------------------
 
@@ -608,19 +611,6 @@ CREATE TABLE `system_logs` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data untuk tabel `system_logs`
---
-
-INSERT INTO `system_logs` (`id`, `user_id`, `action`, `details`, `ip_address`, `user_agent`, `created_at`) VALUES
-(1, 1, 'auth_login', '{\"email\":\"admin@saasgateway.local\",\"role\":\"admin\"}', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:155.0) Gecko/20100101 Firefox/155.0', '2026-09-17 15:45:40'),
-(2, 1, 'admin_update_settings', '{\"app_name\":\"API Hub\",\"default_credits\":\"350\",\"credit_value_rp\":\"50\",\"global_rate_limit\":\"20\",\"notifications_poll_interval\":\"30\",\"registration_enabled\":\"on\",\"new_user_bonus_enabled\":\"on\",\"notifications_enabled\":\"on\",\"credit_bonus_threshold\":\"5\",\"credit_bonus_daily_enabled\":\"on\",\"credit_bonus_daily\":\"50\",\"credit_bonus_weekly_enabled\":\"on\",\"credit_bonus_weekly\":\"75\",\"credit_bonus_monthly_enabled\":\"on\",\"credit_bonus_monthly\":\"150\",\"bank_name\":\"Bank BCA\",\"bank_account_number\":\"1234567890\",\"bank_account_name\":\"PT. API Hub Group\",\"smtp_host\":\"\",\"smtp_port\":\"465\",\"smtp_encryption\":\"ssl\",\"smtp_username\":\"\",\"smtp_password\":\"\",\"smtp_from_email\":\"\",\"smtp_from_name\":\"API Hub\",\"custom_package_rate_limit_min\":\"20\",\"custom_package_rate_limit_max\":\"500\",\"custom_package_rate_limit_step\":\"1\",\"custom_package_rate_limit_price_per_step\":\"172\",\"referral_enabled\":\"on\",\"referral_credit_amount\":\"200\",\"referral_description\":\"Invite friends and earn credits for each successful registration!\",\"new_referral_credit_amount\":\"100\",\"site_title\":\"One API Key for Everything\",\"site_description\":\"Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"site_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"seo_meta_title\":\"API Hub\",\"seo_meta_description\":\"Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"seo_meta_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"og_title\":\"One API Key for Everything\",\"og_url\":\"http://localhost:3000\",\"og_description\":\"One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.\",\"files\":[]}', '127.0.0.1', NULL, '2026-09-17 15:48:52'),
-(3, 1, 'admin_update_settings', '{\"app_name\":\"API Hub\",\"default_credits\":\"350\",\"credit_value_rp\":\"39\",\"global_rate_limit\":\"20\",\"notifications_poll_interval\":\"30\",\"registration_enabled\":\"on\",\"new_user_bonus_enabled\":\"on\",\"notifications_enabled\":\"on\",\"credit_bonus_threshold\":\"5\",\"credit_bonus_daily_enabled\":\"on\",\"credit_bonus_daily\":\"50\",\"credit_bonus_weekly_enabled\":\"on\",\"credit_bonus_weekly\":\"75\",\"credit_bonus_monthly_enabled\":\"on\",\"credit_bonus_monthly\":\"150\",\"bank_name\":\"Bank BCA\",\"bank_account_number\":\"1234567890\",\"bank_account_name\":\"PT. API Hub Group\",\"smtp_host\":\"\",\"smtp_port\":\"465\",\"smtp_encryption\":\"ssl\",\"smtp_username\":\"\",\"smtp_password\":\"\",\"smtp_from_email\":\"\",\"smtp_from_name\":\"API Hub\",\"custom_package_rate_limit_min\":\"20\",\"custom_package_rate_limit_max\":\"500\",\"custom_package_rate_limit_step\":\"1\",\"custom_package_rate_limit_price_per_step\":\"172\",\"referral_enabled\":\"on\",\"referral_credit_amount\":\"200\",\"referral_description\":\"Invite friends and earn credits for each successful registration!\",\"new_referral_credit_amount\":\"100\",\"site_title\":\"One API Key for Everything\",\"site_description\":\"Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"site_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"seo_meta_title\":\"API Hub\",\"seo_meta_description\":\"Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"seo_meta_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"og_title\":\"One API Key for Everything\",\"og_url\":\"http://localhost:3000\",\"og_description\":\"One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.\",\"files\":[]}', '127.0.0.1', NULL, '2026-09-17 15:50:10'),
-(4, 1, 'admin_update_settings', '{\"app_name\":\"API Hub\",\"default_credits\":\"350\",\"credit_value_rp\":\"19\",\"global_rate_limit\":\"20\",\"notifications_poll_interval\":\"30\",\"registration_enabled\":\"on\",\"new_user_bonus_enabled\":\"on\",\"notifications_enabled\":\"on\",\"credit_bonus_threshold\":\"5\",\"credit_bonus_daily_enabled\":\"on\",\"credit_bonus_daily\":\"50\",\"credit_bonus_weekly_enabled\":\"on\",\"credit_bonus_weekly\":\"75\",\"credit_bonus_monthly_enabled\":\"on\",\"credit_bonus_monthly\":\"150\",\"bank_name\":\"Bank BCA\",\"bank_account_number\":\"1234567890\",\"bank_account_name\":\"PT. API Hub Group\",\"smtp_host\":\"\",\"smtp_port\":\"465\",\"smtp_encryption\":\"ssl\",\"smtp_username\":\"\",\"smtp_password\":\"\",\"smtp_from_email\":\"\",\"smtp_from_name\":\"API Hub\",\"custom_package_rate_limit_min\":\"20\",\"custom_package_rate_limit_max\":\"500\",\"custom_package_rate_limit_step\":\"1\",\"custom_package_rate_limit_price_per_step\":\"172\",\"referral_enabled\":\"on\",\"referral_credit_amount\":\"200\",\"referral_description\":\"Invite friends and earn credits for each successful registration!\",\"new_referral_credit_amount\":\"100\",\"site_title\":\"One API Key for Everything\",\"site_description\":\"Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"site_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"seo_meta_title\":\"API Hub\",\"seo_meta_description\":\"Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"seo_meta_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"og_title\":\"One API Key for Everything\",\"og_url\":\"http://localhost:3000\",\"og_description\":\"One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.\",\"files\":[]}', '127.0.0.1', NULL, '2026-09-17 15:50:30'),
-(5, 1, 'admin_update_settings', '{\"app_name\":\"API Hub\",\"default_credits\":\"350\",\"credit_value_rp\":\"14\",\"global_rate_limit\":\"20\",\"notifications_poll_interval\":\"30\",\"registration_enabled\":\"on\",\"new_user_bonus_enabled\":\"on\",\"notifications_enabled\":\"on\",\"credit_bonus_threshold\":\"5\",\"credit_bonus_daily_enabled\":\"on\",\"credit_bonus_daily\":\"50\",\"credit_bonus_weekly_enabled\":\"on\",\"credit_bonus_weekly\":\"75\",\"credit_bonus_monthly_enabled\":\"on\",\"credit_bonus_monthly\":\"150\",\"bank_name\":\"Bank BCA\",\"bank_account_number\":\"1234567890\",\"bank_account_name\":\"PT. API Hub Group\",\"smtp_host\":\"\",\"smtp_port\":\"465\",\"smtp_encryption\":\"ssl\",\"smtp_username\":\"\",\"smtp_password\":\"\",\"smtp_from_email\":\"\",\"smtp_from_name\":\"API Hub\",\"custom_package_rate_limit_min\":\"20\",\"custom_package_rate_limit_max\":\"500\",\"custom_package_rate_limit_step\":\"1\",\"custom_package_rate_limit_price_per_step\":\"172\",\"referral_enabled\":\"on\",\"referral_credit_amount\":\"200\",\"referral_description\":\"Invite friends and earn credits for each successful registration!\",\"new_referral_credit_amount\":\"100\",\"site_title\":\"One API Key for Everything\",\"site_description\":\"Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"site_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"seo_meta_title\":\"API Hub\",\"seo_meta_description\":\"Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"seo_meta_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"og_title\":\"One API Key for Everything\",\"og_url\":\"http://localhost:3000\",\"og_description\":\"One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.\",\"files\":[]}', '127.0.0.1', NULL, '2026-09-17 15:50:45'),
-(6, 1, 'admin_update_settings', '{\"app_name\":\"API Hub\",\"default_credits\":\"350\",\"credit_value_rp\":\"16\",\"global_rate_limit\":\"20\",\"notifications_poll_interval\":\"30\",\"registration_enabled\":\"on\",\"new_user_bonus_enabled\":\"on\",\"notifications_enabled\":\"on\",\"credit_bonus_threshold\":\"5\",\"credit_bonus_daily_enabled\":\"on\",\"credit_bonus_daily\":\"50\",\"credit_bonus_weekly_enabled\":\"on\",\"credit_bonus_weekly\":\"75\",\"credit_bonus_monthly_enabled\":\"on\",\"credit_bonus_monthly\":\"150\",\"bank_name\":\"Bank BCA\",\"bank_account_number\":\"1234567890\",\"bank_account_name\":\"PT. API Hub Group\",\"smtp_host\":\"\",\"smtp_port\":\"465\",\"smtp_encryption\":\"ssl\",\"smtp_username\":\"\",\"smtp_password\":\"\",\"smtp_from_email\":\"\",\"smtp_from_name\":\"API Hub\",\"custom_package_rate_limit_min\":\"20\",\"custom_package_rate_limit_max\":\"500\",\"custom_package_rate_limit_step\":\"1\",\"custom_package_rate_limit_price_per_step\":\"172\",\"referral_enabled\":\"on\",\"referral_credit_amount\":\"200\",\"referral_description\":\"Invite friends and earn credits for each successful registration!\",\"new_referral_credit_amount\":\"100\",\"site_title\":\"One API Key for Everything\",\"site_description\":\"Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"site_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"seo_meta_title\":\"API Hub\",\"seo_meta_description\":\"Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"seo_meta_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"og_title\":\"One API Key for Everything\",\"og_url\":\"http://localhost:3000\",\"og_description\":\"One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.\",\"files\":[]}', '127.0.0.1', NULL, '2026-09-17 15:52:47'),
-(7, 1, 'admin_update_settings', '{\"app_name\":\"API Hub\",\"default_credits\":\"350\",\"credit_value_rp\":\"12\",\"global_rate_limit\":\"20\",\"notifications_poll_interval\":\"30\",\"registration_enabled\":\"on\",\"new_user_bonus_enabled\":\"on\",\"notifications_enabled\":\"on\",\"credit_bonus_threshold\":\"5\",\"credit_bonus_daily_enabled\":\"on\",\"credit_bonus_daily\":\"50\",\"credit_bonus_weekly_enabled\":\"on\",\"credit_bonus_weekly\":\"75\",\"credit_bonus_monthly_enabled\":\"on\",\"credit_bonus_monthly\":\"150\",\"bank_name\":\"Bank BCA\",\"bank_account_number\":\"1234567890\",\"bank_account_name\":\"PT. API Hub Group\",\"smtp_host\":\"\",\"smtp_port\":\"465\",\"smtp_encryption\":\"ssl\",\"smtp_username\":\"\",\"smtp_password\":\"\",\"smtp_from_email\":\"\",\"smtp_from_name\":\"API Hub\",\"custom_package_rate_limit_min\":\"20\",\"custom_package_rate_limit_max\":\"500\",\"custom_package_rate_limit_step\":\"1\",\"custom_package_rate_limit_price_per_step\":\"172\",\"referral_enabled\":\"on\",\"referral_credit_amount\":\"200\",\"referral_description\":\"Invite friends and earn credits for each successful registration!\",\"new_referral_credit_amount\":\"100\",\"site_title\":\"One API Key for Everything\",\"site_description\":\"Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"site_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"seo_meta_title\":\"API Hub\",\"seo_meta_description\":\"Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.\",\"seo_meta_keywords\":\"API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration\",\"og_title\":\"One API Key for Everything\",\"og_url\":\"http://localhost:3000\",\"og_description\":\"One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.\",\"files\":[]}', '127.0.0.1', NULL, '2026-09-17 15:53:16');
-
 -- --------------------------------------------------------
 
 --
@@ -637,6 +627,7 @@ CREATE TABLE `transactions` (
   `rate_limit_per_minute` int(11) NOT NULL DEFAULT 100,
   `total_price` int(11) NOT NULL DEFAULT 0,
   `payment_proof` varchar(255) DEFAULT NULL,
+  `payment_method` enum('transfer','qris') DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `admin_note` text DEFAULT NULL,
   `reviewed_by` int(11) DEFAULT NULL,
@@ -677,8 +668,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `uuid`, `username`, `email`, `password_hash`, `full_name`, `role`, `package_id`, `custom_rate_limit`, `avatar`, `referral_code`, `is_active`, `is_verified`, `last_login`, `last_login_ip`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-09-17 15:45:40', '127.0.0.1', '2026-08-27 16:12:19', '2026-09-17 15:45:40', NULL),
-(2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-15 08:56:23', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-15 08:56:23', NULL);
+(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-09-17 16:36:36', '127.0.0.1', '2026-08-27 16:12:19', '2026-09-17 16:36:36', NULL),
+(2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-17 16:34:15', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-17 16:34:15', NULL);
 
 -- --------------------------------------------------------
 
@@ -897,7 +888,7 @@ ALTER TABLE `verification_requests`
 -- AUTO_INCREMENT untuk tabel `admin_settings`
 --
 ALTER TABLE `admin_settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=550;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=553;
 
 --
 -- AUTO_INCREMENT untuk tabel `apis`
@@ -981,7 +972,7 @@ ALTER TABLE `request_logs`
 -- AUTO_INCREMENT untuk tabel `system_logs`
 --
 ALTER TABLE `system_logs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `transactions`

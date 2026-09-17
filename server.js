@@ -178,6 +178,12 @@ function emitNotification({ userIds, target, notification, unreadCount }) {
 app.set('emitNotification', emitNotification);
 
 // ============================================================
+// Run auto-migrations before starting
+// ============================================================
+const runMigrations = require('./migrations/run-migrations');
+runMigrations().catch(err => console.error('[Migration]', err.message));
+
+// ============================================================
 // Start Server
 // ============================================================
 server.listen(PORT, HOST, () => {

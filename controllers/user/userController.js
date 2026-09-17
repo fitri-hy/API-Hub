@@ -318,6 +318,13 @@ const userController = {
       AdminSettings.get('bank_account_name')
     ]);
 
+    // Get payment method settings
+    const [transferEnabled, qrisEnabled, qrisImage] = await Promise.all([
+      AdminSettings.get('payment_method_transfer_enabled'),
+      AdminSettings.get('payment_method_qris_enabled'),
+      AdminSettings.get('qris_image')
+    ]);
+
     res.render('user/credits', {
       title: 'Credits & Wallet', layout: 'layouts/user',
       userData: user, creditStats, transactions, packages, pagination, helpers,
@@ -332,6 +339,11 @@ const userController = {
         bankName: bankName || 'Bank BCA',
         bankAccountNumber: bankAccountNumber || '-',
         bankAccountName: bankAccountName || '-'
+      },
+      paymentMethods: {
+        transferEnabled: transferEnabled === true || transferEnabled === 'true',
+        qrisEnabled: qrisEnabled === true || qrisEnabled === 'true',
+        qrisImage: qrisImage || null
       }
     });
   },
@@ -346,10 +358,91 @@ const userController = {
     }
   },
 
+  async checkout(req, res) {
+    try {
+      const user = await User.findById(req.session.userId);
+      const { type, package_id, credits, rate_limit, notes } = req.query;
+
+      let total_price = 0;
+      let credits_requested = 0;
+      let rate_limit_per_minute = 100;
+      let packageId = null;
+      let packageName = 'Custom Package';
+      let packageDescription = '';
+
+      if (type === 'standard_package' && package_id) {
+        const pkg = await Package.findById(package_id);
+        if (!pkg) {
+          req.flash('error', 'Package not found');
+          return res.redirect('/user/credits');
+        }
+        packageId = pkg.id;
+        packageName = pkg.name;
+        packageDescription = pkg.description || '';
+        credits_requested = pkg.credits_included;
+        rate_limit_per_minute = pkg.rate_limit_per_minute;
+        total_price = pkg.price;
+      } else if (type === 'custom_package') {
+        const calc = await Transaction.calculateCustomPrice(parseInt(credits) || 100, parseInt(rate_limit) || 50);
+        credits_requested = calc.credits;
+        rate_limit_per_minute = calc.rateLimitPerMinute;
+        total_price = calc.totalCost;
+      } else {
+        req.flash('error', 'Invalid checkout parameters');
+        return res.redirect('/user/credits');
+      }
+
+      // Fetch payment method settings
+      const [bankName, bankAccountNumber, bankAccountName, qrisImage, transferEnabled, qrisEnabled] = await Promise.all([
+        AdminSettings.get('bank_name'),
+        AdminSettings.get('bank_account_number'),
+        AdminSettings.get('bank_account_name'),
+        AdminSettings.get('qris_image'),
+        AdminSettings.get('payment_method_transfer_enabled'),
+        AdminSettings.get('payment_method_qris_enabled')
+      ]);
+
+      res.render('user/checkout', {
+        title: 'Checkout', layout: 'layouts/user',
+        userData: user, helpers,
+        order: {
+          type,
+          package_id: packageId,
+          package_name: packageName,
+          package_description: packageDescription,
+          credits_requested,
+          rate_limit_per_minute,
+          total_price,
+          notes: notes || ''
+        },
+        bankInfo: {
+          bankName: bankName || 'Bank BCA',
+          bankAccountNumber: bankAccountNumber || '-',
+          bankAccountName: bankAccountName || '-'
+        },
+        qrisImage: qrisImage || null,
+        paymentMethods: {
+          transferEnabled: transferEnabled === true || transferEnabled === 'true',
+          qrisEnabled: qrisEnabled === true || qrisEnabled === 'true'
+        }
+      });
+    } catch (err) {
+      console.error('Checkout error:', err);
+      req.flash('error', 'Something went wrong');
+      return res.redirect('/user/credits');
+    }
+  },
+
   async purchasePackage(req, res) {
     try {
-      const { package_id, credits, rate_limit, notes, type } = req.body;
+      const { package_id, credits, rate_limit, notes, type, payment_method } = req.body;
       const user = await User.findById(req.session.userId);
+
+      // Require payment proof
+      if (!req.file) {
+        req.flash('error', 'Payment proof is required. Please upload your transfer/QRIS screenshot.');
+        return res.redirect('/user/credits/checkout?type=' + (type || 'standard_package') + (package_id ? '&package_id=' + package_id : '') + (credits ? '&credits=' + credits : '') + (rate_limit ? '&rate_limit=' + rate_limit : ''));
+      }
 
       let total_price = 0;
       let credits_requested = 0;
@@ -376,6 +469,9 @@ const userController = {
         return res.redirect('/user/credits');
       }
 
+      // Save payment proof
+      const proofUrl = `/uploads/avatars/${req.file.filename}`;
+
       // Create transaction
       const transaction = await Transaction.create({
         user_id: user.id,
@@ -384,8 +480,12 @@ const userController = {
         credits_requested,
         rate_limit_per_minute,
         total_price,
+        payment_method: (payment_method === 'qris') ? 'qris' : 'transfer',
         notes: notes || null
       });
+
+      // Save payment proof
+      await db.query('UPDATE transactions SET payment_proof = ? WHERE id = ?', [proofUrl, transaction.id]);
 
       await SystemLog.create({
         userId: user.id,
@@ -400,7 +500,7 @@ const userController = {
         await emitToAdmins(req, { type: 'transaction_pending', title: 'New Transaction', message: user.username + ' has submitted a transaction for ' + credits_requested + ' credits.', link: '/admin/transactions/' + transaction.id, icon: 'credit-card', is_read: 0, created_at: new Date().toISOString() });
       } catch (e) { console.error('Notification error:', e); }
 
-      req.flash('success', 'Purchase request submitted. Please upload payment proof.');
+      req.flash('success', 'Purchase request submitted with payment proof. Waiting for admin review.');
       return res.redirect('/user/transactions/' + transaction.id);
     } catch (err) {
       console.error('Purchase error:', err);
@@ -434,6 +534,13 @@ const userController = {
       AdminSettings.get('bank_account_name')
     ]);
 
+    // Get QRIS info
+    const [qrisImage, transferEnabled, qrisEnabled] = await Promise.all([
+      AdminSettings.get('qris_image'),
+      AdminSettings.get('payment_method_transfer_enabled'),
+      AdminSettings.get('payment_method_qris_enabled')
+    ]);
+
     res.render('user/transaction-detail', {
       title: 'Transaction Detail', layout: 'layouts/user',
       userData: user, transaction, helpers,
@@ -441,6 +548,11 @@ const userController = {
         bankName: bankName || 'Bank BCA',
         bankAccountNumber: bankAccountNumber || '-',
         bankAccountName: bankAccountName || '-'
+      },
+      qrisImage: qrisImage || null,
+      paymentMethods: {
+        transferEnabled: transferEnabled === true || transferEnabled === 'true',
+        qrisEnabled: qrisEnabled === true || qrisEnabled === 'true'
       }
     });
   },

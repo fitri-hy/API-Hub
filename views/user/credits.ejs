@@ -61,13 +61,9 @@
                 <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-500 border border-emerald-200/70 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"><%= helpers.formatNumber(pkg.credits_included) %> credits</span>
                 <span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-500 border border-rose-200/70 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20"><%= pkg.rate_limit_per_minute %> req/min</span>
               </div>
-              <form method="POST" action="/user/credits/purchase" class="inline">
-                <input type="hidden" name="type" value="standard_package">
-                <input type="hidden" name="package_id" value="<%= pkg.id %>">
-                <div class="flex justify-end">
-				  <button type="submit" class="btn-normal px-3 py-2 rounded-md text-xs font-medium">Buy Now</button>
-                </div>
-			  </form>
+              <div class="flex justify-end">
+                <button type="button" onclick="window.location.href='/user/credits/checkout?type=standard_package&package_id=<%= pkg.id %>'" class="btn-normal px-3 py-2 rounded-md text-xs font-medium">Buy Now</button>
+              </div>
             </div>
           <% }); %>
         </div>
@@ -142,8 +138,8 @@
               </div>
             </div>
 			<div class="flex items-center justify-center lg:justify-end">
-              <button type="submit" class="lg:max-w-xs btn-normal px-4 py-2.5 rounded-md text-sm font-medium">
-                Submit Purchase Request
+              <button type="button" onclick="goToCustomCheckout()" class="lg:max-w-xs btn-normal px-4 py-2.5 rounded-md text-sm font-medium">
+                Proceed to Checkout
               </button>
             </div>
           </div>
@@ -197,6 +193,14 @@ const settingsJson = JSON.stringify(customPackageSettings);
 pageScript = `
 <script>
 const settings = ` + settingsJson + `;
+
+function goToCustomCheckout() {
+  const credits = document.getElementById('customCredits').value || 100;
+  const rateLimit = document.getElementById('customRateLimit').value || settings.rateLimitMin;
+  const notes = document.querySelector('#customPackageForm textarea[name="notes"]')?.value || '';
+  const url = '/user/credits/checkout?type=custom_package&credits=' + credits + '&rate_limit=' + rateLimit + '&notes=' + encodeURIComponent(notes);
+  window.location.href = url;
+}
 
 function calculateCustomPackage() {
   const credits = parseInt(document.getElementById('customCredits').value) || 0;

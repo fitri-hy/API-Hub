@@ -87,16 +87,36 @@
       <div class="card p-5">
         <h3 class="text-sm font-bold mb-3">Payment Instructions</h3>
         <div class="space-y-3 text-sm">
-          <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded">
-            <p class="font-medium"><%= bankInfo.bankName %></p>
-            <p class="text-lg font-bold font-mono"><%= bankInfo.bankAccountNumber %></p>
-            <p class="text-xs text-gray-500"><%= bankInfo.bankAccountName %></p>
-          </div>
-          <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-            <p>1. Transfer exactly <strong><%= helpers.formatRupiah(transaction.total_price) %></strong></p>
-            <p>2. Upload payment proof above</p>
-            <p>3. Wait for admin approval</p>
-          </div>
+          <% if (transaction.payment_method === 'qris' && paymentMethods.qrisEnabled) { %>
+            <!-- QRIS Payment -->
+            <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded text-center">
+              <% if (qrisImage) { %>
+                <img src="<%= qrisImage %>" alt="QRIS QR Code" class="mx-auto max-w-[220px] rounded-lg border border-gray-200 dark:border-gray-700 mb-2">
+              <% } else { %>
+                <p class="text-gray-400 text-xs">QRIS image not available</p>
+              <% } %>
+              <p class="text-xs text-gray-500">Scan QRIS to pay</p>
+            </div>
+            <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+              <p>1. Open your mobile banking/e-wallet app</p>
+              <p>2. Scan the QRIS code above</p>
+              <p>3. Pay exactly <strong><%= helpers.formatRupiah(transaction.total_price) %></strong></p>
+              <p>4. Upload payment proof above</p>
+              <p>5. Wait for admin approval</p>
+            </div>
+          <% } else { %>
+            <!-- Bank Transfer Payment (default) -->
+            <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded">
+              <p class="font-medium"><%= bankInfo.bankName %></p>
+              <p class="text-lg font-bold font-mono"><%= bankInfo.bankAccountNumber %></p>
+              <p class="text-xs text-gray-500"><%= bankInfo.bankAccountName %></p>
+            </div>
+            <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+              <p>1. Transfer exactly <strong><%= helpers.formatRupiah(transaction.total_price) %></strong></p>
+              <p>2. Upload payment proof above</p>
+              <p>3. Wait for admin approval</p>
+            </div>
+          <% } %>
         </div>
       </div>
     <% } %>

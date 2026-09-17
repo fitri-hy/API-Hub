@@ -84,7 +84,8 @@ router.get('/settings', adminController.settings);
 router.post('/settings', uploadSiteImage.fields([
   { name: 'site_logo', maxCount: 1 },
   { name: 'site_favicon', maxCount: 1 },
-  { name: 'site_og_image', maxCount: 1 }
+  { name: 'site_og_image', maxCount: 1 },
+  { name: 'qris_image', maxCount: 1 }
 ]), adminController.updateSettings);
 router.post('/settings/test-smtp', adminController.testSmtp);
 

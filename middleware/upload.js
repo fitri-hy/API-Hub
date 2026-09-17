@@ -60,7 +60,7 @@ const siteStorage = multer.diskStorage({
   filename: function (req, file, cb) {
     const uniqueSuffix = crypto.randomBytes(16).toString('hex');
     const ext = path.extname(file.originalname);
-    const prefix = file.fieldname === 'site_favicon' ? 'favicon' : file.fieldname === 'site_og_image' ? 'og-image' : 'logo';
+    const prefix = file.fieldname === 'site_favicon' ? 'favicon' : file.fieldname === 'site_og_image' ? 'og-image' : file.fieldname === 'qris_image' ? 'qris' : 'logo';
     cb(null, `${prefix}-${uniqueSuffix}${ext}`);
   }
 });

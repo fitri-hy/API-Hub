@@ -84,9 +84,9 @@ class Transaction {
   // Create new transaction
   static async create(data) {
     const [result] = await db.query(
-      `INSERT INTO transactions (user_id, package_id, type, credits_requested, rate_limit_per_minute, total_price, payment_proof, notes)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [data.user_id, data.package_id || null, data.type, data.credits_requested, data.rate_limit_per_minute, data.total_price, data.payment_proof || null, data.notes || null]
+      `INSERT INTO transactions (user_id, package_id, type, credits_requested, rate_limit_per_minute, total_price, payment_proof, payment_method, notes)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [data.user_id, data.package_id || null, data.type, data.credits_requested, data.rate_limit_per_minute, data.total_price, data.payment_proof || null, data.payment_method || null, data.notes || null]
     );
     return this.findById(result.insertId);
   }

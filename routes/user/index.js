@@ -33,8 +33,9 @@ router.get('/browse-apis/:slug', userController.apiDetail);
 
 // Credits
 router.get('/credits', userController.credits);
+router.get('/credits/checkout', userController.checkout);
 router.post('/credits/calculate', userController.calculateCustomPackage);
-router.post('/credits/purchase', userController.purchasePackage);
+router.post('/credits/purchase', uploadAvatar.single('payment_proof'), userController.purchasePackage);
 
 // Transactions
 router.get('/transactions', userController.transactions);

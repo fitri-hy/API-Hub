@@ -22,6 +22,7 @@
           <th class="px-4 py-2 text-center">Credits</th>
           <th class="px-4 py-2 text-center">Rate Limit</th>
           <th class="px-4 py-2 text-right">Price</th>
+          <th class="px-4 py-2 text-center">Payment</th>
           <th class="px-4 py-2 text-center">Status</th>
           <th class="px-4 py-2 text-center">Date</th>
           <th class="px-4 py-2 text-right">Action</th>
@@ -42,6 +43,12 @@
               <td class="px-4 py-2 text-xs text-right font-mono"><%= helpers.formatRupiah(t.total_price) %></td>
               <td class="px-4 py-2 text-center">
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium
+                  <%= t.payment_method === 'qris' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700' %>">
+                  <%= t.payment_method === 'qris' ? 'QRIS' : 'Transfer' %>
+                </span>
+              </td>
+              <td class="px-4 py-2 text-center">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium
                   <%= t.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
                       t.status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
                       'bg-rose-100 text-rose-700' %>">
@@ -55,7 +62,7 @@
             </tr>
           <% }); %>
         <% } else { %>
-          <tr><td colspan="8" class="px-6 py-12 text-sm text-center">No transactions yet.</td></tr>
+          <tr><td colspan="9" class="px-6 py-12 text-sm text-center">No transactions yet.</td></tr>
         <% } %>
       </tbody>
     </table>

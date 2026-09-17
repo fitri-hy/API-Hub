@@ -283,6 +283,36 @@ async function initDatabase() {
   console.log('Table: system_logs');
 
   // ============================================
+  // TRANSACTIONS TABLE
+  // ============================================
+  await conn.query(`
+    CREATE TABLE transactions (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      package_id INT NULL,
+      type ENUM('standard_package', 'custom_package') NOT NULL DEFAULT 'standard_package',
+      status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+      credits_requested INT NOT NULL DEFAULT 0,
+      rate_limit_per_minute INT NOT NULL DEFAULT 100,
+      total_price INT NOT NULL DEFAULT 0,
+      payment_proof VARCHAR(255) NULL,
+      payment_method ENUM('transfer', 'qris') DEFAULT NULL,
+      notes TEXT NULL,
+      admin_note TEXT NULL,
+      reviewed_by INT NULL,
+      reviewed_at DATETIME NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE SET NULL,
+      FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE SET NULL,
+      INDEX idx_txn_user (user_id),
+      INDEX idx_txn_status (status)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  `);
+  console.log('Table: transactions');
+
+  // ============================================
   // SEED DATA
   // ============================================
   console.log('\nSeeding default data...');
@@ -331,6 +361,26 @@ async function initDatabase() {
     );
   }
   console.log('Seeded: admin_settings');
+
+  // Add payment_method column to transactions if missing (idempotent)
+  try {
+    await conn.query(`
+      ALTER TABLE transactions ADD COLUMN payment_method ENUM('transfer','qris') DEFAULT NULL AFTER payment_proof
+    `);
+  } catch (e) { /* column already exists */ }
+
+  // Ensure payment method settings
+  const pmSettings = [
+    ['payment_method_transfer_enabled', 'true', 'bool', 'Enable Manual Bank Transfer payment method'],
+    ['payment_method_qris_enabled', 'false', 'bool', 'Enable QRIS Static payment method'],
+    ['qris_image', '', 'string', 'QRIS QR code image path'],
+  ];
+  for (const s of pmSettings) {
+    await conn.query(
+      `INSERT IGNORE INTO admin_settings (setting_key, setting_value, setting_type, description) VALUES (?, ?, ?, ?)`, s
+    );
+  }
+  console.log('Seeded: payment method settings');
 
   // Create admin
   const bcrypt = require('bcryptjs');

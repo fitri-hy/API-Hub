@@ -161,8 +161,93 @@ pageScript = `
 		</div>
       </div>
 
-      <!-- Bank Account Settings -->
+      <!-- ==================== PAYMENT METHODS ==================== -->
       <div class="mt-12">
+	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
+		  <h3 class="text-xl font-bold">Payment Methods</h3>
+		  <p class="text-sm">Enable or disable payment methods available to users. Toggle each method and configure its details below.</p>
+		</div>
+
+        <%
+          const transferEnabled = settings.find(s => s.setting_key === 'payment_method_transfer_enabled');
+          const qrisEnabled = settings.find(s => s.setting_key === 'payment_method_qris_enabled');
+          const qrisImage = settings.find(s => s.setting_key === 'qris_image');
+        %>
+
+        <div class="space-y-6">
+          <!-- Toggle Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Transfer Toggle -->
+            <div class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 bg-gray-50/50 dark:bg-gray-900/30">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                    <svg class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                  </div>
+                  <span class="text-sm font-bold">Manual Transfer</span>
+                </div>
+                <% if (transferEnabled) { %>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" name="payment_method_transfer_enabled" <%= transferEnabled.parsed ? 'checked' : '' %> class="sr-only peer">
+                  <div class="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+                <% } %>
+              </div>
+              <p class="text-[11px] text-gray-500">Users transfer to your bank account and upload proof.</p>
+            </div>
+
+            <!-- QRIS Toggle -->
+            <div class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 bg-gray-50/50 dark:bg-gray-900/30">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                    <svg class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                  </div>
+                  <span class="text-sm font-bold">QRIS Static</span>
+                </div>
+                <% if (qrisEnabled) { %>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" name="payment_method_qris_enabled" <%= qrisEnabled.parsed ? 'checked' : '' %> class="sr-only peer">
+                  <div class="w-9 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+                <% } %>
+              </div>
+              <p class="text-[11px] text-gray-500">Users scan your static QRIS code to pay. Upload the QR image below.</p>
+            </div>
+          </div>
+
+          <!-- QRIS Image Upload (shown when QRIS is enabled) -->
+          <div id="qrisSection" class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4">
+            <h4 class="text-sm font-bold mb-3">QRIS QR Code</h4>
+            <div class="flex items-start gap-6">
+              <div class="flex-shrink-0">
+                <div class="w-40 h-40 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden">
+                  <% if (settingsMap.qris_image) { %>
+                    <img src="<%= settingsMap.qris_image %>" alt="QRIS QR Code" class="w-full h-full object-contain p-2">
+                  <% } else { %>
+                    <div class="text-center p-4">
+                      <svg class="mx-auto h-10 w-10 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                      <p class="text-[10px] text-gray-400 mt-1">No QR image</p>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+              <div class="flex-1 space-y-2">
+                <label class="block text-xs font-semibold">Upload QRIS QR Code Image</label>
+                <input type="file" name="qris_image" accept="image/*"
+                  class="w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-900/30 dark:file:text-emerald-400 hover:file:bg-emerald-100">
+                <p class="text-[10px] text-gray-500">Recommended: Square image, PNG/JPG. This QR will be shown to users during payment.</p>
+                <% if (settingsMap.qris_image) { %>
+                  <p class="text-[10px] text-emerald-600 dark:text-emerald-400">✓ QRIS image uploaded. Upload a new file to replace.</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bank Account Settings (shown when transfer is enabled) -->
+      <div id="transferSection" class="mt-12">
 	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
 		  <h3 class="text-xl font-bold">Bank Account (Manual Transfer)</h3>
 		  <p class="text-sm">Provide manual transfer payment details.</p>
@@ -455,6 +540,22 @@ pageScript = `
 <%
 pageScript = `
       <script>
+      // Payment method toggle logic
+      (function() {
+        const transferToggle = document.querySelector('input[name="payment_method_transfer_enabled"]');
+        const qrisToggle = document.querySelector('input[name="payment_method_qris_enabled"]');
+        const transferSection = document.getElementById('transferSection');
+        const qrisSection = document.getElementById('qrisSection');
+
+        function applyPaymentVisibility() {
+          if (transferSection) transferSection.style.display = transferToggle && transferToggle.checked ? '' : 'none';
+          if (qrisSection)   qrisSection.style.display   = qrisToggle && qrisToggle.checked ? '' : 'none';
+        }
+        if (transferToggle) transferToggle.addEventListener('change', applyPaymentVisibility);
+        if (qrisToggle) qrisToggle.addEventListener('change', applyPaymentVisibility);
+        applyPaymentVisibility();
+      })();
+
       function showFlash(type, message) {
         let container = document.getElementById('smtpFlashContainer');
         if (!container) {

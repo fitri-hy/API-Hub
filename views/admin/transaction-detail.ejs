@@ -47,6 +47,13 @@
           <p class="text-lg font-bold"><%= helpers.formatRupiah(transaction.total_price) %></p>
         </div>
         <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Payment Method</label>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium
+            <%= transaction.payment_method === 'qris' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700' %>">
+            <%= transaction.payment_method === 'qris' ? 'QRIS' : 'Transfer' %>
+          </span>
+        </div>
+        <div>
           <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Created</label>
           <p class="text-sm"><%= helpers.formatDate(transaction.created_at, 'datetime') %></p>
         </div>
