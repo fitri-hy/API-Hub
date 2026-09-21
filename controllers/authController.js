@@ -4,6 +4,7 @@ const AdminSettings = require('../models/AdminSettings');
 const SystemLog = require('../models/SystemLog');
 const Referral = require('../models/Referral');
 const Notification = require('../models/Notification');
+const Webhook = require('../models/Webhook');
 
 // Helper: emit notification via Socket.IO
 async function emitToUser(req, userId, notificationData) {
@@ -257,6 +258,10 @@ const authController = {
         });
         await emitToAdmins(req, { type: 'new_user', title: 'New User Registration', message: user.username + ' (' + user.email + ') has registered.', link: '/admin/users/' + user.uuid, icon: 'user-plus', is_read: 0, created_at: new Date().toISOString() });
       } catch (e) { console.error('Notification error:', e); }
+      // Webhook dispatch
+      try {
+        await Webhook.dispatch('user.registered', { user_id: user.id, username: user.username, email: user.email });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
 
       req.flash('success', 'Registration successful! Please log in.');
       return res.redirect('/auth/login');

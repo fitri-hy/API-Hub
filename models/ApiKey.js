@@ -45,6 +45,17 @@ class ApiKey {
     return rows;
   }
 
+  // List all keys (admin)
+  static async listAll() {
+    const [rows] = await db.query(
+      `SELECT ak.*, u.username, u.email
+       FROM api_keys ak
+       JOIN users u ON ak.user_id = u.id
+       ORDER BY ak.created_at DESC`
+    );
+    return rows;
+  }
+
   // Count keys for a user
   static async countByUser(userId) {
     const [rows] = await db.query('SELECT COUNT(*) as total FROM api_keys WHERE user_id = ?', [userId]);

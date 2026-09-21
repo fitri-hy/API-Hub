@@ -11,6 +11,7 @@ const Referral = require('../../models/Referral');
 const Email = require('../../utils/email');
 const VerificationRequest = require('../../models/VerificationRequest');
 const Notification = require('../../models/Notification');
+const Webhook = require('../../models/Webhook');
 const db = require('../../config/database');
 const helpers = require('../../utils/helpers');
 const { deleteAvatar, deleteSiteImage } = require('../../middleware/upload');
@@ -201,6 +202,12 @@ const adminController = {
       try {
         await Notification.creditChanged(user.id, { amount: amt, type: amt > 0 ? 'admin_add' : 'admin_deduct', description: description || (amt > 0 ? 'Admin credit bonus' : 'Admin credit deduction') });
       } catch (e) { console.error('Notification error:', e); }
+      // Webhook dispatch
+      try {
+        const event = amt > 0 ? 'credit.added' : 'credit.deducted';
+        await Webhook.dispatch(event, { user_id: user.id, amount: Math.abs(amt), type: amt > 0 ? 'admin_add' : 'admin_deduct', description: description || '' });
+        await Webhook.dispatch('credit.changed', { user_id: user.id, amount: Math.abs(amt), type: amt > 0 ? 'admin_add' : 'admin_deduct', description: description || '' });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
       req.flash('success', `${Math.abs(amt)} Credit successful ${amt > 0 ? 'added' : 'deducted'} (balance: ${result.balance})`);
       return res.redirect(`/admin/users/${req.params.uuid}`);
     } catch (err) {
@@ -267,6 +274,11 @@ const adminController = {
         try {
           await Notification.verificationStatus(user.id, { status: 'approved', adminNote: admin_note });
         } catch (e) { console.error('Notification error:', e); }
+        // Webhook dispatch
+        try {
+          await Webhook.dispatch('user.verified', { user_id: user.id, username: user.username });
+          await Webhook.dispatch('verification.status_changed', { user_id: user.id, username: user.username, status: 'approved' });
+        } catch (e) { console.error('Webhook dispatch error:', e); }
         req.flash('success', `Verification request for ${user.username} has been approved.`);
       } else {
         req.flash('error', result.message);
@@ -295,6 +307,11 @@ const adminController = {
         try {
           await Notification.verificationStatus(user.id, { status: 'rejected', adminNote: admin_note });
         } catch (e) { console.error('Notification error:', e); }
+        // Webhook dispatch
+        try {
+          await Webhook.dispatch('user.verification_rejected', { user_id: user.id, username: user.username, admin_note });
+          await Webhook.dispatch('verification.status_changed', { user_id: user.id, username: user.username, status: 'rejected', admin_note });
+        } catch (e) { console.error('Webhook dispatch error:', e); }
         req.flash('success', `Verification request for ${user.username} has been rejected.`);
       } else {
         req.flash('error', result.message);
@@ -565,6 +582,10 @@ const adminController = {
       let parsedFeatures = null;
       try { if (features && features.trim()) parsedFeatures = JSON.parse(features); } catch (e) { /* ignore */ }
       await Package.create({ slug: slug || helpers.slugify(name), name, description, price: parseInt(price) || 0, creditsIncluded: parseInt(credits_included) || 0, rateLimitPerMinute: parseInt(rate_limit_per_minute) || 100, features: parsedFeatures, sortOrder: parseInt(sort_order) || 0 });
+      // Webhook dispatch
+      try {
+        await Webhook.dispatch('package.changed', { action: 'created', name, slug: slug || helpers.slugify(name), price: parseInt(price) || 0 });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
       req.flash('success', 'Package successfully created');
       return res.redirect('/admin/packages');
     } catch (err) { req.flash('error', 'Failed to create package'); return res.redirect('/admin/packages'); }
@@ -583,6 +604,10 @@ const adminController = {
           await Notification.packageChanged(u.id, { packageName: name, credits: parseInt(credits_included) || 0 });
         }
       } catch (e) { console.error('Notification error:', e); }
+      // Webhook dispatch
+      try {
+        await Webhook.dispatch('package.changed', { action: 'updated', package_id: req.params.id, name, price: parseInt(price) || 0 });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
       req.flash('success', 'Package successfully updated.');
       return res.redirect('/admin/packages');
     } catch (err) { req.flash('error', 'Failed to update package'); return res.redirect('/admin/packages'); }
@@ -801,6 +826,10 @@ const adminController = {
             await Notification.transactionApproved({ id: req.params.id, user_id: transaction.user_id });
           } catch (e) { console.error('Notification error:', e); }
         }
+        // Webhook dispatch
+        try {
+          await Webhook.dispatch('transaction.approved', { transaction_id: req.params.id, user_id: transaction.user_id, amount: transaction.amount });
+        } catch (e) { console.error('Webhook dispatch error:', e); }
         req.flash('success', result.message);
       } else {
         req.flash('error', result.message);
@@ -824,6 +853,10 @@ const adminController = {
             await Notification.transactionRejected({ id: req.params.id, user_id: transaction.user_id }, admin_note);
           } catch (e) { console.error('Notification error:', e); }
         }
+        // Webhook dispatch
+        try {
+          await Webhook.dispatch('transaction.rejected', { transaction_id: req.params.id, user_id: transaction.user_id, admin_note });
+        } catch (e) { console.error('Webhook dispatch error:', e); }
         req.flash('success', 'Transaction rejected');
       } else {
         req.flash('error', 'Transaction not found or already processed');

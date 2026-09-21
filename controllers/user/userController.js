@@ -14,6 +14,7 @@ const Referral = require('../../models/Referral');
 const SystemLog = require('../../models/SystemLog');
 const VerificationRequest = require('../../models/VerificationRequest');
 const Notification = require('../../models/Notification');
+const Webhook = require('../../models/Webhook');
 const Favorite = require('../../models/Favorite');
 const KeyScope = require('../../models/KeyScope');
 const db = require('../../config/database');
@@ -203,6 +204,10 @@ const userController = {
         return res.redirect('/user/api-keys');
       }
       await ApiKey.create(req.session.userId, name || 'API Key', parseInt(credit_limit) || 0);
+      // Webhook dispatch
+      try {
+        await Webhook.dispatch('api_key.created', { user_id: req.session.userId, name: name || 'API Key' });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
       req.flash('success', 'API key created successfully');
       return res.redirect('/user/api-keys');
     } catch (err) {
@@ -240,6 +245,10 @@ const userController = {
         return res.redirect('/user/api-keys');
       }
       await ApiKey.delete(key.id);
+      // Webhook dispatch
+      try {
+        await Webhook.dispatch('api_key.deleted', { user_id: req.session.userId, name: key.name });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
       req.flash('success', 'API key deleted successfully');
       return res.redirect('/user/api-keys');
     } catch (err) {
@@ -499,6 +508,10 @@ const userController = {
         await Notification.transactionPending({ id: transaction.id, credits_requested }, user);
         await emitToAdmins(req, { type: 'transaction_pending', title: 'New Transaction', message: user.username + ' has submitted a transaction for ' + credits_requested + ' credits.', link: '/admin/transactions/' + transaction.id, icon: 'credit-card', is_read: 0, created_at: new Date().toISOString() });
       } catch (e) { console.error('Notification error:', e); }
+      // Webhook dispatch
+      try {
+        await Webhook.dispatch('transaction.created', { transaction_id: transaction.id, user_id: user.id, total_price, credits_requested, payment_method: payment_method || 'transfer' });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
 
       req.flash('success', 'Purchase request submitted with payment proof. Waiting for admin review.');
       return res.redirect('/user/transactions/' + transaction.id);
@@ -582,6 +595,11 @@ const userController = {
         await Notification.paymentProofUploaded({ id: parseInt(req.params.id) }, user);
         await emitToAdmins(req, { type: 'payment_proof_uploaded', title: 'Payment Proof Uploaded', message: user.username + ' has uploaded payment proof for transaction #' + req.params.id + '.', link: '/admin/transactions/' + req.params.id, icon: 'upload', is_read: 0, created_at: new Date().toISOString() });
       } catch (e) { console.error('Notification error:', e); }
+
+      // Webhook dispatch
+      try {
+        await Webhook.dispatch('transaction.proof_uploaded', { transaction_id: parseInt(req.params.id), user_id: req.session.userId });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
 
       req.flash('success', 'Payment proof uploaded. Waiting for admin review.');
       return res.redirect('/user/transactions/' + req.params.id);
@@ -681,6 +699,10 @@ const userController = {
         ipAddress: helpers.getClientIp(req),
         userAgent: req.headers['user-agent']
       });
+      // Webhook dispatch
+      try {
+        await Webhook.dispatch('profile.updated', { user_id: req.session.userId, full_name, email });
+      } catch (e) { console.error('Webhook dispatch error:', e); }
 
       req.flash('success', 'Profile updated successfully.');
       return res.redirect('/user/profile');

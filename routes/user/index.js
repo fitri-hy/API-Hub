@@ -45,6 +45,20 @@ router.post('/transactions/:id/upload-proof', uploadAvatar.single('payment_proof
 // Logs
 router.get('/logs', userController.logs);
 
+// Webhooks
+const webhookController = require('../../controllers/webhookController');
+router.get('/webhooks', webhookController.userList);
+router.get('/webhooks/create', webhookController.userCreate);
+router.post('/webhooks/create', webhookController.userStore);
+router.get('/webhooks/logs', webhookController.userLogs);
+router.post('/webhooks/logs/clear', webhookController.userClearLogs);
+router.get('/webhooks/:id', webhookController.userDetailLogs);
+router.get('/webhooks/:id/edit', webhookController.userEdit);
+router.post('/webhooks/:id/edit', webhookController.userUpdate);
+router.post('/webhooks/:id/delete', webhookController.userDelete);
+router.post('/webhooks/:id/toggle', webhookController.userToggle);
+router.post('/webhooks/:id/rotate-secret', webhookController.userRotateSecret);
+
 // Profile
 router.get('/profile', userController.profile);
 router.post('/profile', uploadAvatar.single('avatar'), userController.updateProfile);

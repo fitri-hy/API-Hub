@@ -1,0 +1,162 @@
+<div class="card p-5">
+	<div class="pb-4 mb-4 border-b border-gray-200/70 dark:border-gray-800/70">
+		<div class="flex items-center gap-4">
+			<a href="/admin/webhooks" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
+					<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</a>
+			<div>
+				<h3 class="text-base font-bold"><%= webhook ? 'Edit' : 'Create' %> Webhook</h3>
+				<p class="text-sm">Set up an endpoint to start listening for automated events.</p>
+			</div>
+		</div>
+	</div>
+	<div>
+	  <form method="POST" action="<%= webhook ? '/admin/webhooks/' + webhook.id + '/edit' : '/admin/webhooks/create' %>" class="space-y-6">
+		<div class="space-y-2 lg:max-w-2xl">
+			<h3 class="text-sm font-bold">Basic Information</h3>
+			<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+				<div class="lg:col-span-2">
+					<label class="block text-[10px] font-semibold uppercase tracking-wider mb-1">Name <span class="text-red-500">*</span></label>
+					<input type="text" name="name" value="<%= webhook ? webhook.name : '' %>" required class="w-full bg-form px-4 py-2 text-sm rounded-md" placeholder="My Webhook">
+				</div>
+				<div class="lg:col-span-3">
+					<label class="block text-[10px] font-semibold uppercase tracking-wider mb-1">Endpoint URL <span class="text-red-500">*</span></label>
+					<input type="url" name="url" value="<%= webhook ? webhook.url : '' %>" required class="w-full bg-form px-4 py-2 text-sm rounded-md font-mono" placeholder="https://example.com/webhook">
+				</div>
+			</div>
+		</div>
+
+		<!-- Events -->
+		<div class="space-y-2">
+		  <h3 class="text-sm font-bold">Subscribe to Events <span class="text-rose-500">*</span></h3>
+		  <%
+		  const selectedEvents = webhook ? (typeof webhook.events === 'string' ? JSON.parse(webhook.events) : webhook.events) : [];
+		  %>
+
+		  <div class="flex flex-col gap-2">
+			<div class="flex">
+				<label class="flex items-center gap-2 cursor-pointer">
+					<input type="checkbox" onchange="toggleAllEvents(this)" class="accent-blue-500" id="selectAllEvents">
+					<span class="text-xs font-bold">Select All</span>
+				</label>
+			</div>
+			<% events.forEach(ev => { %>
+			<div class="flex pl-4">
+			  <label class="flex items-start gap-2 cursor-pointer">
+				<input type="checkbox" name="events" value="<%= ev.name %>" <%= selectedEvents.includes(ev.name) ? 'checked' : '' %> class="mt-1 event-checkbox accent-blue-500">
+				<div>
+				  <h6 class="text-sm font-medium"><%= ev.label %></h6>
+				  <p class="text-[10px]"><%= ev.description %></p>
+				</div>
+			  </label>
+		    </div>
+			<% }) %>
+		  </div>
+		</div>
+
+		<!-- Authentication -->
+		<div class="space-y-2">
+			<h3 class="text-sm font-bold">API Key Authentication</h3>
+
+			<div>
+			  <label class="block text-[10px] font-semibold uppercase tracking-wider mb-1">
+				Auth Method
+			  </label>
+			  <div class="inline-flex rounded-md bg-gray-100 dark:bg-gray-800/80 border border-gray-200/60 dark:border-gray-700/50">
+				<label class="relative flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer text-xs font-medium text-gray-600 dark:text-gray-300 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-900 has-[:checked]:text-gray-900 dark:has-[:checked]:text-white has-[:checked]:shadow-sm transition-all">
+				  <input type="radio" name="auth_type" value="header" <%= !webhook || webhook.auth_type === 'header' ? 'checked' : '' %> class="sr-only">
+				  <span>Header</span>
+				</label>
+
+				<label class="relative flex items-center gap-2 px-4 py-2 rounded-md cursor-pointer text-xs font-medium text-gray-600 dark:text-gray-300 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-900 has-[:checked]:text-gray-900 dark:has-[:checked]:text-white has-[:checked]:shadow-sm transition-all">
+				  <input type="radio" name="auth_type" value="param" <%= webhook && webhook.auth_type === 'param' ? 'checked' : '' %> class="sr-only">
+				  <span>Query Param</span>
+				</label>
+			  </div>
+			</div>
+
+			<div class="flex gap-4">
+			  <div id="headerConfig">
+				<label class="block text-[10px] font-semibold uppercase tracking-wider mb-1">Header Name</label>
+				<input type="text" name="auth_header_name" value="<%= webhook ? webhook.auth_header_name : 'X-API-Key' %>" class="w-full bg-form px-4 py-2 text-sm rounded-md font-mono" placeholder="X-API-Key">
+			  </div>
+			  <div id="paramConfig" class="hidden">
+				<label class="block text-[10px] font-semibold uppercase tracking-wider mb-1">Parameter Name</label>
+				<input type="text" name="auth_param_name" value="<%= webhook ? webhook.auth_param_name : 'api_key' %>" class="w-full bg-form px-4 py-2 text-sm rounded-md font-mono" placeholder="api_key">
+			  </div>
+			  <div>
+				<label class="block text-[10px] font-semibold uppercase tracking-wider mb-1">API Key (Optional)</label>
+				<select name="api_key_id" class="w-full bg-form px-4 py-2 text-sm rounded-md">
+				  <option value="">No API Key</option>
+				  <% if (typeof apiKeys !== 'undefined' && apiKeys) { %>
+					<% apiKeys.forEach(key => { %>
+					  <option value="<%= key.id %>" <%= webhook && webhook.api_key_id == key.id ? 'selected' : '' %>><%= key.name %> (<%= key.key_value.substring(0, 12) %>...)</option>
+					<% }) %>
+				  <% } %>
+				</select>
+			  </div>
+		  </div>
+		</div>
+
+		<!-- Status -->
+		<% if (webhook) { %>
+		<div class="space-y-2">
+		  <h3 class="text-sm font-bold">Status</h3>
+		  <label class="flex items-center gap-2 cursor-pointer">
+			<input type="checkbox" name="is_active" <%= webhook.is_active ? 'checked' : '' %> class="accent-blue-500">
+			<span class="text-sm font-medium">Active</span>
+		  </label>
+		</div>
+		<% } %>
+
+		<!-- Submit -->
+		<div class="flex items-center justify-end gap-4">
+		  <a href="/admin/webhooks" class="flex items-center gap-1 btn-failed px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<g fill="currentColor">
+					<path d="M5.53717 19.5302C5.24427 19.8231 4.7694 19.8231 4.47651 19.5302C4.18361 19.2373 4.18361 18.7624 4.47651 18.4696L18.4764 4.46967C18.7693 4.17678 19.2442 4.17678 19.5371 4.46967C19.8299 4.76256 19.8299 5.23744 19.5371 5.53033L5.53717 19.5302Z"></path>
+					<path d="M4.46978 5.53033C4.17689 5.23744 4.17689 4.76256 4.46978 4.46967C4.76268 4.17678 5.23755 4.17678 5.53044 4.46967L19.5303 18.4696C19.8232 18.7624 19.8232 19.2373 19.5303 19.5302C19.2374 19.8231 18.7626 19.8231 18.4697 19.5302L4.46978 5.53033Z"></path>
+				</g>
+			</svg>
+			Cancel
+		  </a>
+		  <button type="submit" class="flex items-center gap-1 btn-normal px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<g fill="none" stroke="currentColor" stroke-width="1.5">
+					<path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z"></path>
+					<path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22"></path>
+					<path stroke-linecap="round" d="M7 8H13"></path>
+				</g>
+			</svg>
+			<%= webhook ? 'Update Webhook' : 'Create Webhook' %>
+		  </button>
+		</div>
+	  </form>
+	</div>
+</div>
+<%
+const authType = (typeof webhook !== 'undefined' && webhook && webhook.auth_type) ? webhook.auth_type : 'header';
+pageScript = `
+<script>
+
+function toggleAllEvents(checkbox) {
+  document.querySelectorAll('.event-checkbox').forEach(cb => cb.checked = checkbox.checked);
+}
+
+document.querySelectorAll('input[name="auth_type"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    document.getElementById('headerConfig').classList.toggle('hidden', this.value !== 'header');
+    document.getElementById('paramConfig').classList.toggle('hidden', this.value !== 'param');
+  });
+});
+
+const currentAuthType = "${authType}";
+document.getElementById('headerConfig').classList.toggle('hidden', currentAuthType !== 'header');
+document.getElementById('paramConfig').classList.toggle('hidden', currentAuthType !== 'param');
+</script>
+`;
+%>

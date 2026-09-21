@@ -1,0 +1,116 @@
+<div class="card">
+	<div class="pt-5 px-5 flex items-center justify-between gap-4 pb-4 mb-4 border-b border-gray-200/70 dark:border-gray-800/70">
+		<div class="flex items-center gap-4">
+			<a href="/user/webhooks" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
+					<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</a>
+			<div>
+				<h3 class="text-base font-bold">Webhook Delivery Logs</h3>
+				<p class="text-sm">All webhook delivery attempts across all webhooks</p>
+			</div>
+		</div>
+		<form method="POST" action="/user/webhooks/logs/clear" onsubmit="return confirm('Delete ALL webhook logs? This cannot be undone.')">
+			<button type="submit" class="w-full md:w-auto flex justify-center items-center gap-2 text-xs md:text-sm btn-failed px-3 py-2 rounded-md text-white">
+				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none"></path>
+					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11v6m4-6v6m5-11v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+				</svg>
+				<span class="hidden md:flex">Clear All</span>
+			</button>
+		</form>
+	</div>
+	<!-- Filters -->
+	<div class="mb-4 px-4">
+	  <form method="GET" class="flex flex-wrap gap-3 items-end">
+		<div class="md:w-40">
+		  <label class="block text-[10px] font-semibold uppercase tracking-wider mb-1">Status</label>
+		  <select name="status" class="w-full bg-form px-3 py-2 text-sm rounded-md">
+			<option value="">All Statuses</option>
+			<option value="success" <%= filters.status === 'success' ? 'selected' : '' %>>Success</option>
+			<option value="failed" <%= filters.status === 'failed' ? 'selected' : '' %>>Failed</option>
+			<option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Pending</option>
+		  </select>
+		</div>
+		<button type="submit" class="btn-normal p-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<path fill="none" stroke="currentColor" stroke-width="1.5" d="M19 3H5C3.58579 3 2.87868 3 2.43934 3.4122C2 3.8244 2 4.48782 2 5.81466V6.50448C2 7.54232 2 8.06124 2.2596 8.49142C2.5192 8.9216 2.99347 9.18858 3.94202 9.72255L6.85504 11.3624C7.49146 11.7206 7.80967 11.8998 8.03751 12.0976C8.51199 12.5095 8.80408 12.9935 8.93644 13.5872C9 13.8722 9 14.2058 9 14.8729L9 17.5424C9 18.452 9 18.9067 9.25192 19.2613C9.50385 19.6158 9.95128 19.7907 10.8462 20.1406C12.7248 20.875 13.6641 21.2422 14.3321 20.8244C15 20.4066 15 19.4519 15 17.5424V14.8729C15 14.2058 15 13.8722 15.0636 13.5872C15.1959 12.9935 15.488 12.5095 15.9625 12.0976C16.1903 11.8998 16.5085 11.7206 17.145 11.3624L20.058 9.72255C21.0065 9.18858 21.4808 8.9216 21.7404 8.49142C22 8.06124 22 7.54232 22 6.50448V5.81466C22 4.48782 22 3.8244 21.5607 3.4122C21.1213 3 20.4142 3 19 3Z"></path>
+			</svg>
+		</button>
+	  </form>
+	</div>
+
+	<!-- Logs Table -->
+	<div class="overflow-hidden">
+	  <div class="overflow-x-auto">
+		<table class="w-full text-sm">
+		  <thead>
+			<tr class="border-b border-gray-100 dark:border-gray-800">
+			  <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider">Status</th>
+			  <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider">Event</th>
+			  <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider">Webhook</th>
+			  <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider">HTTP</th>
+			  <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider">Duration</th>
+			  <th class="px-4 py-3 text-left text-[10px] font-semibold uppercase tracking-wider">Time</th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<% if (logs.length === 0) { %>
+			  <tr><td colspan="7" class="px-4 py-8 text-center text-sm">No logs found</td></tr>
+			<% } else { %>
+			  <% logs.forEach(log => { %>
+				<tr class="border-b border-gray-200/70 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+				  <td class="px-4 py-3">
+					<span class="w-2 h-2 inline-block rounded-full
+					  <%= log.status === 'success' ? 'bg-emerald-500' : log.status === 'failed' ? 'bg-rose-500' : 'bg-gray-400' %>"></span>
+					<span class="text-xs ml-1"><%= log.status %></span>
+				  </td>
+				  <td class="px-4 py-3 text-xs font-mono"><%= log.event_name %></td>
+				  <td class="px-4 py-3">
+					<a href="/user/webhooks/<%= log.webhook_id %>" class="text-xs text-blue-500 hover:underline"><%= log.webhook_name %></a>
+				  </td>
+				  <td class="px-4 py-3">
+					<% if (log.response_status_code) { %>
+					  <span class="text-xs px-1.5 py-0.5 rounded
+						<%= log.response_status_code >= 200 && log.response_status_code < 300 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300' %>">
+						<%= log.response_status_code %>
+					  </span>
+					<% } else { %>
+					  <span class="text-xs">-</span>
+					<% } %>
+				  </td>
+				  <td class="px-4 py-3 text-xs"><%= log.duration_ms || 0 %>ms</td>
+				  <td class="px-4 py-3 text-xs"><%= new Date(log.created_at).toLocaleString('id-ID') %></td>
+				</tr>
+			  <% }) %>
+			<% } %>
+		  </tbody>
+		</table>
+	  </div>
+	</div>
+	
+	<!-- Pagination -->
+	<% if (pagination && pagination.totalPages > 1) { %>
+		<div class="flex items-center justify-between gap-4 border-t border-gray-200/70 dark:border-gray-800/70 mt-2 p-2">
+			<p class="text-xs text-gray-500 dark:text-gray-400">
+				Showing 
+				<span class="font-medium text-gray-900 dark:text-white"><%= (pagination.currentPage - 1) * (pagination.perPage || 20) + 1 %>-<%= Math.min(pagination.currentPage * (pagination.perPage || 20), pagination.total) %></span>
+				from
+				<span class="font-medium text-gray-900 dark:text-white"><%= pagination.total %></span>
+			</p>
+
+			<nav class="flex items-center gap-1">
+				<% for (let i = pagination.startPage; i <= pagination.endPage; i++) { %>
+					<a href="?page=<%= i %>&status=<%= (filters && filters.status) || '' %>&event=<%= (filters && filters.event) || '' %>"
+						class="flex h-6 min-w-6 items-center justify-center rounded p-1 text-xs font-medium transition-colors
+						<%= i === pagination.currentPage
+							? 'bg-blue-500 dark:bg-blue-600 text-white'
+							: 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' %>">
+						<%= i %>
+					</a>
+				<% } %>
+			</nav>
+		</div>
+	<% } %>

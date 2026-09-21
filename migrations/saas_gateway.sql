@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 17 Sep 2026 pada 11.38
+-- Waktu pembuatan: 21 Sep 2026 pada 04.28
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -41,56 +41,56 @@ CREATE TABLE `admin_settings` (
 --
 
 INSERT INTO `admin_settings` (`id`, `setting_key`, `setting_value`, `setting_type`, `description`, `updated_at`) VALUES
-(1, 'app_name', 'API Hub', 'string', 'Application name', '2026-09-17 16:09:29'),
-(2, 'default_credits', '350', 'int', 'Default credits for new users', '2026-09-17 16:09:29'),
-(3, 'credit_value_rp', '12', 'int', 'Value of 1 credit in IDR', '2026-09-17 16:09:29'),
-(4, 'global_rate_limit', '20', 'int', 'Default rate limit per minute', '2026-09-17 16:09:29'),
-(5, 'registration_enabled', 'true', 'bool', 'Allow new registrations', '2026-09-17 16:09:29'),
-(6, 'maintenance_mode', 'false', 'bool', 'Enable maintenance mode', '2026-09-17 16:09:29'),
+(1, 'app_name', 'API Hub', 'string', 'Application name', '2026-09-19 08:07:59'),
+(2, 'default_credits', '350', 'int', 'Default credits for new users', '2026-09-19 08:07:59'),
+(3, 'credit_value_rp', '12', 'int', 'Value of 1 credit in IDR', '2026-09-19 08:07:59'),
+(4, 'global_rate_limit', '20', 'int', 'Default rate limit per minute', '2026-09-19 08:07:59'),
+(5, 'registration_enabled', 'true', 'bool', 'Allow new registrations', '2026-09-19 08:07:59'),
+(6, 'maintenance_mode', 'false', 'bool', 'Enable maintenance mode', '2026-09-19 08:07:59'),
 (31, 'new_user_bonus_enabled', 'true', 'bool', 'Enable bonus credits for new users', '2026-09-01 12:05:18'),
-(70, 'bank_name', 'Bank BCA', 'string', 'Bank name for transfers', '2026-09-17 16:09:29'),
-(71, 'bank_account_number', '1234567890', 'string', 'Bank account number', '2026-09-17 16:09:29'),
-(72, 'bank_account_name', 'PT. API Hub Group', 'string', 'Bank account holder name', '2026-09-17 16:09:29'),
-(73, 'custom_package_rate_limit_min', '20', 'int', 'Custom package: minimum rate limit per minute', '2026-09-17 16:09:29'),
-(74, 'custom_package_rate_limit_max', '500', 'int', 'Custom package: maximum rate limit per minute', '2026-09-17 16:09:29'),
-(75, 'custom_package_rate_limit_step', '1', 'int', 'Custom package: rate limit step size', '2026-09-17 16:09:29'),
-(76, 'custom_package_rate_limit_price_per_step', '172', 'int', 'Custom package: price per rate limit step in IDR', '2026-09-17 16:09:29'),
-(207, 'site_title', 'One API Key for Everything', 'string', 'Website display title', '2026-09-17 16:09:29'),
-(208, 'site_description', 'Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.', 'string', 'Website short description', '2026-09-17 16:09:29'),
-(209, 'site_keywords', 'API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration', 'string', 'Website keywords (comma-separated)', '2026-09-17 16:09:29'),
+(70, 'bank_name', 'Bank BCA', 'string', 'Bank name for transfers', '2026-09-19 08:07:59'),
+(71, 'bank_account_number', '1234567890', 'string', 'Bank account number', '2026-09-19 08:07:59'),
+(72, 'bank_account_name', 'PT. API Hub Group', 'string', 'Bank account holder name', '2026-09-19 08:07:59'),
+(73, 'custom_package_rate_limit_min', '20', 'int', 'Custom package: minimum rate limit per minute', '2026-09-19 08:07:59'),
+(74, 'custom_package_rate_limit_max', '500', 'int', 'Custom package: maximum rate limit per minute', '2026-09-19 08:07:59'),
+(75, 'custom_package_rate_limit_step', '1', 'int', 'Custom package: rate limit step size', '2026-09-19 08:07:59'),
+(76, 'custom_package_rate_limit_price_per_step', '172', 'int', 'Custom package: price per rate limit step in IDR', '2026-09-19 08:07:59'),
+(207, 'site_title', 'One API Key for Everything', 'string', 'Website display title', '2026-09-19 08:07:59'),
+(208, 'site_description', 'Access hundreds of API endpoints with one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.', 'string', 'Website short description', '2026-09-19 08:07:59'),
+(209, 'site_keywords', 'API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration', 'string', 'Website keywords (comma-separated)', '2026-09-19 08:07:59'),
 (210, 'site_logo', '/uploads/site/logo-9b538ca331f08b08f6b1b29eceedde1e.webp', 'string', 'Website logo image path', '2026-09-04 07:54:29'),
 (211, 'site_favicon', '/uploads/site/favicon-5ddcccd3f1b2eb95ed4980b09a14ac15.webp', 'string', 'Website favicon image path', '2026-09-04 07:54:29'),
-(212, 'seo_meta_title', 'API Hub', 'string', 'HTML meta title for SEO', '2026-09-17 16:09:29'),
-(213, 'seo_meta_description', 'Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.', 'string', 'HTML meta description for SEO', '2026-09-17 16:09:29'),
-(214, 'seo_meta_keywords', 'API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration', 'string', 'HTML meta keywords for SEO', '2026-09-17 16:09:29'),
-(215, 'og_title', 'One API Key for Everything', 'string', 'Open Graph title for social sharing', '2026-09-17 16:09:29'),
-(216, 'og_description', 'One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.', 'string', 'Open Graph description for social sharing', '2026-09-17 16:09:29'),
-(217, 'og_url', 'http://localhost:3000', 'string', 'Open Graph canonical URL', '2026-09-17 16:09:29'),
+(212, 'seo_meta_title', 'API Hub', 'string', 'HTML meta title for SEO', '2026-09-19 08:07:59'),
+(213, 'seo_meta_description', 'Access hundreds of API endpoints through one API key. Built for ultra-low latency, maximum security, and effortless scaling with API Hub.', 'string', 'HTML meta description for SEO', '2026-09-19 08:07:59'),
+(214, 'seo_meta_keywords', 'API Hub, API, API key, API marketplace, REST API, API endpoints, developer API, secure API, fast API, API integration', 'string', 'HTML meta keywords for SEO', '2026-09-19 08:07:59'),
+(215, 'og_title', 'One API Key for Everything', 'string', 'Open Graph title for social sharing', '2026-09-19 08:07:59'),
+(216, 'og_description', 'One API key gives you access to hundreds of endpoints through a single, secure, ultra-fast integration.', 'string', 'Open Graph description for social sharing', '2026-09-19 08:07:59'),
+(217, 'og_url', 'http://localhost:3000', 'string', 'Open Graph canonical URL', '2026-09-19 08:07:59'),
 (218, 'site_og_image', '/uploads/site/og-image-9938038e9d8dd524300f961aa1d21771.jpg', 'string', 'Open Graph image path', '2026-09-04 07:54:29'),
-(266, 'referral_enabled', 'true', 'bool', 'Enable referral program for users', '2026-09-17 16:09:29'),
-(267, 'referral_credit_amount', '200', 'int', 'Credits awarded to referrer for each successful referral', '2026-09-17 16:09:29'),
-(268, 'referral_description', 'Invite friends and earn credits for each successful registration!', '', 'Description shown to users about the referral program', '2026-09-17 16:09:29'),
-(269, 'new_referral_credit_amount', '100', 'int', 'Credits awarded to new user who registers with a referral code', '2026-09-17 16:09:29'),
-(270, 'auth_captcha_enabled', 'false', 'bool', 'Enable captcha on login & register forms', '2026-09-17 16:09:29'),
-(271, 'notifications_enabled', 'true', 'bool', 'Enable notification system', '2026-09-17 16:09:29'),
+(266, 'referral_enabled', 'true', 'bool', 'Enable referral program for users', '2026-09-19 08:07:59'),
+(267, 'referral_credit_amount', '200', 'int', 'Credits awarded to referrer for each successful referral', '2026-09-19 08:07:59'),
+(268, 'referral_description', 'Invite friends and earn credits for each successful registration!', '', 'Description shown to users about the referral program', '2026-09-19 08:07:59'),
+(269, 'new_referral_credit_amount', '100', 'int', 'Credits awarded to new user who registers with a referral code', '2026-09-19 08:07:59'),
+(270, 'auth_captcha_enabled', 'false', 'bool', 'Enable captcha on login & register forms', '2026-09-19 08:07:59'),
+(271, 'notifications_enabled', 'true', 'bool', 'Enable notification system', '2026-09-19 08:07:59'),
 (272, 'notifications_poll_interval', '30', 'int', 'Notification polling interval in seconds', '2026-09-13 07:41:24'),
-(273, 'smtp_host', '', 'string', 'SMTP Host (e.g. smtp.gmail.com)', '2026-09-17 16:09:29'),
-(274, 'smtp_port', '465', 'int', 'SMTP Port (e.g. 587 for TLS, 465 for SSL)', '2026-09-17 16:09:29'),
-(275, 'smtp_encryption', 'ssl', 'string', 'SMTP Encryption (tls, ssl, or none)', '2026-09-17 16:09:29'),
-(276, 'smtp_username', '', 'string', 'SMTP Username', '2026-09-17 16:09:29'),
-(277, 'smtp_password', '', 'string', 'SMTP Password', '2026-09-17 16:09:29'),
-(278, 'smtp_from_email', '', 'string', 'From Email Address', '2026-09-17 16:09:29'),
-(279, 'smtp_from_name', 'API Hub', 'string', 'From Name', '2026-09-17 16:09:29'),
-(280, 'credit_bonus_enabled', 'false', 'bool', 'Enable automatic credit bonus when balance drops below threshold', '2026-09-17 16:09:29'),
-(281, 'credit_bonus_threshold', '5', 'int', 'Credit balance threshold to trigger bonus (e.g. 5 = bonus when balance < 5)', '2026-09-17 16:09:29'),
-(282, 'credit_bonus_daily', '50', 'int', 'Bonus credits for daily tier (1-6 days since last threshold)', '2026-09-17 16:09:29'),
-(283, 'credit_bonus_weekly', '75', 'int', 'Bonus credits for weekly tier (7-29 days since last threshold)', '2026-09-17 16:09:29'),
-(284, 'credit_bonus_monthly', '150', 'int', 'Bonus credits for monthly tier (30+ days since last threshold)', '2026-09-17 16:09:29'),
-(287, 'credit_bonus_daily_enabled', 'true', 'bool', 'Enable daily bonus tier', '2026-09-17 16:09:29'),
-(289, 'credit_bonus_weekly_enabled', 'true', 'bool', 'Enable weekly bonus tier', '2026-09-17 16:09:29'),
-(291, 'credit_bonus_monthly_enabled', 'true', 'bool', 'Enable monthly bonus tier', '2026-09-17 16:09:29'),
-(550, 'payment_method_transfer_enabled', 'true', 'bool', 'Enable Manual Bank Transfer payment method', '2026-09-17 16:09:29'),
-(551, 'payment_method_qris_enabled', 'true', 'bool', 'Enable QRIS Static payment method', '2026-09-17 16:09:29'),
+(273, 'smtp_host', '', 'string', 'SMTP Host (e.g. smtp.gmail.com)', '2026-09-19 08:07:59'),
+(274, 'smtp_port', '465', 'int', 'SMTP Port (e.g. 587 for TLS, 465 for SSL)', '2026-09-19 08:07:59'),
+(275, 'smtp_encryption', 'ssl', 'string', 'SMTP Encryption (tls, ssl, or none)', '2026-09-19 08:07:59'),
+(276, 'smtp_username', '', 'string', 'SMTP Username', '2026-09-19 08:07:59'),
+(277, 'smtp_password', '', 'string', 'SMTP Password', '2026-09-19 08:07:59'),
+(278, 'smtp_from_email', '', 'string', 'From Email Address', '2026-09-19 08:07:59'),
+(279, 'smtp_from_name', 'API Hub', 'string', 'From Name', '2026-09-19 08:07:59'),
+(280, 'credit_bonus_enabled', 'false', 'bool', 'Enable automatic credit bonus when balance drops below threshold', '2026-09-19 08:07:59'),
+(281, 'credit_bonus_threshold', '5', 'int', 'Credit balance threshold to trigger bonus (e.g. 5 = bonus when balance < 5)', '2026-09-19 08:07:59'),
+(282, 'credit_bonus_daily', '50', 'int', 'Bonus credits for daily tier (1-6 days since last threshold)', '2026-09-19 08:07:59'),
+(283, 'credit_bonus_weekly', '75', 'int', 'Bonus credits for weekly tier (7-29 days since last threshold)', '2026-09-19 08:07:59'),
+(284, 'credit_bonus_monthly', '150', 'int', 'Bonus credits for monthly tier (30+ days since last threshold)', '2026-09-19 08:07:59'),
+(287, 'credit_bonus_daily_enabled', 'true', 'bool', 'Enable daily bonus tier', '2026-09-19 08:07:59'),
+(289, 'credit_bonus_weekly_enabled', 'true', 'bool', 'Enable weekly bonus tier', '2026-09-19 08:07:59'),
+(291, 'credit_bonus_monthly_enabled', 'true', 'bool', 'Enable monthly bonus tier', '2026-09-19 08:07:59'),
+(550, 'payment_method_transfer_enabled', 'true', 'bool', 'Enable Manual Bank Transfer payment method', '2026-09-19 08:07:59'),
+(551, 'payment_method_qris_enabled', 'true', 'bool', 'Enable QRIS Static payment method', '2026-09-19 08:07:59'),
 (552, 'qris_image', '/uploads/site/qris-b013b2169fbac7aadeb17630e28bac3a.png', 'string', 'QRIS QR code image path', '2026-09-17 16:09:29');
 
 -- --------------------------------------------------------
@@ -668,8 +668,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `uuid`, `username`, `email`, `password_hash`, `full_name`, `role`, `package_id`, `custom_rate_limit`, `avatar`, `referral_code`, `is_active`, `is_verified`, `last_login`, `last_login_ip`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-09-17 16:36:36', '127.0.0.1', '2026-08-27 16:12:19', '2026-09-17 16:36:36', NULL),
-(2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-17 16:34:15', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-17 16:34:15', NULL);
+(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-09-21 09:21:28', '127.0.0.1', '2026-08-27 16:12:19', '2026-09-21 09:21:28', NULL),
+(2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-19 07:37:18', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-19 07:37:18', NULL);
 
 -- --------------------------------------------------------
 
@@ -698,6 +698,51 @@ CREATE TABLE `verification_requests` (
   `admin_note` text DEFAULT NULL COMMENT 'Admin note on approval/rejection',
   `reviewed_by` int(11) DEFAULT NULL COMMENT 'Admin user ID who reviewed',
   `reviewed_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `webhooks`
+--
+
+CREATE TABLE `webhooks` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `role` enum('admin','user') NOT NULL DEFAULT 'user',
+  `name` varchar(100) NOT NULL DEFAULT 'My Webhook',
+  `url` varchar(500) NOT NULL,
+  `secret` varchar(64) NOT NULL,
+  `events` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Array of event names to subscribe' CHECK (json_valid(`events`)),
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `custom_headers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Custom headers to send with webhook' CHECK (json_valid(`custom_headers`)),
+  `api_key_id` int(11) DEFAULT NULL COMMENT 'API key for authentication',
+  `auth_type` enum('header','param') NOT NULL DEFAULT 'header' COMMENT 'How to send API key',
+  `auth_header_name` varchar(100) NOT NULL DEFAULT 'X-API-Key',
+  `auth_param_name` varchar(100) NOT NULL DEFAULT 'api_key',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `webhook_logs`
+--
+
+CREATE TABLE `webhook_logs` (
+  `id` int(11) NOT NULL,
+  `webhook_id` int(11) NOT NULL,
+  `event_name` varchar(100) NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`payload`)),
+  `status` enum('pending','success','failed','retrying') NOT NULL DEFAULT 'pending',
+  `response_status_code` int(11) DEFAULT NULL,
+  `response_body` text DEFAULT NULL,
+  `error_message` text DEFAULT NULL,
+  `duration_ms` int(11) DEFAULT NULL,
+  `retry_count` int(11) NOT NULL DEFAULT 0,
+  `next_retry_at` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -881,6 +926,25 @@ ALTER TABLE `verification_requests`
   ADD KEY `fk_vr_reviewer` (`reviewed_by`);
 
 --
+-- Indeks untuk tabel `webhooks`
+--
+ALTER TABLE `webhooks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_webhook_user` (`user_id`),
+  ADD KEY `idx_webhook_role` (`role`),
+  ADD KEY `idx_webhook_active` (`is_active`);
+
+--
+-- Indeks untuk tabel `webhook_logs`
+--
+ALTER TABLE `webhook_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_webhook_log_webhook` (`webhook_id`),
+  ADD KEY `idx_webhook_log_event` (`event_name`),
+  ADD KEY `idx_webhook_log_status` (`status`),
+  ADD KEY `idx_webhook_log_created` (`created_at`);
+
+--
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
@@ -999,6 +1063,18 @@ ALTER TABLE `verification_requests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT untuk tabel `webhooks`
+--
+ALTER TABLE `webhooks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `webhook_logs`
+--
+ALTER TABLE `webhook_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
@@ -1081,6 +1157,18 @@ ALTER TABLE `transactions`
 ALTER TABLE `verification_requests`
   ADD CONSTRAINT `fk_vr_reviewer` FOREIGN KEY (`reviewed_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_vr_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `webhooks`
+--
+ALTER TABLE `webhooks`
+  ADD CONSTRAINT `fk_webhook_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `webhook_logs`
+--
+ALTER TABLE `webhook_logs`
+  ADD CONSTRAINT `fk_webhook_log_webhook` FOREIGN KEY (`webhook_id`) REFERENCES `webhooks` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

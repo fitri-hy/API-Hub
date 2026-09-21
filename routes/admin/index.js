@@ -96,4 +96,18 @@ router.get('/referrals', adminController.referrals);
 router.use('/notification', require('./notification'));
 router.use('/push-notification', require('./push-notification'));
 
+// Webhooks
+const webhookController = require('../../controllers/webhookController');
+router.get('/webhooks', webhookController.adminList);
+router.get('/webhooks/create', webhookController.adminCreate);
+router.post('/webhooks/create', webhookController.adminStore);
+router.get('/webhooks/logs', webhookController.adminLogs);
+router.post('/webhooks/logs/clear', webhookController.adminClearLogs);
+router.get('/webhooks/:id', webhookController.adminDetailLogs);
+router.get('/webhooks/:id/edit', webhookController.adminEdit);
+router.post('/webhooks/:id/edit', webhookController.adminUpdate);
+router.post('/webhooks/:id/delete', webhookController.adminDelete);
+router.post('/webhooks/:id/toggle', webhookController.adminToggle);
+router.post('/webhooks/:id/rotate-secret', webhookController.adminRotateSecret);
+
 module.exports = router;

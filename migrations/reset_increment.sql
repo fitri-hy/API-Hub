@@ -21,3 +21,5 @@ ALTER TABLE `transactions` AUTO_INCREMENT = 1;
 ALTER TABLE `users` AUTO_INCREMENT = 1;
 ALTER TABLE `user_favorites` AUTO_INCREMENT = 1;
 ALTER TABLE `verification_requests` AUTO_INCREMENT = 1;
+ALTER TABLE `webhooks` AUTO_INCREMENT = 1;
+ALTER TABLE `webhook_logs` AUTO_INCREMENT = 1;
