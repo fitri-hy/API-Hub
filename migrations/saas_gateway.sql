@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Sep 2026 pada 04.28
+-- Waktu pembuatan: 21 Sep 2026 pada 05.50
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -91,7 +91,10 @@ INSERT INTO `admin_settings` (`id`, `setting_key`, `setting_value`, `setting_typ
 (291, 'credit_bonus_monthly_enabled', 'true', 'bool', 'Enable monthly bonus tier', '2026-09-19 08:07:59'),
 (550, 'payment_method_transfer_enabled', 'true', 'bool', 'Enable Manual Bank Transfer payment method', '2026-09-19 08:07:59'),
 (551, 'payment_method_qris_enabled', 'true', 'bool', 'Enable QRIS Static payment method', '2026-09-19 08:07:59'),
-(552, 'qris_image', '/uploads/site/qris-b013b2169fbac7aadeb17630e28bac3a.png', 'string', 'QRIS QR code image path', '2026-09-17 16:09:29');
+(552, 'qris_image', '/uploads/site/qris-b013b2169fbac7aadeb17630e28bac3a.png', 'string', 'QRIS QR code image path', '2026-09-17 16:09:29'),
+(553, 'help_center_enabled', 'true', 'bool', 'Enable the Help Center / Support Ticket system', '2026-09-21 09:41:39'),
+(554, 'ticket_auto_close_days', '7', 'int', 'Auto-close resolved tickets after N days of inactivity', '2026-09-21 09:41:39'),
+(555, 'ticket_max_per_user', '10', 'int', 'Maximum open tickets per user', '2026-09-21 09:41:39');
 
 -- --------------------------------------------------------
 
@@ -598,6 +601,35 @@ CREATE TABLE `request_logs` (
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `support_tickets`
+--
+
+CREATE TABLE `support_tickets` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `ticket_number` varchar(20) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `category` enum('technical','feature_request','bug_report','billing','account','api_issue','other') NOT NULL DEFAULT 'technical',
+  `priority` enum('low','medium','high','urgent') NOT NULL DEFAULT 'medium',
+  `status` enum('open','in_progress','waiting_reply','resolved','closed') NOT NULL DEFAULT 'open',
+  `assigned_to` int(11) DEFAULT NULL,
+  `related_api_id` int(11) UNSIGNED DEFAULT NULL,
+  `api_endpoint` varchar(255) DEFAULT NULL,
+  `error_message` text DEFAULT NULL,
+  `reproduction_steps` text DEFAULT NULL,
+  `browser_info` varchar(255) DEFAULT NULL,
+  `tags` varchar(255) DEFAULT NULL,
+  `admin_notes` text DEFAULT NULL,
+  `resolved_at` datetime DEFAULT NULL,
+  `closed_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `system_logs`
 --
 
@@ -609,6 +641,24 @@ CREATE TABLE `system_logs` (
   `ip_address` varchar(45) DEFAULT NULL,
   `user_agent` text DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `ticket_messages`
+--
+
+CREATE TABLE `ticket_messages` (
+  `id` int(11) NOT NULL,
+  `ticket_id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `sender_role` enum('user','admin') NOT NULL DEFAULT 'user',
+  `message` text NOT NULL,
+  `is_internal_note` tinyint(1) NOT NULL DEFAULT 0,
+  `attachments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`attachments`)),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `read_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -668,8 +718,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `uuid`, `username`, `email`, `password_hash`, `full_name`, `role`, `package_id`, `custom_rate_limit`, `avatar`, `referral_code`, `is_active`, `is_verified`, `last_login`, `last_login_ip`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-09-21 09:21:28', '127.0.0.1', '2026-08-27 16:12:19', '2026-09-21 09:21:28', NULL),
-(2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-19 07:37:18', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-19 07:37:18', NULL);
+(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-09-21 10:08:30', '127.0.0.1', '2026-08-27 16:12:19', '2026-09-21 10:08:30', NULL),
+(2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-21 10:08:41', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-21 10:08:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -877,6 +927,19 @@ ALTER TABLE `request_logs`
   ADD KEY `idx_reqlog_status` (`response_status`);
 
 --
+-- Indeks untuk tabel `support_tickets`
+--
+ALTER TABLE `support_tickets`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_ticket_number` (`ticket_number`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_category` (`category`),
+  ADD KEY `idx_priority` (`priority`),
+  ADD KEY `idx_assigned_to` (`assigned_to`),
+  ADD KEY `idx_created_at` (`created_at`);
+
+--
 -- Indeks untuk tabel `system_logs`
 --
 ALTER TABLE `system_logs`
@@ -884,6 +947,15 @@ ALTER TABLE `system_logs`
   ADD KEY `idx_syslog_user` (`user_id`),
   ADD KEY `idx_syslog_action` (`action`),
   ADD KEY `idx_syslog_created` (`created_at`);
+
+--
+-- Indeks untuk tabel `ticket_messages`
+--
+ALTER TABLE `ticket_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_ticket_id` (`ticket_id`),
+  ADD KEY `idx_sender_id` (`sender_id`),
+  ADD KEY `idx_created_at` (`created_at`);
 
 --
 -- Indeks untuk tabel `transactions`
@@ -952,7 +1024,7 @@ ALTER TABLE `webhook_logs`
 -- AUTO_INCREMENT untuk tabel `admin_settings`
 --
 ALTER TABLE `admin_settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=553;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=556;
 
 --
 -- AUTO_INCREMENT untuk tabel `apis`
@@ -1033,10 +1105,22 @@ ALTER TABLE `request_logs`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT untuk tabel `support_tickets`
+--
+ALTER TABLE `support_tickets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT untuk tabel `system_logs`
 --
 ALTER TABLE `system_logs`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `ticket_messages`
+--
+ALTER TABLE `ticket_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `transactions`
@@ -1142,6 +1226,13 @@ ALTER TABLE `request_logs`
 --
 ALTER TABLE `system_logs`
   ADD CONSTRAINT `system_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Ketidakleluasaan untuk tabel `ticket_messages`
+--
+ALTER TABLE `ticket_messages`
+  ADD CONSTRAINT `fk_ticket_messages_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_ticket_messages_ticket` FOREIGN KEY (`ticket_id`) REFERENCES `support_tickets` (`id`) ON DELETE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `transactions`

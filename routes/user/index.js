@@ -84,4 +84,12 @@ router.get('/playground/apis/:slug/routes', playgroundController.getRoutes);
 // Notifications
 router.use('/notification', require('./notification'));
 
+// Help Center - Support Tickets
+router.get('/tickets', userController.tickets);
+router.get('/tickets/create', userController.ticketCreateForm);
+router.post('/tickets/create', userController.ticketCreate);
+router.get('/tickets/:id', userController.ticketDetail);
+router.post('/tickets/:id/reply', userController.ticketReply);
+router.post('/tickets/:id/close', userController.ticketClose);
+
 module.exports = router;

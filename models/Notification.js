@@ -718,6 +718,83 @@ class Notification {
   }
 
   // ============================================================
+  // TICKET EVENT NOTIFICATIONS
+  // ============================================================
+
+  /**
+   * Notify admins: new support ticket created
+   */
+  static async ticketCreated(ticket, user) {
+    return this.broadcast({
+      target: 'admin',
+      type: 'ticket_created',
+      title: 'New Support Ticket',
+      message: `${user.username} submitted ticket ${ticket.ticket_number}: "${ticket.subject}"`,
+      link: `/admin/tickets/${ticket.id}`,
+      icon: 'headphones',
+      metadata: { ticketId: ticket.id, ticketNumber: ticket.ticket_number, userId: user.id, username: user.username, subject: ticket.subject, category: ticket.category, priority: ticket.priority }
+    });
+  }
+
+  /**
+   * Notify user: ticket replied (by admin or system)
+   */
+  static async ticketRepliedToUser(ticket, sender) {
+    return this.sendToUser(ticket.user_id, {
+      type: 'ticket_replied',
+      title: 'Ticket Reply',
+      message: `${sender.full_name || sender.username} replied to your ticket ${ticket.ticket_number}.`,
+      link: `/user/tickets/${ticket.id}`,
+      icon: 'message-circle',
+      metadata: { ticketId: ticket.id, ticketNumber: ticket.ticket_number, senderId: sender.id, senderName: sender.full_name || sender.username }
+    });
+  }
+
+  /**
+   * Notify admins: ticket replied (by user)
+   */
+  static async ticketRepliedToAdmins(ticket, sender) {
+    return this.broadcast({
+      target: 'admin',
+      type: 'ticket_replied',
+      title: 'Ticket Reply',
+      message: `${sender.full_name || sender.username} replied to ticket ${ticket.ticket_number}.`,
+      link: `/admin/tickets/${ticket.id}`,
+      icon: 'message-circle',
+      metadata: { ticketId: ticket.id, ticketNumber: ticket.ticket_number, senderId: sender.id, senderName: sender.full_name || sender.username }
+    });
+  }
+
+  /**
+   * Notify user: ticket status changed
+   */
+  static async ticketStatusChanged(ticket, oldStatus, newStatus) {
+    const statusLabel = { open: 'Open', in_progress: 'In Progress', waiting_reply: 'Waiting Reply', resolved: 'Resolved', closed: 'Closed' };
+    return this.sendToUser(ticket.user_id, {
+      type: 'ticket_status_changed',
+      title: 'Ticket Status Updated',
+      message: `Your ticket ${ticket.ticket_number} status changed from "${statusLabel[oldStatus] || oldStatus}" to "${statusLabel[newStatus] || newStatus}".`,
+      link: `/user/tickets/${ticket.id}`,
+      icon: 'refresh-cw',
+      metadata: { ticketId: ticket.id, ticketNumber: ticket.ticket_number, oldStatus, newStatus }
+    });
+  }
+
+  /**
+   * Notify user: ticket closed
+   */
+  static async ticketClosed(ticket) {
+    return this.sendToUser(ticket.user_id, {
+      type: 'ticket_closed',
+      title: 'Ticket Closed',
+      message: `Your ticket ${ticket.ticket_number} has been closed.`,
+      link: `/user/tickets/${ticket.id}`,
+      icon: 'check-circle',
+      metadata: { ticketId: ticket.id, ticketNumber: ticket.ticket_number }
+    });
+  }
+
+  // ============================================================
   // ADMIN PUSH NOTIFICATION (manual)
   // ============================================================
 

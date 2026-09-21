@@ -12,6 +12,7 @@ const Email = require('../../utils/email');
 const VerificationRequest = require('../../models/VerificationRequest');
 const Notification = require('../../models/Notification');
 const Webhook = require('../../models/Webhook');
+const SupportTicket = require('../../models/SupportTicket');
 const db = require('../../config/database');
 const helpers = require('../../utils/helpers');
 const { deleteAvatar, deleteSiteImage } = require('../../middleware/upload');
@@ -892,6 +893,188 @@ const adminController = {
     const pagination = helpers.paginate(total, page, 20);
     const stats = await Referral.getAdminStats();
     res.render('admin/referrals', { title: 'Referral Report', layout: 'layouts/admin', referrals, pagination, stats, filters: { search }, helpers });
+  },
+
+  // ============================================================
+  // HELP CENTER - SUPPORT TICKETS
+  // ============================================================
+
+  /**
+   * Admin: List all support tickets
+   */
+  async tickets(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const { status, category, priority, assigned_to, search } = req.query;
+    const { tickets, total } = await SupportTicket.listAll({
+      page, limit: 20, status, category, priority, assigned_to, search
+    });
+    const pagination = helpers.paginate(total, page, 20);
+    const stats = await SupportTicket.getStats();
+    const admins = await User.listAll({ page: 1, limit: 100, role: 'admin' });
+
+    res.render('admin/tickets', {
+      title: 'Support Tickets', layout: 'layouts/admin',
+      tickets, pagination, stats,
+      filters: { status, category, priority, assigned_to, search },
+      admins: admins.users, helpers, SupportTicket
+    });
+  },
+
+  /**
+   * Admin: View single ticket
+   */
+  async ticketDetail(req, res) {
+    const ticket = await SupportTicket.findById(req.params.id);
+    if (!ticket) {
+      req.flash('error', 'Ticket not found');
+      return res.redirect('/admin/tickets');
+    }
+
+    const messages = await SupportTicket.getMessages(ticket.id, { includeInternal: true });
+    await SupportTicket.markMessagesRead(ticket.id, 'admin');
+    const admins = await User.listAll({ page: 1, limit: 100, role: 'admin' });
+    const unassignedCount = await SupportTicket.getUnreadCount(ticket.id, 'user');
+
+    res.render('admin/ticket-detail', {
+      title: `Ticket ${ticket.ticket_number}`, layout: 'layouts/admin',
+      ticket, messages, helpers, SupportTicket,
+      admins: admins.users, unassignedCount
+    });
+  },
+
+  /**
+   * Admin: Update ticket status/priority/assignment
+   */
+  async ticketUpdate(req, res) {
+    try {
+      const ticket = await SupportTicket.findById(req.params.id);
+      if (!ticket) {
+        req.flash('error', 'Ticket not found');
+        return res.redirect('/admin/tickets');
+      }
+
+      const { status, priority, assigned_to, admin_notes } = req.body;
+      const updateData = {};
+
+      if (status) {
+        updateData.status = status;
+        if (status === 'resolved') updateData.resolved_at = new Date();
+        if (status === 'closed') updateData.closed_at = new Date();
+      }
+      if (priority) updateData.priority = priority;
+      if (assigned_to !== undefined) {
+        updateData.assigned_to = assigned_to === '' ? null : parseInt(assigned_to);
+      }
+      if (admin_notes !== undefined) updateData.admin_notes = admin_notes;
+
+      await SupportTicket.update(ticket.id, updateData);
+
+      // Notify the ticket owner about status change
+      if (status && status !== ticket.status) {
+        const updatedTicket = await SupportTicket.findById(ticket.id);
+        await Notification.ticketStatusChanged(updatedTicket, ticket.status, status);
+        await Webhook.dispatch('ticket.status_changed', { ticket: updatedTicket, oldStatus: ticket.status, newStatus: status, changedBy: { id: req.session.userId, role: 'admin' } }, 'admin');
+      }
+
+      req.flash('success', 'Ticket updated successfully');
+    } catch (err) {
+      console.error('Ticket update error:', err);
+      req.flash('error', 'Failed to update ticket');
+    }
+    return res.redirect(`/admin/tickets/${req.params.id}`);
+  },
+
+  /**
+   * Admin: Reply to ticket
+   */
+  async ticketReply(req, res) {
+    try {
+      const ticket = await SupportTicket.findById(req.params.id);
+      if (!ticket) {
+        req.flash('error', 'Ticket not found');
+        return res.redirect('/admin/tickets');
+      }
+
+      const { message, is_internal_note } = req.body;
+      if (!message || !message.trim()) {
+        req.flash('error', 'Message cannot be empty');
+        return res.redirect(`/admin/tickets/${req.params.id}`);
+      }
+
+      await SupportTicket.addMessage({
+        ticket_id: ticket.id,
+        sender_id: req.session.userId,
+        sender_role: 'admin',
+        message: message.trim(),
+        is_internal_note: is_internal_note ? 1 : 0
+      });
+
+      // Update status to in_progress if currently open
+      if (ticket.status === 'open') {
+        await SupportTicket.update(ticket.id, { status: 'in_progress' });
+      }
+
+      // Notify user about admin reply (skip for internal notes)
+      if (!is_internal_note) {
+        const sender = await User.findById(req.session.userId);
+        await Notification.ticketRepliedToUser(ticket, sender);
+        await Webhook.dispatch('ticket.replied', { ticket, sender: { id: sender.id, username: sender.username, role: 'admin' } }, 'admin');
+      }
+
+      req.flash('success', is_internal_note ? 'Internal note added' : 'Reply sent successfully');
+    } catch (err) {
+      console.error('Ticket reply error:', err);
+      req.flash('error', 'Failed to send reply');
+    }
+    return res.redirect(`/admin/tickets/${req.params.id}`);
+  },
+
+  /**
+   * Admin: Clear/resolve old tickets
+   */
+  async ticketBulkAction(req, res) {
+    try {
+      const { action, ticket_ids } = req.body;
+      if (!ticket_ids || !Array.isArray(ticket_ids)) {
+        req.flash('error', 'No tickets selected');
+        return res.redirect('/admin/tickets');
+      }
+
+      for (const id of ticket_ids) {
+        if (action === 'close') {
+          await SupportTicket.close(id);
+        } else if (action === 'resolve') {
+          await SupportTicket.update(id, { status: 'resolved', resolved_at: new Date() });
+        }
+      }
+
+      req.flash('success', `${ticket_ids.length} ticket(s) updated`);
+    } catch (err) {
+      console.error('Bulk action error:', err);
+      req.flash('error', 'Failed to perform bulk action');
+    }
+    return res.redirect('/admin/tickets');
+  },
+
+  /**
+   * DELETE /admin/tickets/:id/delete
+   */
+  async ticketDelete(req, res) {
+    try {
+      const ticket = await SupportTicket.findById(req.params.id);
+      if (!ticket) {
+        req.flash('error', 'Ticket not found');
+        return res.redirect('/admin/tickets');
+      }
+
+      await SupportTicket.delete(req.params.id);
+      await Webhook.dispatch('ticket.deleted', { ticket }, 'admin');
+      req.flash('success', `Ticket ${ticket.ticket_number} deleted`);
+    } catch (err) {
+      console.error('Delete ticket error:', err);
+      req.flash('error', 'Failed to delete ticket');
+    }
+    return res.redirect('/admin/tickets');
   }
 };
 

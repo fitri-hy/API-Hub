@@ -1,0 +1,123 @@
+	<div class="flex items-center gap-4 card px-4 py-3 mb-4">
+		<a href="/user/tickets" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
+				<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+			</svg>
+		</a>
+		<div>
+		  <h2 class="text-sm font-bold mb-1">Submit a Ticket</h2>
+		  <p class="text-xs">
+			Describe your issue or request in detail
+		  </p>
+		</div>
+	</div>
+
+<form method="POST" action="/user/tickets/create" class="space-y-4">
+  <!-- Subject & Category -->
+  <div class="card p-6">
+    <h3 class="text-sm font-bold mb-4 flex items-center gap-2">
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 1024 1024">
+			<path d="M0 0h1024v1024H0z" fill="none" />
+			<path fill="currentColor" d="M464 512a48 48 0 1 0 96 0a48 48 0 1 0-96 0m200 0a48 48 0 1 0 96 0a48 48 0 1 0-96 0m-400 0a48 48 0 1 0 96 0a48 48 0 1 0-96 0m661.2-173.6c-22.6-53.7-55-101.9-96.3-143.3a444.4 444.4 0 0 0-143.3-96.3C630.6 75.7 572.2 64 512 64h-2c-60.6.3-119.3 12.3-174.5 35.9a445.4 445.4 0 0 0-142 96.5c-40.9 41.3-73 89.3-95.2 142.8c-23 55.4-34.6 114.3-34.3 174.9A449.4 449.4 0 0 0 112 714v152a46 46 0 0 0 46 46h152.1A449.4 449.4 0 0 0 510 960h2.1c59.9 0 118-11.6 172.7-34.3a444.5 444.5 0 0 0 142.8-95.2c41.3-40.9 73.8-88.7 96.5-142c23.6-55.2 35.6-113.9 35.9-174.5c.3-60.9-11.5-120-34.8-175.6m-151.1 438C704 845.8 611 884 512 884h-1.7c-60.3-.3-120.2-15.3-173.1-43.5l-8.4-4.5H188V695.2l-4.5-8.4C155.3 633.9 140.3 574 140 513.7c-.4-99.7 37.7-193.3 107.6-263.8c69.8-70.5 163.1-109.5 262.8-109.9h1.7c50 0 98.5 9.7 144.2 28.9c44.6 18.7 84.6 45.6 119 80c34.3 34.3 61.3 74.4 80 119c19.4 46.2 29.1 95.2 28.9 145.8c-.6 99.6-39.7 192.9-110.1 262.7" />
+		</svg>
+		Basic Information
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="md:col-span-2">
+        <label class="block text-xs font-semibold mb-1">Subject <span class="text-rose-500">*</span></label>
+        <input type="text" name="subject" required maxlength="255" placeholder="Brief summary of your issue..." class="text-sm bg-form px-4 py-2 w-full" value="<%= typeof subject !== 'undefined' ? subject : '' %>">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold mb-1">Category <span class="text-rose-500">*</span></label>
+        <select name="category" class="text-sm bg-form px-4 py-2 w-full">
+          <option value="technical">Technical Issue</option>
+          <option value="bug_report">Bug Report</option>
+          <option value="feature_request">Feature Request</option>
+          <option value="api_issue">API Issue</option>
+          <option value="billing">Billing</option>
+          <option value="account">Account</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold mb-1">Priority</label>
+        <select name="priority" class="text-sm bg-form px-4 py-2 w-full">
+          <option value="low">Low - General question</option>
+          <option value="medium" selected>Medium - Normal issue</option>
+          <option value="high">High - Blocking problem</option>
+          <option value="urgent">Urgent - Service down</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="card p-6">
+    <h3 class="text-sm font-bold mb-4 flex items-center gap-2">
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16">
+			<path d="M0 0h16v16H0z" fill="none" />
+			<path fill="currentColor" d="M2 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5M13.5 6h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 0-1m-4 3h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1m-7 3h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1" />
+		</svg>
+      Description
+    </h3>
+    <div>
+      <label class="block text-xs font-semibold mb-1">Detailed Description <span class="text-rose-500">*</span></label>
+      <textarea name="description" required rows="6" placeholder="Describe your issue in detail. Include what you expected, what actually happened, and any error messages..." class="text-sm bg-form px-4 py-2 w-full resize-y"><%= typeof description !== 'undefined' ? description : '' %></textarea>
+    </div>
+  </div>
+
+  <!-- API & Technical Details -->
+  <div class="card p-6">
+    <h3 class="text-sm font-bold mb-4 flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 2v6.292a7 7 0 1 0 4 0V2M5 15h14M8.5 2h7"/></svg>
+      Technical Details <span class="text-[10px] font-normal">(Optional)</span>
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-xs font-semibold mb-1">Related API</label>
+        <select name="related_api_id" class="text-sm bg-form px-4 py-2 w-full">
+          <option value="">None</option>
+          <% if (apis && apis.length > 0) { %>
+            <% apis.forEach(function(api) { %>
+              <option value="<%= api.id %>"><%= api.name %> (/ <%= api.slug %>)</option>
+            <% }); %>
+          <% } %>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold mb-1">API Endpoint</label>
+        <input type="text" name="api_endpoint" placeholder="e.g. /gateway/{name}/{route}" class="text-sm bg-form px-4 py-2 w-full" value="<%= typeof api_endpoint !== 'undefined' ? api_endpoint : '' %>">
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-xs font-semibold mb-1">Error Message</label>
+        <textarea name="error_message" rows="3" placeholder="Paste any error messages you received..." class="text-sm bg-form px-4 py-2 w-full resize-y font-mono text-xs"><%= typeof error_message !== 'undefined' ? error_message : '' %></textarea>
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-xs font-semibold mb-1">Steps to Reproduce</label>
+        <textarea name="reproduction_steps" rows="4" placeholder="1. Send request to...&#10;2. With parameters...&#10;3. Observe error..." class="text-sm bg-form px-4 py-2 w-full resize-y"><%= typeof reproduction_steps !== 'undefined' ? reproduction_steps : '' %></textarea>
+      </div>
+    </div>
+  </div>
+  
+	<div class="flex items-center justify-end gap-4">
+		  <a href="/user/tickets" class="flex items-center gap-1 btn-failed px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"></path>
+				<g fill="currentColor">
+					<path d="M5.53717 19.5302C5.24427 19.8231 4.7694 19.8231 4.47651 19.5302C4.18361 19.2373 4.18361 18.7624 4.47651 18.4696L18.4764 4.46967C18.7693 4.17678 19.2442 4.17678 19.5371 4.46967C19.8299 4.76256 19.8299 5.23744 19.5371 5.53033L5.53717 19.5302Z"></path>
+					<path d="M4.46978 5.53033C4.17689 5.23744 4.17689 4.76256 4.46978 4.46967C4.76268 4.17678 5.23755 4.17678 5.53044 4.46967L19.5303 18.4696C19.8232 18.7624 19.8232 19.2373 19.5303 19.5302C19.2374 19.8231 18.7626 19.8231 18.4697 19.5302L4.46978 5.53033Z"></path>
+				</g>
+			</svg>
+			Cancel
+		  </a>
+		  <button type="submit" class="flex items-center gap-1 btn-normal px-4 py-2 rounded-md">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none" />
+				<path fill="currentColor" d="M20 4H6c-1.103 0-2 .897-2 2v5h2V8l6.4 4.8a1 1 0 0 0 1.2 0L20 8v9h-8v2h8c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2m-7 6.75L6.666 6h12.668z" />
+				<path fill="currentColor" d="M2 12h7v2H2zm2 3h6v2H4zm3 3h4v2H7z" />
+			</svg>
+
+			Submit Ticket
+		  </button>
+		</div>
+</form>

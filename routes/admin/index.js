@@ -110,4 +110,12 @@ router.post('/webhooks/:id/delete', webhookController.adminDelete);
 router.post('/webhooks/:id/toggle', webhookController.adminToggle);
 router.post('/webhooks/:id/rotate-secret', webhookController.adminRotateSecret);
 
+// Help Center - Support Tickets
+router.get('/tickets', adminController.tickets);
+router.get('/tickets/:id', adminController.ticketDetail);
+router.post('/tickets/:id', adminController.ticketUpdate);
+router.post('/tickets/:id/reply', adminController.ticketReply);
+router.post('/tickets/:id/delete', adminController.ticketDelete);
+router.post('/tickets/bulk-action', adminController.ticketBulkAction);
+
 module.exports = router;

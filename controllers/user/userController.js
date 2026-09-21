@@ -17,6 +17,7 @@ const Notification = require('../../models/Notification');
 const Webhook = require('../../models/Webhook');
 const Favorite = require('../../models/Favorite');
 const KeyScope = require('../../models/KeyScope');
+const SupportTicket = require('../../models/SupportTicket');
 const db = require('../../config/database');
 const helpers = require('../../utils/helpers');
 
@@ -796,6 +797,177 @@ const userController = {
       req.flash('error', 'Failed to update favorite');
     }
     return res.redirect(referrer);
+  },
+
+  // ============================================================
+  // HELP CENTER - SUPPORT TICKETS
+  // ============================================================
+
+  /**
+   * User: List my tickets
+   */
+  async tickets(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const { status, category, search } = req.query;
+    const { tickets, total } = await SupportTicket.listByUser(req.session.userId, {
+      page, limit: 20, status, category, search
+    });
+    const pagination = helpers.paginate(total, page, 20);
+    const stats = await SupportTicket.getUserStats(req.session.userId);
+
+    res.render('user/tickets', {
+      title: 'Help Center', layout: 'layouts/user',
+      tickets, pagination, stats,
+      filters: { status, category, search },
+      helpers, SupportTicket
+    });
+  },
+
+  /**
+   * User: Create ticket form
+   */
+  async ticketCreateForm(req, res) {
+    const apis = await Api.list({ limit: 100, status: 'active' });
+    res.render('user/ticket-create', {
+      title: 'Submit Ticket', layout: 'layouts/user',
+      apis: apis.apis || [], helpers
+    });
+  },
+
+  /**
+   * User: Submit new ticket
+   */
+  async ticketCreate(req, res) {
+    try {
+      const { subject, description, category, priority, related_api_id, api_endpoint, error_message, reproduction_steps } = req.body;
+
+      if (!subject || !subject.trim()) {
+        req.flash('error', 'Subject is required');
+        return res.redirect('/user/tickets/create');
+      }
+      if (!description || !description.trim()) {
+        req.flash('error', 'Description is required');
+        return res.redirect('/user/tickets/create');
+      }
+
+      // Check ticket limit
+      const maxTicketsSetting = await AdminSettings.get('ticket_max_per_user');
+      const maxTickets = parseInt(maxTicketsSetting) || 10;
+      const userStats = await SupportTicket.getUserStats(req.session.userId);
+      if (userStats.open >= maxTickets) {
+        req.flash('error', `You have reached the maximum limit of ${maxTickets} open tickets. Please close some before creating a new one.`);
+        return res.redirect('/user/tickets');
+      }
+
+      const ticket = await SupportTicket.create({
+        user_id: req.session.userId,
+        subject: subject.trim(),
+        description: description.trim(),
+        category: category || 'technical',
+        priority: priority || 'medium',
+        related_api_id: related_api_id ? parseInt(related_api_id) : null,
+        api_endpoint: api_endpoint || null,
+        error_message: error_message || null,
+        reproduction_steps: reproduction_steps || null,
+        browser_info: req.headers['user-agent'] || null
+      });
+
+      // Notify admins + webhook
+      const user = await User.findById(req.session.userId);
+      await Notification.ticketCreated(ticket, user);
+      await Webhook.dispatch('ticket.created', { ticket, user: { id: user.id, username: user.username, email: user.email } }, 'admin');
+
+      req.flash('success', `Ticket ${ticket.ticket_number} has been created successfully`);
+      return res.redirect(`/user/tickets/${ticket.id}`);
+    } catch (err) {
+      console.error('Ticket create error:', err);
+      req.flash('error', 'Failed to create ticket');
+      return res.redirect('/user/tickets/create');
+    }
+  },
+
+  /**
+   * User: View ticket detail
+   */
+  async ticketDetail(req, res) {
+    const ticket = await SupportTicket.findById(req.params.id);
+    if (!ticket || ticket.user_id !== req.session.userId) {
+      req.flash('error', 'Ticket not found');
+      return res.redirect('/user/tickets');
+    }
+
+    const messages = await SupportTicket.getMessages(ticket.id);
+    await SupportTicket.markMessagesRead(ticket.id, 'user');
+
+    res.render('user/ticket-detail', {
+      title: `Ticket ${ticket.ticket_number}`, layout: 'layouts/user',
+      ticket, messages, helpers, SupportTicket
+    });
+  },
+
+  /**
+   * User: Reply to ticket
+   */
+  async ticketReply(req, res) {
+    try {
+      const ticket = await SupportTicket.findById(req.params.id);
+      if (!ticket || ticket.user_id !== req.session.userId) {
+        req.flash('error', 'Ticket not found');
+        return res.redirect('/user/tickets');
+      }
+
+      const { message } = req.body;
+      if (!message || !message.trim()) {
+        req.flash('error', 'Message cannot be empty');
+        return res.redirect(`/user/tickets/${req.params.id}`);
+      }
+
+      await SupportTicket.addMessage({
+        ticket_id: ticket.id,
+        sender_id: req.session.userId,
+        sender_role: 'user',
+        message: message.trim()
+      });
+
+      // Update status to waiting_reply if currently in_progress
+      const oldStatus = ticket.status;
+      if (ticket.status === 'in_progress') {
+        await SupportTicket.update(ticket.id, { status: 'waiting_reply' });
+      }
+
+      // Notify admins + webhook
+      const sender = await User.findById(req.session.userId);
+      await Notification.ticketRepliedToAdmins(ticket, sender);
+      await Webhook.dispatch('ticket.replied', { ticket, sender: { id: sender.id, username: sender.username, role: 'user' } }, 'admin');
+
+      req.flash('success', 'Reply sent successfully');
+    } catch (err) {
+      console.error('Ticket reply error:', err);
+      req.flash('error', 'Failed to send reply');
+    }
+    return res.redirect(`/user/tickets/${req.params.id}`);
+  },
+
+  /**
+   * User: Close ticket
+   */
+  async ticketClose(req, res) {
+    try {
+      const ticket = await SupportTicket.findById(req.params.id);
+      if (!ticket || ticket.user_id !== req.session.userId) {
+        req.flash('error', 'Ticket not found');
+        return res.redirect('/user/tickets');
+      }
+
+      await SupportTicket.close(ticket.id);
+      await Notification.ticketClosed(ticket);
+      await Webhook.dispatch('ticket.closed', { ticket, closedBy: { id: req.session.userId, role: 'user' } }, 'admin');
+      req.flash('success', 'Ticket has been closed');
+    } catch (err) {
+      console.error('Ticket close error:', err);
+      req.flash('error', 'Failed to close ticket');
+    }
+    return res.redirect('/user/tickets');
   }
 };
 

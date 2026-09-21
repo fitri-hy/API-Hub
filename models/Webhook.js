@@ -20,6 +20,11 @@ const WEBHOOK_EVENTS = {
     { name: 'api_key.deleted', label: 'API Key Deleted', description: 'When an API key is deleted' },
     { name: 'system.maintenance', label: 'System Maintenance', description: 'When maintenance mode is toggled' },
     { name: 'system.alert', label: 'System Alert', description: 'System-level alerts and warnings' },
+    { name: 'ticket.created', label: 'Ticket Created', description: 'When a user submits a new support ticket' },
+    { name: 'ticket.replied', label: 'Ticket Replied', description: 'When someone replies to a support ticket' },
+    { name: 'ticket.status_changed', label: 'Ticket Status Changed', description: 'When a support ticket status changes' },
+    { name: 'ticket.closed', label: 'Ticket Closed', description: 'When a support ticket is closed' },
+    { name: 'ticket.deleted', label: 'Ticket Deleted', description: 'When a support ticket is deleted by admin' },
   ],
   user: [
     { name: 'transaction.created', label: 'Transaction Created', description: 'When you submit a new transaction' },
@@ -31,6 +36,10 @@ const WEBHOOK_EVENTS = {
     { name: 'api_key.deleted', label: 'API Key Deleted', description: 'When you delete an API key' },
     { name: 'profile.updated', label: 'Profile Updated', description: 'When your profile is updated' },
     { name: 'verification.status_changed', label: 'Verification Status Changed', description: 'When your verification status changes' },
+    { name: 'ticket.created', label: 'Ticket Created', description: 'When you submit a new support ticket' },
+    { name: 'ticket.replied', label: 'Ticket Replied', description: 'When someone replies to your ticket' },
+    { name: 'ticket.status_changed', label: 'Ticket Status Changed', description: 'When your ticket status changes' },
+    { name: 'ticket.closed', label: 'Ticket Closed', description: 'When your ticket is closed' },
   ]
 };
 
