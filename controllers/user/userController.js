@@ -639,17 +639,9 @@ const userController = {
 
   async updateProfile(req, res) {
     try {
-      const { full_name, email, current_password, new_password, confirm_password } = req.body;
+      // Hapus 'email' dari destructuring req.body agar tidak bisa diubah user
+      const { full_name, current_password, new_password, confirm_password } = req.body;
       const user = await User.findById(req.session.userId);
-
-      // Validate email uniqueness
-      if (email && email !== user.email) {
-        const existingEmail = await User.findByEmail(email);
-        if (existingEmail) {
-          req.flash('error', 'Email is already in use by another account.');
-          return res.redirect('/user/profile');
-        }
-      }
 
       // Handle password change
       if (new_password) {
@@ -683,12 +675,13 @@ const userController = {
           }
         }
         const avatarUrl = `/uploads/avatars/${req.file.filename}`;
-        await User.update(req.session.userId, { full_name, email, avatar: avatarUrl });
+        // Hanya update full_name dan avatar (email dan username dibiarkan tetap)
+        await User.update(req.session.userId, { full_name, avatar: avatarUrl });
       } else {
-        await User.update(req.session.userId, { full_name, email });
+        await User.update(req.session.userId, { full_name });
       }
 
-      // Update session username if full_name changed
+      // Update session full_name jika diubah
       if (full_name) {
         req.session.fullName = full_name;
       }
@@ -696,13 +689,14 @@ const userController = {
       await SystemLog.create({
         userId: req.session.userId,
         action: 'profile_update',
-        details: { full_name, email },
+        details: { full_name }, // Email dihapus dari log detail
         ipAddress: helpers.getClientIp(req),
         userAgent: req.headers['user-agent']
       });
+
       // Webhook dispatch
       try {
-        await Webhook.dispatch('profile.updated', { user_id: req.session.userId, full_name, email });
+        await Webhook.dispatch('profile.updated', { user_id: req.session.userId, full_name }); // Email dihapus dari webhook
       } catch (e) { console.error('Webhook dispatch error:', e); }
 
       req.flash('success', 'Profile updated successfully.');

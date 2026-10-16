@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Sep 2026 pada 05.50
+-- Waktu pembuatan: 16 Okt 2026 pada 08.01
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -698,6 +698,7 @@ CREATE TABLE `users` (
   `username` varchar(50) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
+  `google_id` varchar(255) DEFAULT NULL,
   `full_name` varchar(100) NOT NULL DEFAULT '',
   `role` enum('admin','user') NOT NULL DEFAULT 'user',
   `package_id` int(11) DEFAULT NULL,
@@ -717,9 +718,9 @@ CREATE TABLE `users` (
 -- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `users` (`id`, `uuid`, `username`, `email`, `password_hash`, `full_name`, `role`, `package_id`, `custom_rate_limit`, `avatar`, `referral_code`, `is_active`, `is_verified`, `last_login`, `last_login_ip`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-09-21 10:08:30', '127.0.0.1', '2026-08-27 16:12:19', '2026-09-21 10:08:30', NULL),
-(2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-21 10:08:41', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-21 10:08:41', NULL);
+INSERT INTO `users` (`id`, `uuid`, `username`, `email`, `password_hash`, `google_id`, `full_name`, `role`, `package_id`, `custom_rate_limit`, `avatar`, `referral_code`, `is_active`, `is_verified`, `last_login`, `last_login_ip`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', NULL, 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-09-21 10:08:30', '127.0.0.1', '2026-08-27 16:12:19', '2026-09-21 10:08:30', NULL),
+(2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', NULL, 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-21 10:08:41', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-21 10:08:41', NULL);
 
 -- --------------------------------------------------------
 

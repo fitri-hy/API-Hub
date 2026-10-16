@@ -8,4 +8,8 @@ router.get('/register', authController.getRegister);
 router.post('/register', authController.postRegister);
 router.get('/logout', authController.logout);
 
+// Google OAuth
+router.get('/google', authController.googleLogin);
+router.get('/google/callback', authController.googleCallback);
+
 module.exports = router;

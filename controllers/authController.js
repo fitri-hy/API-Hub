@@ -1,3 +1,5 @@
+const passport = require('../config/passport');
+
 const User = require('../models/User');
 const Credit = require('../models/Credit');
 const AdminSettings = require('../models/AdminSettings');
@@ -284,7 +286,53 @@ const authController = {
     }
     req.session.destroy();
     res.redirect('/auth/login');
-  }
+  },
+  
+  // ============ GOOGLE OAUTH ============
+
+  googleLogin: passport.authenticate('google', { scope: ['profile', 'email'] }),
+
+  googleCallback(req, res, next) {
+    passport.authenticate('google', async (err, user, info) => {
+      try {
+        if (err || !user) {
+          req.flash('error', 'Google authentication failed.');
+          return res.redirect('/auth/login');
+        }
+
+        if (!user.is_active) {
+          req.flash('error', 'Your account has been deactivated. Please contact the admin to reactivate your account.');
+          return res.redirect('/auth/login');
+        }
+
+        // Set session user
+        req.session.userId = user.id;
+        req.session.uuid = user.uuid;
+        req.session.role = user.role;
+        req.session.username = user.username;
+        req.session.email = user.email;
+
+        await User.updateLastLogin(user.id, helpers.getClientIp(req));
+
+        await SystemLog.create({
+          userId: user.id,
+          action: 'auth_login_google',
+          details: { email: user.email, role: user.role },
+          ipAddress: helpers.getClientIp(req),
+          userAgent: req.headers['user-agent']
+        });
+
+        req.flash('success', `Welcome, ${user.full_name || user.username}!`);
+        return user.role === 'admin'
+          ? res.redirect('/admin/dashboard')
+          : res.redirect('/user/dashboard');
+      } catch (e) {
+        console.error('Google callback error:', e);
+        req.flash('error', 'An error occurred during Google login.');
+        return res.redirect('/auth/login');
+      }
+    })(req, res, next);
+  },
 };
 
 module.exports = authController;

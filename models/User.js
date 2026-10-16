@@ -86,7 +86,7 @@ class User {
   static async update(id, data) {
     const fields = [];
     const values = [];
-    const allowed = ['full_name', 'email', 'role', 'is_active', 'is_verified', 'package_id', 'custom_rate_limit', 'avatar', 'referral_code'];
+    const allowed = ['full_name', 'email', 'role', 'is_active', 'is_verified', 'package_id', 'custom_rate_limit', 'avatar', 'referral_code', 'google_id'];
 
     for (const field of allowed) {
       if (data[field] !== undefined) {
@@ -224,6 +224,36 @@ class User {
     } finally {
       conn.release();
     }
+  }
+  
+  static async findByGoogleId(googleId) {
+    const [rows] = await db.query(
+      'SELECT * FROM users WHERE google_id = ? AND deleted_at IS NULL',
+      [googleId]
+    );
+    return rows[0] || null;
+  }
+
+  static async createFromGoogle(data) {
+    const uuid = uuidv4();
+    const referralCode = await Referral.createUniqueCode();
+
+    const [result] = await db.query(
+      `INSERT INTO users (
+        uuid, username, email, password_hash, full_name, role, is_active, is_verified, package_id, referral_code, google_id, avatar
+      ) VALUES (?, ?, ?, '', ?, 'user', 1, 1, NULL, ?, ?, ?)`,
+      [
+        uuid,
+        data.username,
+        data.email,
+        data.fullName || data.username,
+        referralCode,
+        data.googleId,
+        data.avatar || null
+      ]
+    );
+
+    return this.findById(result.insertId);
   }
 }
 
