@@ -2,10 +2,10 @@
 <div class="card">
   <div class="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
 	<div>
-	  <h3 class="text-sm font-bold">Transaction List</h3>
-  	  <p class="mt-0.5 text-xs font-medium">View all your payment and billing history.</p>
+	  <h3 data-aos="zoom-in" class="text-sm font-bold">Transaction List</h3>
+  	  <p data-aos="zoom-in" class="mt-0.5 text-xs font-medium">View all your payment and billing history.</p>
 	</div>
-    <form method="GET" action="/admin/transactions" class="flex items-center gap-2 flex-wrap">
+    <form data-aos="zoom-in" method="GET" action="/admin/transactions" class="flex items-center gap-2 flex-wrap">
       <select name="status" class="bg-form px-3 py-2 text-sm rounded-md">
         <option value="">All Status</option>
         <option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Pending</option>
@@ -27,7 +27,7 @@
   <div class="overflow-x-auto">
     <table class="w-full">
       <thead>
-        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+        <tr data-aos="zoom-in" class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
           <th class="px-4 py-2 text-left">ID</th>
           <th class="px-4 py-2 text-left">User</th>
           <th class="px-4 py-2 text-left">Type</th>
@@ -43,7 +43,7 @@
       <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
         <% if (transactions && transactions.length > 0) { %>
           <% transactions.forEach(function(t) { %>
-            <tr>
+            <tr data-aos="zoom-in">
 				<td class="px-4 py-2 text-xs font-mono">#<%= t.id %></td>
 				<td class="px-4 py-2">
 					<div class="flex items-center gap-3">
@@ -97,7 +97,7 @@
             </tr>
           <% }); %>
         <% } else { %>
-          <tr><td colspan="10" class="px-6 py-12 text-sm text-center">No data found.</td></tr>
+          <tr data-aos="zoom-in"><td colspan="10" class="px-6 py-12 text-sm text-center">No data found.</td></tr>
         <% } %>
       </tbody>
     </table>

@@ -15,25 +15,25 @@
 
 <!-- Stats -->
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-  <div class="card p-4">
+  <div data-aos="zoom-in" class="card p-4">
     <h4 class="text-[10px] font-semibold uppercase tracking-wider">Total</h4>
     <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(stats.total) %></p>
   </div>
-  <div class="card p-4">
+  <div data-aos="zoom-in" class="card p-4">
     <div class="flex items-center gap-2">
       <div class="w-2 h-2 rounded-full bg-blue-500"></div>
       <h4 class="text-[10px] font-semibold uppercase tracking-wider">Open</h4>
     </div>
     <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(stats.open) %></p>
   </div>
-  <div class="card p-4">
+  <div data-aos="zoom-in" class="card p-4">
     <div class="flex items-center gap-2">
       <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
       <h4 class="text-[10px] font-semibold uppercase tracking-wider">Resolved</h4>
     </div>
     <p class="text-2xl font-bold mt-1"><%= helpers.formatNumber(stats.resolved) %></p>
   </div>
-  <div class="card p-4">
+  <div data-aos="zoom-in" class="card p-4">
     <div class="flex items-center gap-2">
       <div class="w-2 h-2 rounded-full bg-gray-400"></div>
       <h4 class="text-[10px] font-semibold uppercase tracking-wider">Closed</h4>
@@ -43,7 +43,7 @@
 </div>
 
 <!-- Filters -->
-<div class="card mb-4">
+<div data-aos="zoom-in" class="card mb-4">
   <form method="GET" action="/user/tickets" class="p-4 flex flex-wrap gap-3 items-end">
     <div class="flex-1 min-w-[200px]">
       <label class="block text-xs font-semibold mb-1">Search</label>
@@ -83,7 +83,7 @@
 </div>
 
 <!-- Tickets List -->
-<div class="card">
+<div data-aos="zoom-in" class="card">
   <div class="overflow-x-auto">
     <table class="w-full">
       <thead>

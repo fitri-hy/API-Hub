@@ -3,7 +3,7 @@
   <!-- Referral Stats Cards -->
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
     <!-- Total Referrals -->
-    <div class="card flex flex-col justify-between p-5">
+    <div data-aos="zoom-in" class="card flex flex-col justify-between p-5">
       <div class="flex items-start justify-between">
         <div>
           <h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Total Referrals</h6>
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Today's Referrals -->
-    <div class="card flex flex-col justify-between p-5">
+    <div data-aos="zoom-in" class="card flex flex-col justify-between p-5">
       <div class="flex items-start justify-between">
         <div>
           <h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Today</h6>
@@ -33,7 +33,7 @@
     </div>
 
     <!-- Active Referrers -->
-    <div class="card flex flex-col justify-between p-5">
+    <div data-aos="zoom-in" class="card flex flex-col justify-between p-5">
       <div class="flex items-start justify-between">
         <div>
           <h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Active Referrers</h6>
@@ -48,7 +48,7 @@
     </div>
 
     <!-- Credits Awarded -->
-    <div class="card flex flex-col justify-between p-5">
+    <div data-aos="zoom-in" class="card flex flex-col justify-between p-5">
       <div class="flex items-start justify-between">
         <div>
           <h6 class="whitespace-nowrap text-xs font-semibold uppercase tracking-wider">Credits Awarded</h6>
@@ -68,10 +68,10 @@
     <div class="p-5">
       <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
 		<div>
-	      <h3 class="text-sm font-bold">Referral History</h3>
-  	      <p class="mt-0.5 text-xs font-medium">Track invited users and earned rewards.</p>
+	      <h3 data-aos="zoom-in" class="text-sm font-bold">Referral History</h3>
+  	      <p data-aos="zoom-in" class="mt-0.5 text-xs font-medium">Track invited users and earned rewards.</p>
 	    </div>
-        <form method="GET" action="/admin/referrals" class="flex gap-2">
+        <form data-aos="zoom-in" method="GET" action="/admin/referrals" class="flex gap-2">
           <input type="text" name="search" value="<%= filters.search %>" placeholder="Search username or email..."
             class="px-4 py-2 text-sm rounded-md bg-form border border-gray-200/70 dark:border-gray-800/70 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <button type="submit" class="p-2 text-sm rounded-md btn-normal">
@@ -86,7 +86,7 @@
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead>
-          <tr class="border-b border-gray-200/70 dark:border-gray-800/70">
+          <tr data-aos="zoom-in" class="border-b border-gray-200/70 dark:border-gray-800/70">
             <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wider">Referrer</th>
             <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wider">Referred User</th>
             <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wider">Credits</th>
@@ -96,7 +96,7 @@
         </thead>
         <tbody>
           <% if (referrals.length === 0) { %>
-            <tr>
+            <tr data-aos="zoom-in">
               <td colspan="5" class="px-5 py-12 text-center">
                   <p>No referrals found</p>
                 </div>
@@ -104,7 +104,7 @@
             </tr>
           <% } else { %>
             <% referrals.forEach(function(r) { %>
-              <tr class="border-b border-gray-100/70 dark:border-gray-800/50 hover:bg-gray-50/50 dark:hover:bg-gray-900/50">
+              <tr data-aos="zoom-in" class="border-b border-gray-100/70 dark:border-gray-800/50 hover:bg-gray-50/50 dark:hover:bg-gray-900/50">
                 <td class="px-4 py-2">
                   <div>
                     <div class="font-medium"><%= r.referrer_name || r.referrer_username %></div>

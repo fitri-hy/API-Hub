@@ -1,8 +1,8 @@
 <!-- Browse APIs -->
 <div class="card">
   <div class="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-    <h3 class="text-sm font-bold">Available APIs</h3>
-    <form method="GET" action="/user/browse-apis" class="flex items-center gap-2 flex-wrap">
+    <h3 data-aos="zoom-in" class="text-sm font-bold">Available APIs</h3>
+    <form data-aos="zoom-in" method="GET" action="/user/browse-apis" class="flex items-center gap-2 flex-wrap">
       <input type="text" name="search" value="<%= filters.search %>" placeholder="Search APIs..." class="w-full sm:w-auto flex-1 bg-form px-3 py-2 text-sm">
       <button type="submit" class="btn-normal p-2 rounded-md">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -24,7 +24,7 @@
   <div class="overflow-x-auto">
     <table class="w-full">
       <thead>
-        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+        <tr data-aos="zoom-in" class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
           <th class="px-4 py-2 text-left w-10"></th>
           <th class="px-4 py-2 text-left">API</th>
           <th class="px-4 py-2 text-left">Description</th>
@@ -36,7 +36,7 @@
       <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
         <% if (apis && apis.length > 0) { %>
           <% apis.forEach(function(api) { %>
-            <tr>
+            <tr data-aos="zoom-in">
               <td class="px-4 py-2 text-center">
                 <form method="POST" action="/user/favorites/toggle/<%= api.id %>" class="inline">
                   <button type="submit" title="<%= (favoriteIds || []).includes(api.id) ? 'Remove from favorites' : 'Add to favorites' %>" class="<%= (favoriteIds || []).includes(api.id) ? 'text-amber-400 hover:text-amber-500' : 'text-gray-300 dark:text-gray-500 hover:text-amber-400' %>">
@@ -76,7 +76,7 @@
             </tr>
           <% }); %>
         <% } else { %>
-          <tr><td colspan="6" class="px-6 py-12 text-sm text-center">No APIs found.</td></tr>
+          <tr data-aos="zoom-in"><td colspan="6" class="px-6 py-12 text-sm text-center">No APIs found.</td></tr>
         <% } %>
       </tbody>
     </table>

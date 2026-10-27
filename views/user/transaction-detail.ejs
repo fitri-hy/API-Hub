@@ -9,7 +9,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
   <!-- Transaction Info -->
   <div class="lg:col-span-2 space-y-4">
-    <div class="card p-5">
+    <div data-aos="zoom-in" class="card p-5">
       <h3 class="text-sm font-bold mb-4">Transaction #<%= transaction.id %></h3>
       <div class="grid grid-cols-2 gap-4">
         <div>
@@ -59,7 +59,7 @@
     </div>
 
     <!-- Payment Proof -->
-    <div class="card p-5">
+    <div data-aos="zoom-in" class="card p-5">
       <h3 class="text-sm font-bold mb-4">Payment Proof</h3>
       <% if (transaction.payment_proof) { %>
         <div class="flex justify-center">
@@ -84,7 +84,7 @@
   <div class="space-y-4">
     <!-- Payment Instructions -->
     <% if (transaction.status === 'pending') { %>
-      <div class="card p-5">
+      <div data-aos="zoom-in" class="card p-5">
         <h3 class="text-sm font-bold mb-3">Payment Instructions</h3>
         <div class="space-y-3 text-sm">
           <% if (transaction.payment_method === 'qris' && paymentMethods.qrisEnabled) { %>
@@ -122,7 +122,7 @@
     <% } %>
 
     <!-- Summary -->
-    <div class="card p-5">
+    <div data-aos="zoom-in" class="card p-5">
       <h3 class="text-sm font-bold mb-3">Summary</h3>
       <div class="space-y-2 text-sm">
         <div class="flex justify-between">

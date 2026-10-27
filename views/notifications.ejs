@@ -2,7 +2,7 @@
 
 	<div class="flex flex-col md:flex-row md:items-center md:justify-between card px-4 py-3 mb-4 gap-4">
 		<div>
-			<h2 class="text-sm font-bold mb-1">Notifications</h2>
+			<h2 data-aos="zoom-in" class="text-sm font-bold mb-1">Notifications</h2>
 			<p class="text-xs">
 				<% if (unreadCount > 0) { %>
 				  You have <span class="font-semibold text-blue-600 dark:text-blue-400"><%= unreadCount %></span> unread notification<%= unreadCount !== 1 ? 's' : '' %>
@@ -13,7 +13,7 @@
 		</div>
 		<div class="flex items-center gap-2">
 			<% if (typeof userData !== 'undefined' && userData && userData.role === 'admin') { %>
-			<a href="/admin/push-notification" class="w-full md:w-auto flex justify-center items-center gap-2 text-xs md:text-sm btn-normal px-3 py-2 rounded-md text-white">
+			<a data-aos="zoom-in" href="/admin/push-notification" class="w-full md:w-auto flex justify-center items-center gap-2 text-xs md:text-sm btn-normal px-3 py-2 rounded-md text-white">
 				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
 					<path d="M0 0h24v24H0z" fill="none" />
 					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0M15 8h6m-3-3v6m2.002 3.464a9 9 0 0 0 .738.863A1 1 0 0 1 20 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 8.75-5.332" />
@@ -22,7 +22,7 @@
 			</a>
 			<% } %>
 			<% if (unreadCount > 0) { %>
-			<button id="notif-page-mark-all" class="w-full md:w-auto flex justify-center items-center gap-2 text-xs md:text-sm btn-normal px-3 py-2 rounded-md text-white">
+			<button data-aos="zoom-in" id="notif-page-mark-all" class="w-full md:w-auto flex justify-center items-center gap-2 text-xs md:text-sm btn-normal px-3 py-2 rounded-md text-white">
 				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
 					<path d="M0 0h24v24H0z" fill="none" />
 					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5h8m-8 7h8m-8 7h8M3 17l2 2l4-4M3 7l2 2l4-4" />
@@ -30,7 +30,7 @@
 			  Mark all
 			</button>
 			<% } %>
-			<button id="notif-page-clear-all" class="w-full md:w-auto flex justify-center items-center gap-2 text-xs md:text-sm btn-failed px-3 py-2 rounded-md text-white">
+			<button data-aos="zoom-in" id="notif-page-clear-all" class="w-full md:w-auto flex justify-center items-center gap-2 text-xs md:text-sm btn-failed px-3 py-2 rounded-md text-white">
 				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
 					<path d="M0 0h24v24H0z" fill="none" />
 					<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11v6m4-6v6m5-11v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
@@ -42,11 +42,11 @@
 
 	<!-- Filter Tabs -->
 	<div class="flex items-center gap-1 mb-4 p-0.5 card rounded-md w-fit">
-		<a href="<%= basePath %>/notification" class="px-3 py-1.5 text-sm font-medium rounded-md
+		<a data-aos="zoom-in" href="<%= basePath %>/notification" class="px-3 py-1.5 text-sm font-medium rounded-md
 		  <%= typeof currentFilter === 'undefined' || !currentFilter ? 'bg-blue-600 dark:blue-500 text-white' : 'hover:text-blue-500 dark:hover:text-blue-400' %>">
 		  All
 		</a>
-		<a href="<%= basePath %>/notification?unread=1" class="px-3 py-1.5 text-sm font-medium rounded-md
+		<a data-aos="zoom-in" href="<%= basePath %>/notification?unread=1" class="px-3 py-1.5 text-sm font-medium rounded-md
 			<%= typeof currentFilter !== 'undefined' && currentFilter === 'unread' ? 'bg-blue-600 dark:blue-500 text-white' : 'hover:text-blue-500 dark:hover:text-blue-400' %>">
 			Unread <% if (unreadCount > 0) { %><span class="ml-1 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[8px] font-bold text-white bg-rose-500 rounded-full"><%= unreadCount %></span><% } %>
 		</a>
@@ -56,13 +56,13 @@
 	<div class="card border border-gray-200/70 dark:border-gray-700/70 overflow-hidden">
 		<% if (notifications.length === 0) { %>
 			<div class="px-6 py-16 text-center">
-				<h3 class="text-lg font-semibold mb-1">No notifications</h3>
-				<p class="text-sm">You're all caught up! New notifications will appear here.</p>
+				<h3 data-aos="zoom-in" class="text-lg font-semibold mb-1">No notifications</h3>
+				<p data-aos="zoom-in" class="text-sm">You're all caught up! New notifications will appear here.</p>
 			</div>
 		<% } else { %>
 		<div class="bg-gray-100/90 dark:bg-slate-950/70 divide-y divide-gray-200/70 dark:divide-gray-700/70">
 			<% notifications.forEach(function(n) { %>
-			  <div class="notification-row flex items-center gap-3 px-4 py-3 
+			  <div data-aos="zoom-in" class="notification-row flex items-center gap-3 px-4 py-3 
 				<%= n.type === 'admin_push' ? 'bg-gray-100/90 dark:bg-slate-950/70 cursor-pointer' : '' %>
 				<%= !n.is_read ? 'bg-white dark:bg-slate-900/50' : '' %>"
 				data-id="<%= n.id %>" data-link="<%= n.type === 'admin_push' ? (n.link || '') : '' %>" data-type="<%= n.type %>">
@@ -199,13 +199,13 @@
 
 		<% if (pagination && pagination.totalPages > 1) { %>
         <div class="flex items-center justify-between gap-4 border-t border-gray-200/70 dark:border-gray-800/70 mt-2 p-2">
-          <p class="text-xs">
+          <p data-aos="zoom-in" class="text-xs">
             Showing
             <span class="font-medium"><%= (pagination.currentPage - 1) * 20 + 1 %>-<%= Math.min(pagination.currentPage * 20, pagination.total) %></span>
             from
             <span class="font-medium"><%= pagination.total %></span>
           </p>
-          <nav class="flex items-center gap-1">
+          <nav data-aos="zoom-in" class="flex items-center gap-1">
             <% pagination.pages.forEach(function(p) { %>
               <% if (p === '...') { %>
                 <span class="flex h-8 min-w-8 items-center justify-center px-1 text-xs">...</span>

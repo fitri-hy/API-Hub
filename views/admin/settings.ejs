@@ -11,8 +11,8 @@ pageScript = `
   <!-- ==================== GENERAL SETTINGS ==================== -->
   <div class="card p-5">
     <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
-      <h3 class="text-xl font-bold">General Settings</h3>
-	  <p class="text-sm">Manage your core preferences.</p>
+      <h3 data-aos="zoom-in" class="text-xl font-bold">General Settings</h3>
+	  <p data-aos="zoom-in" class="text-sm">Manage your core preferences.</p>
     </div>
     <form method="POST" action="/admin/settings" enctype="multipart/form-data" class="space-y-4">
 		<% 
@@ -39,7 +39,7 @@ pageScript = `
 		  <% if (formSettings.length > 0) { %>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 			  <% formSettings.forEach(function(s) { %>
-				<div class="flex flex-col gap-1.5">
+				<div data-aos="zoom-in" class="flex flex-col gap-1.5">
 				  <label class="block text-xs font-semibold">
 					<%= s.description || s.setting_key %>
 				  </label>
@@ -59,7 +59,7 @@ pageScript = `
 			<div>
 			  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
 				<% checkboxSettings.forEach(function(s) { %>
-				  <div class="flex flex-col gap-1.5">
+				  <div data-aos="zoom-in" class="flex flex-col gap-1.5">
 				    <label class="block text-xs font-semibold">
 					  <%= s.description || s.setting_key %>
 					</label>
@@ -80,8 +80,8 @@ pageScript = `
       <!-- ==================== CREDIT BONUS SETTINGS ==================== -->
       <div class="mt-12">
 	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
-		  <h3 class="text-xl font-bold">Credit Bonus System</h3>
-		  <p class="text-sm">Automatically grant bonus credits when a verified user's balance drops below the threshold. Only verified accounts are eligible.</p>
+		  <h3 data-aos="zoom-in" class="text-xl font-bold">Credit Bonus System</h3>
+		  <p data-aos="zoom-in" class="text-sm">Automatically grant bonus credits when a verified user's balance drops below the threshold. Only verified accounts are eligible.</p>
 		</div>
 
 		<%
@@ -99,7 +99,7 @@ pageScript = `
 		  <!-- Main toggle + threshold -->
 		  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		    <% if (bonusMainOn) { %>
-		    <div class="flex flex-col gap-1.5">
+		    <div data-aos="zoom-in" class="flex flex-col gap-1.5">
 		      <label class="block text-xs font-semibold"><%= bonusMainOn.description %></label>
 		      <div class="flex items-center gap-2.5 pt-1">
 		        <input type="checkbox" name="credit_bonus_enabled" <%= bonusMainOn.parsed ? 'checked' : '' %>
@@ -109,7 +109,7 @@ pageScript = `
 		    </div>
 		    <% } %>
 		    <% if (bonusThresholdSetting) { %>
-		    <div class="flex flex-col gap-1.5">
+		    <div data-aos="zoom-in" class="flex flex-col gap-1.5">
 		      <label class="block text-xs font-semibold"><%= bonusThresholdSetting.description %></label>
 		      <input type="number" name="credit_bonus_threshold" value="<%= bonusThresholdSetting.parsed %>" min="1"
 		        class="w-full px-4 py-2 text-sm bg-form">
@@ -126,7 +126,7 @@ pageScript = `
 		        const toggleSetting = settings.find(s => s.setting_key === toggleKey);
 		        const amountSetting = settings.find(s => s.setting_key === amountKey);
 		      %>
-		      <div class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 space-y-3 bg-gray-50/50 dark:bg-gray-900/30">
+		      <div data-aos="zoom-in" class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 space-y-3 bg-gray-50/50 dark:bg-gray-900/30">
 		        <div class="flex items-center justify-between">
 		          <span class="text-sm font-bold"><%= tier.label %></span>
 		          <% if (toggleSetting) { %>
@@ -154,7 +154,7 @@ pageScript = `
 		  </div>
 
 		  <div class="mt-3 p-3 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-200/70 dark:border-blue-800/70">
-		    <p class="text-xs text-blue-700 dark:text-blue-300">
+		    <p data-aos="zoom-in" class="text-xs text-blue-700 dark:text-blue-300">
 		      <strong>How it works:</strong> When a verified user's credit balance drops below the threshold, the system calculates how long since their last threshold crossing and grants the appropriate tier. Cooldown prevents repeated bonus abuse. Disable a tier to skip it — the user will only receive the next enabled tier. Bonus is automatic, no claim needed.
 		    </p>
 		  </div>
@@ -164,8 +164,8 @@ pageScript = `
       <!-- ==================== PAYMENT METHODS ==================== -->
       <div class="mt-12">
 	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
-		  <h3 class="text-xl font-bold">Payment Methods</h3>
-		  <p class="text-sm">Enable or disable payment methods available to users. Toggle each method and configure its details below.</p>
+		  <h3 data-aos="zoom-in" class="text-xl font-bold">Payment Methods</h3>
+		  <p data-aos="zoom-in" class="text-sm">Enable or disable payment methods available to users. Toggle each method and configure its details below.</p>
 		</div>
 
         <%
@@ -178,7 +178,7 @@ pageScript = `
           <!-- Toggle Cards -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Transfer Toggle -->
-            <div class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 bg-gray-50/50 dark:bg-gray-900/30">
+            <div data-aos="zoom-in" class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 bg-gray-50/50 dark:bg-gray-900/30">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
                   <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
@@ -197,7 +197,7 @@ pageScript = `
             </div>
 
             <!-- QRIS Toggle -->
-            <div class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 bg-gray-50/50 dark:bg-gray-900/30">
+            <div data-aos="zoom-in" class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4 bg-gray-50/50 dark:bg-gray-900/30">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
                   <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
@@ -217,7 +217,7 @@ pageScript = `
           </div>
 
           <!-- QRIS Image Upload (shown when QRIS is enabled) -->
-          <div id="qrisSection" class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4">
+          <div data-aos="zoom-in" id="qrisSection" class="rounded-lg border border-gray-200/70 dark:border-gray-800/70 p-4">
             <h4 class="text-sm font-bold mb-3">QRIS QR Code</h4>
             <div class="flex items-start gap-6">
               <div class="flex-shrink-0">
@@ -249,13 +249,13 @@ pageScript = `
       <!-- Bank Account Settings (shown when transfer is enabled) -->
       <div id="transferSection" class="mt-12">
 	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
-		  <h3 class="text-xl font-bold">Bank Account (Manual Transfer)</h3>
-		  <p class="text-sm">Provide manual transfer payment details.</p>
+		  <h3 data-aos="zoom-in" class="text-xl font-bold">Bank Account (Manual Transfer)</h3>
+		  <p data-aos="zoom-in" class="text-sm">Provide manual transfer payment details.</p>
 		</div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <% settings.forEach(function(s) { %>
             <% if (s.setting_key.startsWith('bank_')) { %>
-              <div>
+              <div data-aos="zoom-in">
 				<label class="block text-xs font-semibold"><%= s.description || s.setting_key %></label>
                 <input type="text" name="<%= s.setting_key %>" value="<%= s.setting_value %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="<%= s.description %>">
               </div>
@@ -267,13 +267,13 @@ pageScript = `
       <!-- SMTP Email Settings -->
       <div class="mt-12">
 	    <div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
-		  <h3 class="text-xl font-bold">SMTP Email Settings</h3>
-		  <p class="text-sm">Configure SMTP for email verification and notifications.</p>
+		  <h3 data-aos="zoom-in" class="text-xl font-bold">SMTP Email Settings</h3>
+		  <p data-aos="zoom-in" class="text-sm">Configure SMTP for email verification and notifications.</p>
 		</div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <% settings.forEach(function(s) { %>
             <% if (s.setting_key.startsWith('smtp_')) { %>
-              <div>
+              <div data-aos="zoom-in">
 				<label class="block text-xs font-semibold"><%= s.description || s.setting_key %></label>
                 <% if (s.setting_key === 'smtp_password') { %>
                   <input type="password" name="<%= s.setting_key %>" value="<%= s.setting_value %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="••••••••">
@@ -284,7 +284,7 @@ pageScript = `
             <% } %>
           <% }); %>
         </div>
-        <div class="mt-4 flex items-center gap-3">
+        <div data-aos="zoom-in" class="mt-4 flex items-center gap-3">
           <input type="email" id="testSmtpEmail" placeholder="Test destination email (leave blank = from email)" class="flex-1 max-w-md px-4 py-2 text-sm bg-form rounded-md border border-gray-200/70 dark:border-gray-800/70">
           <button type="button" id="testSmtpBtn" onclick="testSmtp()" class="flex items-center gap-2 btn-success rounded-md px-4 py-2 text-sm whitespace-nowrap">
             <span id="testSmtpLabel">Send Test</span>
@@ -295,12 +295,12 @@ pageScript = `
 
       <!-- Custom Package Settings -->
       <div class="mt-12">
-        <h3 class="text-xl font-bold">Custom Package Pricing</h4>
-        <p class="text-xs mb-4">Configure rate limit pricing for custom packages. Price = (steps above min) × price per step.</p>
+        <h3 data-aos="zoom-in" class="text-xl font-bold">Custom Package Pricing</h4>
+        <p data-aos="zoom-in" class="text-xs mb-4">Configure rate limit pricing for custom packages. Price = (steps above min) × price per step.</p>
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 border-t pt-4 border-gray-200/70 dark:border-gray-800/70">
 		  <% settings.forEach(function(s) { %>
 			<% if (s.setting_key.startsWith('custom_package_')) { %>
-			  <div>
+			  <div data-aos="zoom-in">
 				<label class="block text-xs font-semibold">
 				<% 
 				  let labelText = (s.description || s.setting_key);
@@ -319,8 +319,8 @@ pageScript = `
       <!-- ==================== REFERRAL SETTINGS ==================== -->
       <div class="mt-12">
 		<div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
-		  <h3 class="text-xl font-bold">Referral Program</h3>
-		  <p class="text-sm">Configure the referral system. Users earn credits for each successful referral.</p>
+		  <h3 data-aos="zoom-in" class="text-xl font-bold">Referral Program</h3>
+		  <p data-aos="zoom-in" class="text-sm">Configure the referral system. Users earn credits for each successful referral.</p>
 		</div>
 		<% 
 		  const referralFiltered = settings.filter(s => 
@@ -335,7 +335,7 @@ pageScript = `
 			<div>
 			  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<% referralCheckboxSettings.forEach(function(s) { %>
-				  <div class="flex flex-col gap-1.5">
+				  <div data-aos="zoom-in" class="flex flex-col gap-1.5">
 					<label class="block text-xs font-semibold">
 					  <%= s.description || s.setting_key %>
 					</label>
@@ -356,7 +356,7 @@ pageScript = `
 			<div>
 			  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 <%= referralCheckboxSettings.length > 0 ? 'pt-4' : '' %>">
 				<% referralFormSettings.forEach(function(s) { %>
-				  <div class="flex flex-col gap-1.5">
+				  <div data-aos="zoom-in" class="flex flex-col gap-1.5">
 					<label class="block text-xs font-semibold">
 					  <%= s.description || s.setting_key %>
 					</label>
@@ -378,15 +378,15 @@ pageScript = `
       <!-- ==================== SITE IDENTITY ==================== -->
       <div class="mt-12">
 		<div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
-		  <h3 class="text-xl font-bold">Site Identity</h3>
-		  <p class="text-sm">Configure your website branding — logo, favicon, and display name.</p>
+		  <h3 data-aos="zoom-in" class="text-xl font-bold">Site Identity</h3>
+		  <p data-aos="zoom-in" class="text-sm">Configure your website branding — logo, favicon, and display name.</p>
 		</div>
         <div class="space-y-4">
 
           <!-- Logo & Favicon Row -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Logo -->
-            <div>
+            <div data-aos="zoom-in">
               <label class="block text-xs font-semibold">Website Logo</label>
               <div class="flex items-center gap-4">
                 <div class="w-16 h-16 rounded-lg border border-gray-200/70 dark:border-gray-800/70 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden flex-shrink-0">
@@ -404,7 +404,7 @@ pageScript = `
             </div>
 
             <!-- Favicon -->
-            <div>
+            <div data-aos="zoom-in">
               <label class="block text-xs font-semibold">Favicon</label>
               <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded border border-gray-200/70 dark:border-gray-800/70 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden flex-shrink-0">
@@ -424,17 +424,17 @@ pageScript = `
 
           <!-- Site Name & Description -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div data-aos="zoom-in">
               <label class="block text-xs font-semibold">Site Title</label>
               <input type="text" name="site_title" value="<%= settingsMap.site_title || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="My Awesome Website">
             </div>
-            <div>
+            <div data-aos="zoom-in">
               <label class="block text-xs font-semibold">Site Description</label>
               <input type="text" name="site_description" value="<%= settingsMap.site_description || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="A brief description of your website">
             </div>
           </div>
 
-          <div>
+          <div data-aos="zoom-in">
             <label class="block text-xs font-semibold">Site Keywords</label>
             <input type="text" name="site_keywords" value="<%= settingsMap.site_keywords || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="api, gateway, developer, saas">
             <p class="text-[10px] mt-1">Comma-separated keywords for your site</p>
@@ -445,25 +445,25 @@ pageScript = `
       <!-- ==================== SEO SETTINGS ==================== -->
       <div class="mt-12">
 		<div class="mb-4 border-b border-gray-200/70 dark:border-gray-800/70 pb-4 flex flex-col">
-		  <h3 class="text-xl font-bold">SEO Settings</h3>
-		  <p class="text-sm">Control how your site appears in search engines and social media.</p>
+		  <h3 data-aos="zoom-in" class="text-xl font-bold">SEO Settings</h3>
+		  <p data-aos="zoom-in" class="text-sm">Control how your site appears in search engines and social media.</p>
 		</div>
         <div class="space-y-4">
 
           <!-- Meta Tags -->
           <div>
             <div class="space-y-4">
-              <div>
+              <div data-aos="zoom-in">
                 <label class="block text-xs font-semibold">Meta Title</label>
                 <input type="text" name="seo_meta_title" value="<%= settingsMap.seo_meta_title || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="My Website - Best API Gateway">
                 <p class="text-[10px] mt-1">Recommended: 50-60 characters. If empty, falls back to Site Title.</p>
               </div>
-              <div>
+              <div data-aos="zoom-in">
                 <label class="block text-xs font-semibold">Meta Description</label>
                 <textarea name="seo_meta_description" rows="3" class="w-full px-4 py-2 text-sm bg-form resize-none" placeholder="A comprehensive API gateway platform for developers..."><%= settingsMap.seo_meta_description || '' %></textarea>
                 <p class="text-[10px] mt-1">Recommended: 150-160 characters. If empty, falls back to Site Description.</p>
               </div>
-              <div>
+              <div data-aos="zoom-in">
                 <label class="block text-xs font-semibold">Meta Keywords</label>
                 <input type="text" name="seo_meta_keywords" value="<%= settingsMap.seo_meta_keywords || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="api, gateway, rest, developer tools">
                 <p class="text-[10px] mt-1">Comma-separated. If empty, falls back to Site Keywords.</p>
@@ -475,23 +475,23 @@ pageScript = `
           <div class="mt-9">
             <div class="space-y-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div data-aos="zoom-in">
                   <label class="block text-xs font-semibold">OG Title</label>
                   <input type="text" name="og_title" value="<%= settingsMap.og_title || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="My Website">
                   <p class="text-[10px] mt-1">Title shown when shared on social media. Falls back to Meta Title.</p>
                 </div>
-                <div>
+                <div data-aos="zoom-in">
                   <label class="block text-xs font-semibold">OG URL</label>
                   <input type="url" name="og_url" value="<%= settingsMap.og_url || '' %>" class="w-full px-4 py-2 text-sm bg-form" placeholder="https://example.com">
                   <p class="text-[10px] mt-1">Canonical URL for social sharing. Falls back to site URL.</p>
                 </div>
               </div>
-              <div>
+              <div data-aos="zoom-in">
                 <label class="block text-xs font-semibold">OG Description</label>
                 <textarea name="og_description" rows="3" class="w-full px-4 py-2 text-sm bg-form" placeholder="Description shown when shared on social media..."><%= settingsMap.og_description || '' %></textarea>
                 <p class="text-[10px] mt-1">Description shown when shared on social media. Falls back to Meta Description.</p>
               </div>
-              <div>
+              <div data-aos="zoom-in">
                 <label class="block text-xs font-semibold">OG Image</label>
                 <div class="flex items-center gap-4">
                   <div class="w-32 h-20 rounded-lg border border-gray-200/70 dark:border-gray-800/70 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden flex-shrink-0">
@@ -511,7 +511,7 @@ pageScript = `
           </div>
 
           <!-- SEO Preview -->
-          <div class="mt-9 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 border border-gray-200/70 dark:border-gray-800/70">
+          <div data-aos="zoom-in" class="mt-9 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 border border-gray-200/70 dark:border-gray-800/70">
             <h5 class="text-xs font-bold uppercase tracking-wider mb-3">Search Preview</h5>
             <div class="space-y-1">
               <p class="text-blue-700 dark:text-blue-400 text-base font-medium truncate">

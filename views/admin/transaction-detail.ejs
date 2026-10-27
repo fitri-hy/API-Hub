@@ -1,6 +1,6 @@
 <!-- Transaction Detail -->
 <div class="mb-4">
-  <a href="/admin/transactions" class="link text-sm flex items-center gap-1">
+  <a data-aos="zoom-in" href="/admin/transactions" class="link text-sm flex items-center gap-1">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
     Back to Transactions
   </a>
@@ -9,7 +9,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
   <!-- Transaction Info -->
   <div class="lg:col-span-2 space-y-4">
-    <div class="card p-5">
+    <div data-aos="zoom-in" class="card p-5">
       <h3 class="text-sm font-bold mb-4">Transaction #<%= transaction.id %></h3>
       <div class="grid grid-cols-2 gap-4">
         <div>
@@ -77,7 +77,7 @@
 
     <!-- Payment Proof -->
     <% if (transaction.payment_proof) { %>
-      <div class="card p-5">
+      <div data-aos="zoom-in" class="card p-5">
         <h3 class="text-sm font-bold mb-4">Payment Proof</h3>
         <div class="flex justify-center">
           <img src="<%= transaction.payment_proof %>" alt="Payment Proof" class="max-w-full max-h-96 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer" onclick="window.open(this.src, '_blank')">
@@ -90,7 +90,7 @@
   <div class="space-y-4">
     <!-- Admin Actions -->
     <% if (transaction.status === 'pending') { %>
-      <div class="card p-5">
+      <div data-aos="zoom-in" class="card p-5">
         <h3 class="text-sm font-bold mb-4">Review Transaction</h3>
         <form id="approveForm" method="POST" action="/admin/transactions/<%= transaction.id %>/approve" class="space-y-3">
           <div>
@@ -115,7 +115,7 @@
         </form>
       </div>
     <% } else { %>
-      <div class="card p-5">
+      <div data-aos="zoom-in" class="card p-5">
         <h3 class="text-sm font-bold mb-2">Reviewed</h3>
         <p class="text-sm text-gray-600">By: <span class="font-medium"><%= transaction.reviewed_by_name %></span></p>
         <p class="text-xs text-gray-500"><%= helpers.formatDate(transaction.reviewed_at, 'datetime') %></p>
@@ -123,7 +123,7 @@
     <% } %>
 
     <!-- Summary -->
-    <div class="card p-5">
+    <div data-aos="zoom-in" class="card p-5">
       <h3 class="text-sm font-bold mb-3">Summary</h3>
       <div class="space-y-2 text-sm">
         <div class="flex justify-between">

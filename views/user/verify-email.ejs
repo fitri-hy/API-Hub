@@ -15,7 +15,7 @@
 
   <% if (!smtpConfigured) { %>
     <!-- SMTP Not Configured -->
-    <div class="card p-5">
+    <div data-aos="zoom-in" class="card p-5">
       <div class="flex items-start gap-3.5 p-4 bg-amber-50/80 dark:bg-amber-950/40 rounded-md border border-amber-200/30 dark:border-amber-900/30">
         <div class="p-2 bg-amber-500 text-white rounded-lg shrink-0">
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@
 
   <% } else if (activeOtp) { %>
     <!-- OTP Already Sent — Enter Code -->
-    <div class="card p-5 space-y-4">
+    <div data-aos="zoom-in" class="card p-5 space-y-4">
       <div class="flex items-start gap-3.5 p-4 bg-blue-50/80 dark:bg-blue-950/40 rounded-md border border-blue-200/30 dark:border-blue-900/30">
         <div class="p-2 bg-blue-500 text-white rounded-lg shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -70,7 +70,7 @@
 
   <% } else { %>
     <!-- No OTP sent yet — Send Code -->
-    <div class="card p-5 space-y-4">
+    <div data-aos="zoom-in" class="card p-5 space-y-4">
       <form id="sendForm" class="space-y-6">
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">Email Address</label>

@@ -1,8 +1,8 @@
 <!-- Request Logs -->
 <div class="card">
   <div class="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-    <h3 class="text-sm font-bold">Request Logs</h3>
-    <form method="GET" action="/user/logs" class="w-full lg:w-auto flex items-center gap-2">
+    <h3 data-aos="zoom-in" class="text-sm font-bold">Request Logs</h3>
+    <form data-aos="zoom-in" method="GET" action="/user/logs" class="w-full lg:w-auto flex items-center gap-2">
       <select name="api_id" class="w-full lg:w-full bg-form px-3 py-2 text-sm">
         <option value="">All APIs</option>
         <% if (availableApis && availableApis.length > 0) { %>
@@ -35,7 +35,7 @@
   <div class="overflow-x-auto">
     <table class="w-full">
       <thead>
-        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+        <tr data-aos="zoom-in" class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
           <th class="px-4 py-2 text-left">API</th>
           <th class="px-4 py-2 text-center">Method</th>
           <th class="px-4 py-2 text-left">Path</th>
@@ -48,7 +48,7 @@
       <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
         <% if (logs && logs.length > 0) { %>
           <% logs.forEach(function(log) { %>
-            <tr>
+            <tr data-aos="zoom-in">
               <td class="px-4 py-2">
                 <h6 class="text-sm"><%= log.api_name || '-' %></h6>
                 <% if (log.api_slug) { %><div class="text-[10px] font-mono">/<%= log.api_slug %></div><% } %>
@@ -80,7 +80,7 @@
             </tr>
           <% }); %>
         <% } else { %>
-          <tr><td colspan="7" class="px-6 py-12 text-sm text-center">No logs found.</td></tr>
+          <tr data-aos="zoom-in"><td colspan="7" class="px-6 py-12 text-sm text-center">No logs found.</td></tr>
         <% } %>
       </tbody>
     </table>

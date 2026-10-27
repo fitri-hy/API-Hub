@@ -1,8 +1,8 @@
 <!-- My Transactions -->
 <div class="card">
   <div class="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-    <h3 class="text-sm font-bold">My Transactions</h3>
-    <div class="flex items-center gap-2">
+    <h3 data-aos="zoom-in" class="text-sm font-bold">My Transactions</h3>
+    <div data-aos="zoom-in" class="flex items-center gap-2">
 	  <select onchange="window.location.href='?status='+this.value" class="bg-form px-3 py-2 text-sm rounded-md">
         <option value="">All Status</option>
         <option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Pending</option>
@@ -16,7 +16,7 @@
   <div class="overflow-x-auto">
     <table class="w-full">
       <thead>
-        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+        <tr data-aos="zoom-in" class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
           <th class="px-4 py-2 text-left">ID</th>
           <th class="px-4 py-2 text-left">Type</th>
           <th class="px-4 py-2 text-center">Credits</th>
@@ -31,7 +31,7 @@
       <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
         <% if (transactions && transactions.length > 0) { %>
           <% transactions.forEach(function(t) { %>
-            <tr>
+            <tr data-aos="zoom-in">
               <td class="px-4 py-2 text-xs font-mono">#<%= t.id %></td>
               <td class="px-4 py-2 text-xs">
                 <span class="px-2 py-0.5 rounded <%= t.type === 'standard_package' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' %>">
@@ -62,7 +62,7 @@
             </tr>
           <% }); %>
         <% } else { %>
-          <tr><td colspan="9" class="px-6 py-12 text-sm text-center">No transactions yet.</td></tr>
+          <tr data-aos="zoom-in"><td colspan="9" class="px-6 py-12 text-sm text-center">No transactions yet.</td></tr>
         <% } %>
       </tbody>
     </table>

@@ -23,7 +23,7 @@
   <!-- Conversation -->
   <div class="lg:col-span-3 space-y-4">
     <!-- User Info Card -->
-    <div class="card p-4">
+    <div data-aos="zoom-in" class="card p-4">
       <div class="flex items-center gap-3">
         <div class="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-200 dark:bg-orange-900">
           <% if (ticket.avatar) { %>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Messages -->
-    <div class="card">
+    <div data-aos="zoom-in" class="card">
       <div class="p-4 border-b border-gray-200/70 dark:border-gray-800/70">
         <h3 class="text-sm font-bold">Conversation</h3>
       </div>
@@ -102,7 +102,7 @@
 
     <!-- Reply Form -->
     <% if (ticket.status !== 'closed') { %>
-      <div class="card p-4">
+      <div data-aos="zoom-in" class="card p-4">
         <form method="POST" action="/admin/tickets/<%= ticket.id %>/reply">
           <label class="block text-xs font-semibold mb-2">Your Reply</label>
           <textarea name="message" required rows="1" placeholder="Type your reply..." class="bg-form p-2 w-full resize-y text-sm mb-4"></textarea>
@@ -126,7 +126,7 @@
 
   <!-- Sidebar Info -->
   <div class="space-y-4">
-    <div class="card p-4">
+    <div data-aos="zoom-in" class="card p-4">
 	  <h4 class="text-xs font-semibold uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70 pb-2 mb-2">
 		Ticket Details
 	  </h4>
@@ -153,7 +153,7 @@
     </div>
 
     <% if (ticket.api_endpoint || ticket.error_message) { %>
-      <div class="card p-4">
+      <div data-aos="zoom-in" class="card p-4">
         <h4 class="text-xs font-semibold uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70 pb-2 mb-2">
 		  Technical Info
 	    </h4>

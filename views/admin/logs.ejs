@@ -2,11 +2,11 @@
 <div class="card">
   <div class="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
 		<div>
-	      <h3 class="text-sm font-bold">List Logs</h3>
-  	      <p class="mt-0.5 text-xs font-medium">Monitor your account activity history.</p>
+	      <h3 data-aos="zoom-in" class="text-sm font-bold">List Logs</h3>
+  	      <p data-aos="zoom-in" class="mt-0.5 text-xs font-medium">Monitor your account activity history.</p>
 	    </div>
 		<div class="flex items-center gap-2 flex-wrap">
-			<form method="GET" action="/admin/logs" class="flex items-center flex-wrap gap-2 w-full flex-1">
+			<form data-aos="zoom-in" method="GET" action="/admin/logs" class="flex items-center flex-wrap gap-2 w-full flex-1">
 				<input type="text" name="search" value="<%= filters.search %>" placeholder="Search..." class="min-w-[100px] w-full flex-1 bg-form px-3 py-2 text-sm">
 				<div class="flex items-center gap-2 flex-wrap">
 					<select name="method" class="w-full flex-1 bg-form px-3 py-2 text-sm">
@@ -30,7 +30,7 @@
 					</button>
 				</div>
 			</form>
-			<form method="POST" action="/admin/logs/clear" onsubmit="return confirm('Delete ALL request logs? This action cannot be undone.')">
+			<form data-aos="zoom-in" method="POST" action="/admin/logs/clear" onsubmit="return confirm('Delete ALL request logs? This action cannot be undone.')">
 				<button type="submit" class="btn-failed p-2 rounded-md">
 					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
 						<path d="M0 0h24v24H0z" fill="none" />
@@ -47,7 +47,7 @@
   <div class="overflow-x-auto">
     <table class="w-full">
       <thead>
-        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+        <tr data-aos="zoom-in" class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
           <th class="px-4 py-2 text-left">ID</th>
           <th class="px-4 py-2 text-left">User</th>
           <th class="px-4 py-2 text-left">API</th>
@@ -61,7 +61,7 @@
       </thead>
       <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
         <% logs.forEach(function(log) { %>
-          <tr>
+          <tr data-aos="zoom-in">
             <td class="px-4 py-2 text-xs font-mono">#<%= log.id %></td>
 			<td class="px-4 py-2">
 				<div class="flex items-center gap-3">
@@ -117,7 +117,7 @@
           </tr>
         <% }); %>
         <% if (logs.length === 0) { %>
-          <tr><td colspan="9" class="px-6 py-12 text-sm text-center">No data found.</td></tr>
+          <tr data-aos="zoom-in"><td colspan="9" class="px-6 py-12 text-sm text-center">No data found.</td></tr>
         <% } %>
       </tbody>
     </table>

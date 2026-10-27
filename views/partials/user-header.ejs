@@ -1,13 +1,13 @@
 <header class="sticky top-0 z-30 flex items-center justify-between gap-6 p-4 bg-header">
 	
 	<div class="flex items-center gap-2">
-		<button id="sidebar-toggle" type="button" class="md:hidden relative flex items-center justify-center p-2 rounded-md hover:bg-slate-200/60 dark:hover:bg-slate-700/60" aria-label="Open menu">
+		<button data-aos="zoom-in" id="sidebar-toggle" type="button" class="md:hidden relative flex items-center justify-center p-2 rounded-md hover:bg-slate-200/60 dark:hover:bg-slate-700/60" aria-label="Open menu">
 			<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
 			</svg>
 		</button>
-		<div class="md:hidden h-8 w-px bg-gray-200/70 dark:bg-gray-700/70 sm:block"></div>
-		<div class="flex min-w-0 items-center">
+		<div data-aos="zoom-in" class="md:hidden h-8 w-px bg-gray-200/70 dark:bg-gray-700/70 sm:block"></div>
+		<div data-aos="zoom-in" class="flex min-w-0 items-center">
 			<div class="min-w-0">
 				<h1 class="truncate font-bold tracking-tight text-lg"><%= title || 'Dashboard' %></h1>
 			</div>
@@ -17,7 +17,7 @@
 	<div class="ml-auto flex items-center gap-3">
 		<%- include('notification-dropdown') %>
 		<div class="flex items-center gap-2.5">
-			<div class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-200 dark:bg-orange-900">
+			<div data-aos="zoom-in" class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-200 dark:bg-orange-900">
 				<% const currentUser = typeof user !== 'undefined' && user ? user : userData; %>
                 <% if (currentUser && currentUser.avatar) { %>
                     <img src="<%= currentUser.avatar %>" alt="Avatar" class="h-full w-full object-cover rounded-full">
@@ -38,11 +38,11 @@
 				<% } %>
 			</div>
 			<div class="hidden leading-tight sm:block">
-				<h6 class="max-w-28 truncate text-sm font-semibold"><%= typeof user !== 'undefined' && user ? user.full_name || user.full_name : 'Admin' %></h6>
-				<p class="text-xs">@<%= typeof user !== 'undefined' && user ? user.username || user.username : '-' %></p>
+				<h6 data-aos="zoom-in" class="max-w-28 truncate text-sm font-semibold"><%= typeof user !== 'undefined' && user ? user.full_name || user.full_name : 'Admin' %></h6>
+				<p data-aos="zoom-in" class="text-xs">@<%= typeof user !== 'undefined' && user ? user.username || user.username : '-' %></p>
 			</div>
 		</div>
-		<button type="button" id="theme-toggle" aria-label="Toggle theme" class="relative flex items-center justify-center text-amber-500 h-8 w-8 rounded-full hover:bg-slate-200/60 dark:hover:bg-slate-700/60">
+		<button data-aos="zoom-in" type="button" id="theme-toggle" aria-label="Toggle theme" class="relative flex items-center justify-center text-amber-500 h-8 w-8 rounded-full hover:bg-slate-200/60 dark:hover:bg-slate-700/60">
 			<svg id="theme-sun" xmlns="http://www.w3.org/2000/svg" class="absolute h-6 w-6 scale-100 rotate-0 transition-all duration-300 dark:scale-0 dark:-rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
 				<circle cx="12" cy="12" r="4" />
 				<path stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" />

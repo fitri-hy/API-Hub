@@ -297,24 +297,24 @@ pageScript = `
 	<div class="p-5 card mb-4">
 		<div class="flex items-center justify-between">
 			<div class="flex items-center gap-4">
-				<a href="/admin/apis/<%= api.id %>" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+				<a data-aos="zoom-in" href="/admin/apis/<%= api.id %>" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
 						<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
 					</svg>
 				</a>
 				<div>
-				  <h3 class="text-2xl font-semibold"><%= api.name %></h3>
-				  <p class="max-w-xs truncate text-sm"><%= api.description || 'No description' %></p>
+				  <h3 data-aos="zoom-in" class="text-2xl font-semibold"><%= api.name %></h3>
+				  <p data-aos="zoom-in" class="max-w-xs truncate text-sm"><%= api.description || 'No description' %></p>
 				</div>
 			</div>
 			<div class="flex items-center gap-2">
-				<span class="inline-flex items-center rounded-full px-3 py-1.5 font-bold <%= helpers.statusBadgeClass(api.status) %>">
+				<span data-aos="zoom-in" class="inline-flex items-center rounded-full px-3 py-1.5 font-bold <%= helpers.statusBadgeClass(api.status) %>">
 					<%= api.status %>
 				</span>
 			</div>
 		</div>
 		<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-			<div class="card p-4">
+			<div data-aos="zoom-in" class="card p-4">
 				<div class="text-xs font-medium uppercase tracking-wide">
 					Version
 				</div>
@@ -322,7 +322,7 @@ pageScript = `
 					v<%= api.version %>
 				</div>
 			</div>
-			<div class="card p-4">
+			<div data-aos="zoom-in" class="card p-4">
 				<div class="text-xs font-medium uppercase tracking-wide">
 					Base Route
 				</div>
@@ -330,7 +330,7 @@ pageScript = `
 					<%= api.base_route %>/*
 				</div>
 			</div>
-			<div class="card p-4">
+			<div data-aos="zoom-in" class="card p-4">
 				<div class="text-xs font-medium uppercase tracking-wide">
 					Credit Cost
 				</div>
@@ -342,7 +342,7 @@ pageScript = `
 		<% if (api.auth_required) { %>
 		<div class="mt-4 rounded-md bg-amber-100/40 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-900/40 p-4">
 			<div class="flex items-center gap-3">
-				<div class="flex items-center justify-center p-3 rounded-lg bg-amber-600 dark:bg-amber-900 text-white">
+				<div data-aos="zoom-in" class="flex items-center justify-center p-3 rounded-lg bg-amber-600 dark:bg-amber-900 text-white">
 					<svg xmlns="http://www.w3.org/2000/svg" class="m-auto" width="24" height="24" viewBox="0 0 16 16">
 						<path d="M0 0h16v16H0z" fill="none" />
 						<g fill="currentColor">
@@ -352,11 +352,11 @@ pageScript = `
 					</svg>
 				</div>
 				<div>
-					<h3 class="font-semibold text-xl text-amber-600 dark:text-gray-100">
+					<h3 data-aos="zoom-in" class="font-semibold text-xl text-amber-600 dark:text-gray-100">
 						Authentication Required
 					</h3>
 
-					<p class="text-sm leading-6 text-amber-800 dark:text-gray-300">
+					<p data-aos="zoom-in" class="text-sm leading-6 text-amber-800 dark:text-gray-300">
 						This API requires an API key. Pass it via the
 						<code class="rounded bg-gray-800 dark:bg-black px-1.5 py-0.5 font-mono text-xs text-white">
 							X-API-Key
@@ -372,21 +372,21 @@ pageScript = `
 	<div class="card p-5 mb-4">
 		<div class="flex items-center justify-between gap-4 mb-4 pb-4 border-b border-gray-200/70 dark:border-gray-800/70">
 			<div>
-				<h2 class="text-xl font-bold">
+				<h2 data-aos="zoom-in" class="text-xl font-bold">
 					Endpoints
 				</h2>
-				<p class="text-sm hidden lg:flex">
+				<p data-aos="zoom-in" class="text-sm hidden lg:flex">
 					Available API endpoints and documentation.
 				</p>
 			</div>
-			<span class="font-medium">
+			<span data-aos="zoom-in" class="font-medium">
 				<%= routes.length %> route<%= routes.length === 1 ? '' : 's' %>
 			</span>
 		</div>
 		<div class="endpoint-list space-y-2">
 			<% routes.forEach(function(r) { %>
 				<div class="faq-item overflow-hidden card select-text">
-					<button
+					<button data-aos="zoom-in" 
 						type="button"
 						class="faq-trigger flex w-full items-center gap-3 px-4 py-3 text-left transition"
 						aria-expanded="false"
@@ -404,7 +404,7 @@ pageScript = `
 						</span>
 					</button>
 					<div class="faq-answer grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-in-out">
-						<div class="min-h-0 overflow-hidden border-t border-gray-200/70 dark:border-gray-800/70">
+						<div data-aos="zoom-in" class="min-h-0 overflow-hidden border-t border-gray-200/70 dark:border-gray-800/70">
 							<div class="space-y-9 p-4 ">
 								<% if (r.description) { %>
 									<div class="mb-4 pb-4 border-b border-gray-200/70 dark:border-gray-800/70">
@@ -522,11 +522,11 @@ pageScript = `
 
 			<% if (routes.length === 0) { %>
 				<div class="px-6 py-12 text-center">
-					<h3 class="font-semibold">
+					<h3 data-aos="zoom-in" class="font-semibold">
 						No endpoints available
 					</h3>
 
-					<p class="mt-1 text-sm">
+					<p data-aos="zoom-in" class="mt-1 text-sm">
 						This API does not have any active endpoints yet.
 					</p>
 				</div>

@@ -1,8 +1,8 @@
 <!-- API Keys -->
 <div class="card">
   <div class="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-    <h3 class="text-sm font-bold">List API Keys</h3>
-    <button type="button" onclick="toggleModal('createKeyModal')" class="flex items-center gap-1 px-3 py-2 text-sm rounded-md btn-normal">
+    <h3 data-aos="zoom-in" class="text-sm font-bold">List API Keys</h3>
+    <button data-aos="zoom-in" type="button" onclick="toggleModal('createKeyModal')" class="flex items-center gap-1 px-3 py-2 text-sm rounded-md btn-normal">
 		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 			<path d="M0 0h24v24H0z" fill="none" />
 			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h6m0 0h6m-6 0v6m0-6V6" />
@@ -14,7 +14,7 @@
   <div class="overflow-x-auto">
     <table class="w-full">
       <thead>
-        <tr class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
+        <tr data-aos="zoom-in" class="text-xs font-medium uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70">
           <th class="px-4 py-2 text-left">Name</th>
           <th class="px-4 py-2 text-left">APIKey</th>
           <th class="px-4 py-2 text-center">Limit</th>
@@ -27,7 +27,7 @@
       <tbody class="divide-y divide-gray-200/70 dark:divide-gray-800/70">
         <% if (apiKeys && apiKeys.length > 0) { %>
           <% apiKeys.forEach(function(key) { %>
-            <tr>
+            <tr data-aos="zoom-in">
               <td class="px-4 py-2">
                 <h6 class="text-sm font-medium"><%= key.name || 'Unnamed' %></h6>
               </td>
@@ -98,7 +98,7 @@
             </tr>
           <% }); %>
         <% } else { %>
-          <tr><td colspan="7" class="px-6 py-12 text-sm text-center">No API keys found.</td></tr>
+          <tr data-aos="zoom-in"><td colspan="7" class="px-6 py-12 text-sm text-center">No API keys found.</td></tr>
         <% } %>
       </tbody>
     </table>

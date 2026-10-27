@@ -1,23 +1,23 @@
 <div class="card p-5">
 	<div class="flex justify-between gap-4 pb-4 mb-4 border-b border-gray-200/70 dark:border-gray-800/70">
 		<div class="flex items-center gap-4">
-			<a href="/admin/webhooks" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+			<a data-aos="zoom-in" href="/admin/webhooks" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
 					<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
 				</svg>
 			</a>
 			<div>
-				<h3 class="text-base font-bold">
+				<h3 data-aos="zoom-in" class="text-base font-bold">
 					<%= webhook.name %>
 				 <span class="text-[10px] px-1.5 py-0.5 rounded-full <%= webhook.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500' %>">
 				    <%= webhook.is_active ? 'Active' : 'Inactive' %>
 				  </span>
 				</h3>
-				<p class="text-sm"><%= webhook.url %></p>
+				<p data-aos="zoom-in" class="text-sm"><%= webhook.url %></p>
 			</div>
 		</div>
 		<div>
-			<a href="/admin/webhooks/<%= webhook.id %>/edit" class="flex items-center gap-1 btn-normal text-sm px-2 py-2 lg:px-4 lg:py-2 rounded-md">
+			<a data-aos="zoom-in" href="/admin/webhooks/<%= webhook.id %>/edit" class="flex items-center gap-1 btn-normal text-sm px-2 py-2 lg:px-4 lg:py-2 rounded-md">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 640 640">
 					<path d="M0 0h640v640H0z" fill="none"></path>
 					<path fill="currentColor" d="m505 122.9l12.1 12.1c9.4 9.4 9.4 24.6 0 33.9L488 198.1L441.9 152l29.1-29.1c9.4-9.4 24.6-9.4 33.9 0zM273.8 320.2L408 185.9l46.1 46.1l-134.3 134.2c-2.9 2.9-6.5 5-10.4 6.1L250.9 389l16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM437.1 89L239.8 286.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L551 202.9c28.1-28.1 28.1-73.7 0-101.8L538.9 89c-28.1-28.1-73.7-28.1-101.8 0M152 128c-48.6 0-88 39.4-88 88v272c0 48.6 39.4 88 88 88h272c48.6 0 88-39.4 88-88V376c0-13.3-10.7-24-24-24s-24 10.7-24 24v112c0 22.1-17.9 40-40 40H152c-22.1 0-40-17.9-40-40V216c0-22.1 17.9-40 40-40h112c13.3 0 24-10.7 24-24s-10.7-24-24-24z"></path>
@@ -26,13 +26,13 @@
 			</a>
 		</div>
 	</div>
-	<div class="flex flex-wrap gap-1">
+	<div data-aos="zoom-in" class="flex flex-wrap gap-1">
 		<% const events = typeof webhook.events === 'string' ? JSON.parse(webhook.events) : webhook.events; %>
         <% events.forEach(ev => { %>
 			<span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"><%= ev %></span>
 		<% }) %>
 	</div>
-	<div class="flex items-center gap-4 text-[10px] mt-2">
+	<div data-aos="zoom-in" class="flex items-center gap-4 text-[10px] mt-2">
         <span>User: <%= webhook.username %></span>
         <span>Created: <%= new Date(webhook.created_at).toLocaleString('id-ID') %></span>
         <% if (webhook.last_triggerose_at) { %>
@@ -45,13 +45,13 @@
 		<div class="space-y-2 divide-y divide-gray-200 dark:divide-gray-800">
 		  <% if (logs.length === 0) { %>
 			<div class="px-6 py-16 text-center">
-				<h3 class="text-lg font-semibold mb-1">No delivery logs yet</h3>
-				<p class="text-sm">No delivery attempts have been logged for this webhook yet.</p>
+				<h3 data-aos="zoom-in" class="text-lg font-semibold mb-1">No delivery logs yet</h3>
+				<p data-aos="zoom-in" class="text-sm">No delivery attempts have been logged for this webhook yet.</p>
 			</div>
 		  <% } else { %>
 			<% logs.forEach(log => { %>
 			  <div class="space-y-2">
-				<div class="flex items-center justify-between gap-3">
+				<div data-aos="zoom-in" class="flex items-center justify-between gap-3">
 				  <div class="flex items-center gap-3 min-w-0">
 					<div class="w-2 h-2 rounded-full shrink-0
 					  <%= log.status === 'success' ? 'bg-emerald-500' : log.status === 'failed' ? 'bg-rose-500' : log.status === 'retrying' ? 'bg-yellow-500' : 'bg-gray-400' %>"></div>
@@ -75,7 +75,7 @@
 					</svg>
 				  </button>
 				</div>
-				<div class="log-detail hidden mt-2 border-t border-gray-100 dark:border-gray-800">
+				<div data-aos="zoom-in" class="log-detail hidden mt-2 border-t border-gray-100 dark:border-gray-800">
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 					  <!-- Payload Box -->
 					  <div class="text-gray-200 flex flex-col rounded-md border border-gray-200/80 dark:border-gray-800 bg-gray-900 overflow-hidden shadow-sm">

@@ -3,33 +3,33 @@
 		<div class="card p-5">
 			<div class="flex flex-col gap-4 border-b pb-4 mb-4 border-gray-200/70 dark:border-gray-800/70">
 				<div class="flex items-center gap-4">
-					<span class="rounded-full px-2.5 py-1 text-xs md:text-sm font-semibold <%= helpers.statusBadgeClass(api.status) %>">
+					<span data-aos="zoom-in" class="rounded-full px-2.5 py-1 text-xs md:text-sm font-semibold <%= helpers.statusBadgeClass(api.status) %>">
 						<%= api.status ? api.status.charAt(0).toUpperCase() + api.status.slice(1) : 'Draft' %>
 					</span>
-					<span class="rounded-full px-2.5 py-1 text-xs md:text-sm text-sm font-semibold bg-blue-100/30 dark:bg-blue-950/70 border border-blue-200/70 dark:border-blue-900/70 text-blue-600 dark:text-blue-400">
+					<span data-aos="zoom-in" class="rounded-full px-2.5 py-1 text-xs md:text-sm text-sm font-semibold bg-blue-100/30 dark:bg-blue-950/70 border border-blue-200/70 dark:border-blue-900/70 text-blue-600 dark:text-blue-400">
 						v<%= api.version %>
 					</span>
 				</div>
 				<div class="flex flex-col lg:flex-row gap-6 justify-between">
 					<div>
 						<div class="flex items-center gap-4">
-							<a href="/browser-apis" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+							<a data-aos="zoom-in" href="/browser-apis" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
 								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
 									<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
 								</svg>
 							</a>
-							<h1 class="text-xl md:text-2xl font-bold tracking-tight"><%= api.name %></h1>
+							<h1 data-aos="zoom-in" class="text-xl md:text-2xl font-bold tracking-tight"><%= api.name %></h1>
 						</div>
-						<p class="text-xs md:text-sm mt-2"><%= api.description || 'No description available.' %></p>
+						<p data-aos="zoom-in" class="text-xs md:text-sm mt-2"><%= api.description || 'No description available.' %></p>
 					</div>
-					<div class="flex flex-col p-2 items-center justify-center rounded-lg bg-purple-100/50 dark:bg-purple-950/50 border border-purple-100/70 dark:border-purple-950/70">
+					<div data-aos="zoom-in" class="flex flex-col p-2 items-center justify-center rounded-lg bg-purple-100/50 dark:bg-purple-950/50 border border-purple-100/70 dark:border-purple-950/70">
 						<div class="text-3xl font-bold text-purple-500"><%= api.credit_cost %></div>
 						<div class="text-xs">Credits / Request</div>
 					</div>
 				</div>
 			</div>
 			<div class="grid grid-cols-2 gap-3 md:grid-cols-4">
-				<div class="card p-5 flex flex-col items-center justify-center">
+				<div data-aos="zoom-in" class="card p-5 flex flex-col items-center justify-center">
 					<div class="flex items-center gap-2">
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
 							<path d="M0 0h24v24H0z" fill="none" />
@@ -45,7 +45,7 @@
 					</div>
 					<div class="text-sm md:text-lg font-bold">v<%= api.version %></div>
 				</div>
-				<div class="card p-5 flex flex-col items-center justify-center">
+				<div data-aos="zoom-in" class="card p-5 flex flex-col items-center justify-center">
 					<div class="flex items-center gap-2">
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
 							<path d="M0 0h24v24H0z" fill="none" />
@@ -65,7 +65,7 @@
 					</div>
 					<div class="text-sm md:text-lg font-bold"><%= api.rate_limit_per_minute %><span class="ml-1 text-xs font-medium">/min</span></div>
 				</div>
-				<div class="card p-5 flex flex-col items-center justify-center">
+				<div data-aos="zoom-in" class="card p-5 flex flex-col items-center justify-center">
 					<div class="flex items-center gap-2">
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
 							<path d="M0 0h24v24H0z" fill="none" />
@@ -78,7 +78,7 @@
 					</div>
 					<div class="text-sm md:text-lg font-bold"><%= api.auth_required ? 'Required' : 'Not Required' %></div>
 				</div>
-				<div class="card p-5 flex flex-col items-center justify-center">
+				<div data-aos="zoom-in" class="card p-5 flex flex-col items-center justify-center">
 					<div class="flex items-center gap-2">
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
 							<path d="M0 0h24v24H0z" fill="none"></path>
@@ -94,7 +94,7 @@
 					<div class="text-sm md:text-lg font-bold"><%= routes.length %></div>
 				</div>
 			</div>
-			<div class="mt-4 rounded-md bg-amber-100/40 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-900/40 p-4">
+			<div data-aos="zoom-in" class="mt-4 rounded-md bg-amber-100/40 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-900/40 p-4">
 				<div class="flex items-center gap-3">
 					<div class="hidden md:flex items-center justify-center p-3 rounded-lg bg-amber-600 dark:bg-amber-900 text-white">
 						<svg xmlns="http://www.w3.org/2000/svg" class="m-auto" width="24" height="24" viewBox="0 0 16 16">
@@ -123,14 +123,14 @@
 
 		<div class="mt-8">
 			<div class="mb-4">
-				<h2 class="text-md md:text-lg font-bold tracking-tight">API Endpoints</h2>
-				<p class="text-xs md:text-sm mt-1">Available endpoints for this API.</p>
+				<h2 data-aos="zoom-in" class="text-md md:text-lg font-bold tracking-tight">API Endpoints</h2>
+				<p data-aos="zoom-in" class="text-xs md:text-sm mt-1">Available endpoints for this API.</p>
 			</div>
 
 			<% if (routes && routes.length > 0) { %>
 				<div id="api-routes" class="space-y-3 select-text">
 					<% routes.forEach(route => { %>
-						<div class="route-item overflow-hidden card">
+						<div data-aos="zoom-in" class="route-item overflow-hidden card">
 							<button type="button" class="route-trigger flex w-full cursor-pointer gap-3 p-5 text-left transition md:flex-row md:items-center md:justify-between" aria-expanded="false">
 								<div class="flex w-full min-w-0 items-center gap-3">
 									<span class="shrink-0 rounded-md px-2.5 py-1 text-xs font-bold <%= helpers.methodBadgeClass(route.method) %>"><%= route.method %></span>
@@ -188,7 +188,7 @@
 				</div>
 			<% } else { %>
 				<div class="flex flex-col items-center justify-center py-12 px-6">
-					<p class="text-center">No active endpoints available for this API.</p>
+					<p data-aos="zoom-in" class="text-center">No active endpoints available for this API.</p>
 				</div>
 			<% } %>
 		</div>

@@ -87,7 +87,7 @@ pageScript = `
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
   <div class="lg:col-span-2 space-y-4">
     <!-- API Settings -->
-    <div class="card p-5">
+    <div data-aos="zoom-in" class="card p-5">
       <div class="border-b pb-4 mb-4 border-gray-200/70 dark:border-gray-800/70 flex items-center justify-between">
 		<div class="flex items-center gap-4">
 			<a href="/admin/apis/<%= api.id %>" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
@@ -171,7 +171,7 @@ pageScript = `
     </div>
 
     <!-- Routes -->
-    <div class="card p-5">
+    <div data-aos="zoom-in" class="card p-5">
       <div class="border-b pb-4 border-gray-200/70 dark:border-gray-800/70 flex items-center justify-between">
         <h3 class="text-sm font-semibold">Routes (<%= routes.length %>)</h3>
         <button type="button" onclick="toggleAddRoute()" class="flex items-center gap-1 text-xs link">
@@ -385,7 +385,7 @@ curl -X GET https://gateway.example.com/random-quote \\
 
   <!-- Sidebar -->
   <div class="space-y-4">
-	<div class="card p-5">
+	<div data-aos="zoom-in" class="card p-5">
 	  <div class="border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4">
 		<h3 class="text-xs font-semibold uppercase tracking-wider">Info</h3>
 	  </div>
@@ -395,7 +395,7 @@ curl -X GET https://gateway.example.com/random-quote \\
         <div class="flex justify-between"><span>Created</span><span><%= helpers.formatDate(api.created_at, 'short') %></span></div>
       </div>
     </div>
-	<div class="card p-5">
+	<div data-aos="zoom-in" class="card p-5">
 	  <div class="border-b border-gray-200/70 dark:border-gray-800/70 pb-4 mb-4"><h3 class="text-xs font-semibold uppercase tracking-wider">Stats (30d)</h3></div>
 	  <div class="space-y-1.5 text-sm">
 		<div class="flex justify-between"><span>Total Requests</span><span class="font-mono"><%= helpers.formatNumber(Number(stats?.overview?.total_requests || 0)) %></span></div>

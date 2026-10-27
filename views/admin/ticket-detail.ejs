@@ -1,12 +1,12 @@
 	<div class="flex items-center gap-4 card px-4 py-3 mb-4">
-		<a href="/admin/tickets" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+		<a data-aos="zoom-in" href="/admin/tickets" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
 				<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
 			</svg>
 		</a>
 		<div>
-		  <h2 class="text-sm font-bold mb-1"><%= ticket.subject %></h2>
-		  <div class="flex items-center gap-2 mt-1 flex-wrap">
+		  <h2 data-aos="zoom-in" class="text-sm font-bold mb-1"><%= ticket.subject %></h2>
+		  <div data-aos="zoom-in" class="flex items-center gap-2 mt-1 flex-wrap">
 			<span class="text-xs font-mono text-blue-600 dark:text-blue-400"><%= ticket.ticket_number %></span>
 			<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold <%= SupportTicket.getStatusColor(ticket.status) %>">
 			  <%= SupportTicket.getStatusLabel(ticket.status) %>
@@ -23,7 +23,7 @@
   <!-- Conversation -->
   <div class="lg:col-span-3 space-y-4">
     <!-- User Info Card -->
-    <div class="card p-4">
+    <div data-aos="zoom-in" class="card p-4">
       <div class="flex items-center gap-3">
         <div class="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-200 dark:bg-orange-900">
           <% if (ticket.avatar) { %>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Messages -->
-    <div class="card">
+    <div data-aos="zoom-in" class="card">
       <div class="p-4 border-b border-gray-200/70 dark:border-gray-800/70">
         <h3 class="text-sm font-bold">Conversation</h3>
       </div>
@@ -102,7 +102,7 @@
 
     <!-- Reply Form -->
     <% if (ticket.status !== 'closed') { %>
-      <div class="card p-4">
+      <div data-aos="zoom-in" class="card p-4">
         <form method="POST" action="/admin/tickets/<%= ticket.id %>/reply">
           <label class="block text-xs font-semibold mb-2">Your Reply</label>
           <textarea name="message" required rows="1" placeholder="Type your reply..." class="bg-form p-2 w-full resize-y text-sm mb-4"></textarea>
@@ -127,7 +127,7 @@
   <!-- Admin Panel -->
   <div class="space-y-4">
     <!-- Update Ticket -->
-    <div class="card p-4">
+    <div data-aos="zoom-in" class="card p-4">
       <h4 class="text-xs font-semibold uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70 pb-2 mb-2">
 		Update Ticket
 	  </h4>
@@ -171,7 +171,7 @@
     </div>
 
     <!-- Delete Ticket -->
-    <div class="card p-4 border-rose-200/70 dark:border-rose-500/20">
+    <div data-aos="zoom-in" class="card p-4 border-rose-200/70 dark:border-rose-500/20">
       <h4 class="text-xs font-semibold uppercase tracking-wider mb-3 text-rose-600 dark:text-rose-400">Danger Zone</h4>
       <form method="POST" action="/admin/tickets/<%= ticket.id %>/delete" onsubmit="return confirm('Delete ticket <%= ticket.ticket_number %>? This cannot be undone.')">
         <button type="submit" class="w-full px-4 py-2 btn-failed rounded-md text-sm font-semibold">
@@ -181,7 +181,7 @@
     </div>
 
     <!-- Ticket Details -->
-    <div class="card p-4">
+    <div data-aos="zoom-in" class="card p-4">
 	  <h4 class="text-xs font-semibold uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70 pb-2 mb-2">
 		Details
 	  </h4>
@@ -210,7 +210,7 @@
     </div>
 
     <% if (ticket.api_endpoint || ticket.error_message || ticket.reproduction_steps) { %>
-      <div class="card p-4">
+      <div data-aos="zoom-in" class="card p-4">
 	    <h4 class="text-xs font-semibold uppercase tracking-wider border-b border-gray-200/70 dark:border-gray-800/70 pb-2 mb-2">
 		  Technical Info
 	    </h4>
