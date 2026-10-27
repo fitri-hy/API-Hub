@@ -1,20 +1,20 @@
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full md:translate-x-0 flex-col transition-transform duration-300 ease-in-out border-r border-gray-200/70 dark:border-gray-800/70 bg-white dark:bg-slate-900 md:bg-white/60 md:dark:bg-slate-900/60">
-	<button data-aos="zoom-in" type="button" data-sidebar-close class="md:hidden absolute z-10 top-2 right-2 rounded-full p-1.5 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-rose-500" aria-label="close menu">
+	<button type="button" data-sidebar-close class="md:hidden absolute z-10 top-2 right-2 rounded-full p-1.5 hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-rose-500" aria-label="close menu">
 		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 			<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
 		</svg>
 	</button>
 	
 	<div class="flex items-center gap-2 p-4">
-		<img data-aos="zoom-in" class="h-10 w-10 rounded-full object-cover" src="<%= site_logo %>" alt="API Hub" />
-		<h1 data-aos="zoom-in" class="text-2xl font-extrabold tracking-tight uppercase font-sans antialiased">
+		<img class="h-10 w-10 rounded-full object-cover" src="<%= site_logo %>" alt="API Hub" />
+		<h1 class="text-2xl font-extrabold tracking-tight uppercase font-sans antialiased">
 			<%= appname %>
 		</h1>
 	</div>
 
 	<nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4 text-base">
 	  <% if (isAuthenticated && user.role !== 'user') { %>
-		<a data-aos="zoom-in" href="/admin/dashboard" class="mb-6 flex items-center gap-2 p-2.5 rounded-md group bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-500/10 dark:to-purple-500/10 border border-indigo-100/60 dark:border-indigo-500/10 hover:from-indigo-100 hover:to-purple-100 dark:hover:from-indigo-500/15 dark:hover:to-purple-500/15gap-3 rounded px-3 py-2">
+		<a href="/admin/dashboard" class="mb-6 flex items-center gap-2 p-2.5 rounded-md group bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-500/10 dark:to-purple-500/10 border border-indigo-100/60 dark:border-indigo-500/10 hover:from-indigo-100 hover:to-purple-100 dark:hover:from-indigo-500/15 dark:hover:to-purple-500/15gap-3 rounded px-3 py-2">
 		  <div class="w-9 h-9 rounded-lg flex items-center justify-center bg-white dark:bg-gray-800 shrink-0">
 			<svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
 		  </div>
@@ -26,14 +26,14 @@
 	  </a>
 	  <% } %>
 	  
-		<a data-aos="zoom-in" href="/user/dashboard" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/dashboard">
+		<a href="/user/dashboard" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/dashboard">
           <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
           Dashboard
         </a>
 
-		<p data-aos="zoom-in" class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">API Management</p>
+		<p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">API Management</p>
 
-        <a data-aos="zoom-in" href="/user/playground" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/playground">
+        <a href="/user/playground" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/playground">
 			<svg class="h-5 w-5 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
 				<path d="M0 0h16v16H0z" fill="none" />
 				<g fill="currentColor" fill-rule="evenodd">
@@ -44,7 +44,7 @@
 			Playground
         </a>
 		
-        <a data-aos="zoom-in" href="/user/api-keys" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/api-keys">
+        <a href="/user/api-keys" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/api-keys">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 2v6.292a7 7 0 1 0 4 0V2M5 15h14M8.5 2h7" />
@@ -52,7 +52,7 @@
 			API Keys
         </a>
 		
-        <a data-aos="zoom-in" href="/user/browse-apis" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/browse-apis">
+        <a href="/user/browse-apis" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/browse-apis">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -63,9 +63,9 @@
 			Browse APIs
         </a>
 		
-		<p data-aos="zoom-in" class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Billing & Credits</p>
+		<p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Billing & Credits</p>
 
-        <a data-aos="zoom-in" href="/user/credits" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/credits">
+        <a href="/user/credits" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/credits">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -76,7 +76,7 @@
 			Credits
         </a>
 		
-        <a data-aos="zoom-in" href="/user/transactions" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/transactions">
+        <a href="/user/transactions" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/transactions">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -87,9 +87,9 @@
 			Transactions
         </a>
 		
-		<p data-aos="zoom-in" class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Community</p>
+		<p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Community</p>
 
-        <a data-aos="zoom-in" href="/user/referrals" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/referrals">
+        <a href="/user/referrals" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/referrals">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -101,9 +101,9 @@
 			Referrals
         </a>
 		
-		<p data-aos="zoom-in" class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Monitoring</p>
+		<p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Monitoring</p>
 
-        <a data-aos="zoom-in" href="/user/logs"class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/logs">
+        <a href="/user/logs"class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/logs">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h1m-1 7h1m-1 7h1M8 5h1m-1 7h1m-1 7h1m4-14h8m-8 7h8m-8 7h8" />
@@ -111,7 +111,7 @@
 			Logs
         </a>
 
-        <a data-aos="zoom-in" href="/user/webhooks" data-path="/admin/webhooks" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold">
+        <a href="/user/webhooks" data-path="/admin/webhooks" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<path fill="currentColor" d="M18 18.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5c-.44 0-.84.2-1.11.5H10c-.55 0-1 .45-1 1c0 .8-.31 1.55-.88 2.12c-1.13 1.13-3.11 1.13-4.24 0C3.31 18.55 3 17.8 3 17s.31-1.55.88-2.12c.32-.32.73-.56 1.2-.72l-.61-1.9c-.78.25-1.46.66-2.01 1.21c-.94.94-1.46 2.2-1.46 3.54s.52 2.59 1.46 3.54s2.2 1.46 3.54 1.46s2.59-.52 3.54-1.46c.7-.7 1.17-1.58 1.36-2.54h5.99c.27.3.67.5 1.11.5Z" />
@@ -121,9 +121,9 @@
 			Webhooks
 		</a>
 
-		<p data-aos="zoom-in" class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Support</p>
+		<p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Support</p>
 
-		<a data-aos="zoom-in" href="/user/tickets" data-path="/user/tickets" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold">
+		<a href="/user/tickets" data-path="/user/tickets" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20">
 				<path d="M0 0h20v20H0z" fill="none" />
 				<path fill="currentColor" d="M14.09 2.233Q12.38 1 9.794 1q-1.968 0-3.317.868q-2.14 1.36-2.277 4.615h3.307q0-.948.553-1.828q.553-.879 1.878-.879q1.348 0 1.854.713q.508.715.508 1.582c0 .504-.252.965-.557 1.383a2.9 2.9 0 0 1-.661.674s-1.793 1.15-2.58 2.074c-.456.535-.497 1.338-.538 2.488c-.002.082.029.252.315.252h2.571c.256 0 .309-.189.312-.274c.018-.418.064-.633.141-.875c.144-.457.538-.855.979-1.199l.91-.627c.822-.641 1.477-1.166 1.767-1.578c.494-.676.842-1.51.842-2.5Q15.8 3.468 14.09 2.233M9.741 14.924c-1.139-.035-2.079.754-2.115 1.99c-.035 1.234.858 2.051 1.998 2.084c1.189.035 2.104-.727 2.141-1.963c.034-1.236-.834-2.076-2.024-2.111" />
@@ -131,9 +131,9 @@
 			Help Center
 		</a>
 		
-		<p data-aos="zoom-in" class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Account</p>
+		<p class="px-3 pt-5 pb-1.5 text-[10px] font-bold uppercase tracking-wider">Account</p>
 
-        <a data-aos="zoom-in" href="/user/profile" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/profile">
+        <a href="/user/profile" class="sidebar-link flex items-center gap-3 rounded px-3 py-2.5 font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/70 hover:font-semibold" data-path="/user/profile">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -148,7 +148,7 @@
 
 	<div class="shrink-0 border-t border-gray-200/70 dark:border-gray-800/70 p-4 flex gap-4 justify-between items-center px-2">
 		<div class="flex flex-1 items-center gap-3">
-			<div data-aos="zoom-in" class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-200 dark:bg-orange-900">
+			<div class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-200 dark:bg-orange-900">
 				<% const currentUser = typeof user !== 'undefined' && user ? user : userData; %>
                 <% if (currentUser && currentUser.avatar) { %>
                     <img src="<%= currentUser.avatar %>" alt="Avatar" class="h-full w-full object-cover rounded-full">
@@ -169,11 +169,11 @@
 				<% } %>
 			</div>
 			<div class="hidden leading-tight sm:block">
-				<h3 data-aos="zoom-in" class="truncate text-sm font-medium"><%= typeof user !== 'undefined' && user ? user.full_name || user.full_name : 'Admin' %></h3>
-				<p data-aos="zoom-in" class="text-xs">@<%= typeof user !== 'undefined' && user ? user.username || user.username : '-' %></p>
+				<h3 class="truncate text-sm font-medium"><%= typeof user !== 'undefined' && user ? user.full_name || user.full_name : 'Admin' %></h3>
+				<p class="text-xs">@<%= typeof user !== 'undefined' && user ? user.username || user.username : '-' %></p>
 			</div>
 		</div>
-		<a data-aos="zoom-in" href="/auth/logout" title="Logout" class="rounded-md p-1 hover:bg-rose-500 dark:hover:bg-rose-800 hover:text-white">
+		<a href="/auth/logout" title="Logout" class="rounded-md p-1 hover:bg-rose-500 dark:hover:bg-rose-800 hover:text-white">
 			<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 				<path d="M0 0h24v24H0z" fill="none" />
 				<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6m10 0l-9 9m3-9h6v6" />
