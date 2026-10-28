@@ -1,113 +1,537 @@
 <%
-  const apiRoutes = routes || [];
-  const gatewayUrl = (typeof baseUrl !== 'undefined' ? baseUrl : '') + (api.base_route || '/gateway/' + api.slug);
-%>
-
-<!-- API Info -->
-<div class="card p-5 mb-4">
-  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 pb-4 border-b border-gray-200/70 dark:border-gray-800/70">
-	<div class="flex items-center gap-4">
-		<a data-aos="zoom-in" href="/user/browse-apis" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
-				<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-			</svg>
-		</a>
-		<div>
-			<h3 data-aos="zoom-in" class="text-sm font-bold mb-1"><%= api.name %></h3>
-			<p data-aos="zoom-in" class="text-xs">/<%= api.slug %></p>
-		</div>
-	</div>
-    <span data-aos="zoom-in" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium <%= helpers.statusBadgeClass(api.status === 'active' ? 'active' : 'inactive') %>">
-      <%= api.status %>
-    </span>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-    <div data-aos="zoom-in">
-      <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Base Route</label>
-      <code class="text-sm block truncate select-text"><%= api.base_route || '-' %></code>
-    </div>
-    <div data-aos="zoom-in">
-      <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Version</label>
-      <span class="text-sm"><%= api.version || '-' %></span>
-    </div>
-    <div data-aos="zoom-in">
-      <label class="block text-xs font-semibold uppercase tracking-wider mb-1">Credit Cost</label>
-      <span class="text-sm font-semibold"><%= api.credit_cost || 0 %>cr/request</span>
-    </div>
-  </div>
-  
-  <% if (api.description) { %>
-	<div class="flex">
-		<p data-aos="zoom-in" class="text-sm border-l-4 border-blue-500 p-2 rounded-r-md bg-gray-200/70 dark:bg-gray-800/70">
-			<%= api.description || 'No description provided' %>
-		</p>
-	</div>
-  <% } %>
-</div>
-
-<!-- Routes -->
-<div class="space-y-3">
-  <% if (apiRoutes.length > 0) { %>
-    <% apiRoutes.forEach(function(route) { %>
-      <div data-aos="zoom-in" class="card overflow-hidden select-text">
-        <div class="route-toggle flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-50/70 dark:hover:bg-gray-800/40 transition-colors" onclick="toggleRouteDoc(this)">
-          <span class="inline-flex shrink-0 items-center justify-center rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-wide
-            <%= route.method === 'GET' ? 'bg-emerald-50 text-emerald-600 border border-emerald-200/70 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20' :
-                route.method === 'POST' ? 'bg-blue-50 text-blue-600 border border-blue-200/70 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20' :
-                route.method === 'PUT' ? 'bg-yellow-50 text-yellow-600 border border-yellow-200/70 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/20' :
-                route.method === 'DELETE' ? 'bg-rose-50 text-rose-600 border border-rose-200/70 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20' :
-                'bg-purple-50 text-purple-600 border border-purple-200/70 dark:bg-purple-500/10 dark:text-purple-400 dark:border-purple-500/20' %>">
-            <%= route.method %>
-          </span>
-          <span class="font-mono text-xs font-medium">
-            <%= route.path %>
-          </span>
-          <svg class="ml-auto shrink-0 w-4 h-4 text-gray-400 transition-transform route-arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </div>
-
-        <div class="route-doc-body hidden p-5 border-t border-gray-200/70 dark:border-gray-800/70">
-		  <!--
-		  <label class="block text-xs font-semibold uppercase tracking-wider mb-4">Description</label>
-          <% if (route.description) { %>
-            <div class="px-5">
-				<p class="text-sm border-l-4 border-blue-500 p-2 bg-gray-200/70 dark:bg-gray-800/70">
-					<%= route.description || 'No description provided' %>
-				</p>
-            </div>
-          <% } %>
-		  -->
-		  <label class="block font-semibold uppercase tracking-wider mb-4">Documentation</label>
-          <% if (route.documentation) { %>
-            <div class="px-5">
-              <div class="prose dark:prose-invert max-w-6xl route-documentation">
-                <%- marked.parse(route.documentation) %>
-              </div>
-            </div>
-          <% } else { %>
-            <div class="p-5">
-              <p class="text-xs">No documentation available for this route.</p>
-            </div>
-          <% } %>
-        </div>
-      </div>
-    <% }); %>
-  <% } else { %>
-    <div class="card p-8 text-center">
-      <p data-aos="zoom-in" class="text-sm">No routes available.</p>
-    </div>
-  <% } %>
-</div>
-
-<% 
-  pageScript = `
-	<script>
-	function toggleRouteDoc(el) {
-	  const body = el.nextElementSibling;
-	  const arrow = el.querySelector('.route-arrow');
-	  body.classList.toggle('hidden');
-	  if (arrow) arrow.style.transform = body.classList.contains('hidden') ? '' : 'rotate(180deg)';
+function formatJson(value) {
+	if (value === null || value === undefined || value === '') return null;
+	try {
+		let parsed = value;
+		if (typeof parsed === 'string') {
+			parsed = parsed.trim();
+			if (!parsed) return null;
+			parsed = JSON.parse(parsed);
+			if (typeof parsed === 'string') {
+				parsed = JSON.parse(parsed);
+			}
+		}
+		return JSON.stringify(parsed, null, 2);
+	} catch (error) {
+		return String(value);
 	}
+}
+
+const editorData = routes.map(function(r) {
+	const request = `curl -X ${r.method} \\
+  -H "X-API-Key: ***" \\
+  -H "Content-Type: application/json" \\
+  ${process.env.APP_URL || 'http://localhost:3000'}${api.base_route}${r.path}`;
+
+	return {
+		id: r.id,
+		documentation: r.documentation || null,
+		request,
+		sampleResponse: formatJson(r.sample_response),
+		requestSchema: formatJson(r.request_schema),
+		responseSchema: formatJson(r.response_schema)
+	};
+});
+
+pageScript = `
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.20/lib/codemirror.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.20/theme/material-ocean.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.20/lib/codemirror.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.20/mode/javascript/javascript.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.20/mode/shell/shell.min.js"></script>
+
+	<style>
+		.codemirror-editor {
+			overflow: hidden;
+			border: 1px solid #334155;
+			border-radius: .5rem;
+		}
+		.codemirror-editor .CodeMirror {
+			height: auto;
+			min-height: 120px;
+			max-height: 500px;
+			font-size: 13px;
+			font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+		}
+		.codemirror-editor .CodeMirror-scroll {
+			max-height: 500px;
+			overflow: auto !important;
+		}
+		.md-content h1,
+		.md-content h2,
+		.md-content h3 {
+			color: #0f172a;
+			font-weight: 700;
+			margin-top: 1rem;
+			margin-bottom: .5rem;
+		}
+		.md-content p {
+			margin: .5rem 0;
+			line-height: 1.7;
+		}
+		.md-content ul,
+		.md-content ol {
+			padding-left: 1.5rem;
+			margin: .5rem 0;
+		}
+		.md-content ul {
+			list-style: disc;
+		}
+		.md-content ol {
+			list-style: decimal;
+		}
+		.md-content code {
+			padding: .15rem .35rem;
+			border-radius: .25rem;
+			background: #f1f5f9;
+			font-family: monospace;
+			font-size: .85em;
+		}
+		.md-content pre {
+			margin: .75rem 0;
+			padding: 1rem;
+			border-radius: .5rem;
+			background: #0f172a;
+			color: #e2e8f0;
+			overflow-x: auto;
+		}
+		.md-content pre code {
+			padding: 0;
+			background: transparent;
+		}
+	</style>
+
+	<script>
+		const editorData = ${JSON.stringify(editorData)};
+		window.codeEditors = {};
+
+		function createCodeEditor(id, value, mode) {
+			const element = document.getElementById(id);
+			if (!element || typeof CodeMirror === 'undefined') return;
+
+			const textarea = document.createElement('textarea');
+			element.appendChild(textarea);
+
+			const editor = CodeMirror.fromTextArea(textarea, {
+				mode: mode,
+				theme: 'material-ocean',
+				lineNumbers: true,
+				readOnly: true,
+				lineWrapping: false,
+				viewportMargin: Infinity,
+				scrollbarStyle: 'native'
+			});
+
+			editor.setValue(value || '');
+			window.codeEditors[id] = editor;
+
+			setTimeout(() => {
+				editor.refresh();
+			}, 50);
+		}
+
+		window.copyEditor = async function(id, button) {
+			const editor = window.codeEditors[id];
+			if (!editor || !button) return;
+
+			try {
+				await navigator.clipboard.writeText(editor.getValue());
+
+				const oldText = button.textContent;
+				button.textContent = 'Copied!';
+				button.classList.add('text-emerald-600');
+
+				setTimeout(() => {
+					button.textContent = oldText;
+					button.classList.remove('text-emerald-600');
+				}, 1500);
+			} catch (error) {
+				console.error('Copy failed:', error);
+			}
+		};
+
+		document.addEventListener('DOMContentLoaded', function() {
+			editorData.forEach(function(item) {
+				if (item.documentation) {
+					const docs = document.getElementById('docs-' + item.id);
+					if (docs && typeof marked !== 'undefined') {
+						docs.innerHTML = marked.parse(item.documentation);
+					}
+				}
+
+				createCodeEditor(
+					'request-editor-' + item.id,
+					item.request,
+					'shell'
+				);
+
+				if (item.sampleResponse) {
+					createCodeEditor(
+						'response-editor-' + item.id,
+						item.sampleResponse,
+						{name: 'javascript', json: true}
+					);
+				}
+
+				if (item.requestSchema) {
+					createCodeEditor(
+						'request-schema-editor-' + item.id,
+						item.requestSchema,
+						{name: 'javascript', json: true}
+					);
+				}
+
+				if (item.responseSchema) {
+					createCodeEditor(
+						'response-schema-editor-' + item.id,
+						item.responseSchema,
+						{name: 'javascript', json: true}
+					);
+				}
+			});
+		});
+	</script>
+
+	<script>
+		(() => {
+			const container = document.querySelector('.endpoint-list');
+			if (!container) return;
+
+			const items = [...container.querySelectorAll('.faq-item')];
+
+			const closeItem = (item) => {
+				const trigger = item.querySelector('.faq-trigger');
+				const answer = item.querySelector('.faq-answer');
+				const icon = item.querySelector('.faq-icon');
+
+				if (!trigger || !answer) return;
+
+				trigger.setAttribute('aria-expanded', 'false');
+
+				answer.classList.remove(
+					'grid-rows-[1fr]',
+					'opacity-100'
+				);
+
+				answer.classList.add(
+					'grid-rows-[0fr]',
+					'opacity-0'
+				);
+
+				if (icon) {
+					icon.classList.remove(
+						'rotate-45',
+						'bg-rose-500/10',
+						'text-rose-500'
+					);
+				}
+			};
+
+			const openItem = (item) => {
+				const trigger = item.querySelector('.faq-trigger');
+				const answer = item.querySelector('.faq-answer');
+				const icon = item.querySelector('.faq-icon');
+
+				if (!trigger || !answer) return;
+
+				trigger.setAttribute('aria-expanded', 'true');
+
+				answer.classList.remove(
+					'grid-rows-[0fr]',
+					'opacity-0'
+				);
+
+				answer.classList.add(
+					'grid-rows-[1fr]',
+					'opacity-100'
+				);
+
+				if (icon) {
+					icon.classList.add(
+						'rotate-45',
+						'bg-rose-500/10',
+						'text-rose-500'
+					);
+				}
+			};
+
+			const refreshEditors = () => {
+				setTimeout(() => {
+					if (!window.codeEditors) return;
+
+					Object.values(window.codeEditors).forEach(editor => {
+						if (editor) editor.refresh();
+					});
+				}, 320);
+			};
+
+			items.forEach((item) => {
+				const trigger = item.querySelector('.faq-trigger');
+				if (!trigger) return;
+
+				trigger.addEventListener('click', () => {
+					const isOpen =
+						trigger.getAttribute('aria-expanded') === 'true';
+
+					items.forEach((other) => {
+						if (other !== item) {
+							closeItem(other);
+						}
+					});
+
+					if (isOpen) {
+						closeItem(item);
+					} else {
+						openItem(item);
+					}
+
+					refreshEditors();
+				});
+			});
+		})();
 	</script>
 `;
 %>
+
+<div>
+	<div class="p-5 card mb-4">
+		<div class="flex items-center justify-between">
+			<div class="flex items-center gap-4">
+				<a data-aos="zoom-in" href="/user/browse-apis" class="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white border border-gray-200/70 dark:border-gray-800/70 hover:bg-gray-100 dark:hover:bg-slate-800 dark:bg-slate-900" title="Back to users">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none">
+						<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+					</svg>
+				</a>
+				<div>
+				  <h3 data-aos="zoom-in" class="text-2xl font-semibold"><%= api.name %></h3>
+				  <p data-aos="zoom-in" class="max-w-xs truncate text-sm"><%= api.description || 'No description' %></p>
+				</div>
+			</div>
+			<div class="flex items-center gap-2">
+				<span data-aos="zoom-in" class="inline-flex items-center rounded-full px-3 py-1.5 font-bold <%= helpers.statusBadgeClass(api.status) %>">
+					<%= api.status %>
+				</span>
+			</div>
+		</div>
+		<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+			<div data-aos="zoom-in" class="card p-4">
+				<div class="text-xs font-medium uppercase tracking-wide">
+					Version
+				</div>
+				<div class="mt-1 font-semibold">
+					v<%= api.version %>
+				</div>
+			</div>
+			<div data-aos="zoom-in" class="card p-4">
+				<div class="text-xs font-medium uppercase tracking-wide">
+					Base Route
+				</div>
+				<div class="mt-1 break-all font-mono text-sm font-semibold select-text">
+					<%= api.base_route %>/*
+				</div>
+			</div>
+			<div data-aos="zoom-in" class="card p-4">
+				<div class="text-xs font-medium uppercase tracking-wide">
+					Credit Cost
+				</div>
+				<div class="mt-1 font-semibold">
+					<%= api.credit_cost %>/request
+				</div>
+			</div>
+		</div>
+		<% if (api.auth_required) { %>
+		<div class="mt-4 rounded-md bg-amber-100/40 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-900/40 p-4">
+			<div class="flex items-center gap-3">
+				<div data-aos="zoom-in" class="flex items-center justify-center p-3 rounded-lg bg-amber-600 dark:bg-amber-900 text-white">
+					<svg xmlns="http://www.w3.org/2000/svg" class="m-auto" width="24" height="24" viewBox="0 0 16 16">
+						<path d="M0 0h16v16H0z" fill="none" />
+						<g fill="currentColor">
+							<path d="M5.338 1.59a61 61 0 0 0-2.837.856a.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025a1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453a7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625a11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43A63 63 0 0 1 5.072.56" />
+							<path d="M9.5 6.5a1.5 1.5 0 0 1-1 1.415l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99a1.5 1.5 0 1 1 2-1.415" />
+						</g>
+					</svg>
+				</div>
+				<div>
+					<h3 data-aos="zoom-in" class="font-semibold text-xl text-amber-600 dark:text-gray-100">
+						Authentication Required
+					</h3>
+
+					<p data-aos="zoom-in" class="text-sm leading-6 text-amber-800 dark:text-gray-300">
+						This API requires an API key. Pass it via the
+						<code class="rounded bg-gray-800 dark:bg-black px-1.5 py-0.5 font-mono text-xs text-white">
+							X-API-Key
+						</code>
+						header.
+					</p>
+				</div>
+			</div>
+		</div>
+		<% } %>
+	</div>
+
+	<div class="card p-5 mb-4">
+		<div class="flex items-center justify-between gap-4 mb-4 pb-4 border-b border-gray-200/70 dark:border-gray-800/70">
+			<div>
+				<h2 data-aos="zoom-in" class="text-xl font-bold">
+					Endpoints
+				</h2>
+				<p data-aos="zoom-in" class="text-sm hidden lg:flex">
+					Available API endpoints and documentation.
+				</p>
+			</div>
+			<span data-aos="zoom-in" class="font-medium">
+				<%= routes.length %> route<%= routes.length === 1 ? '' : 's' %>
+			</span>
+		</div>
+		<div class="endpoint-list space-y-2">
+			<% routes.forEach(function(r) { %>
+				<div class="faq-item overflow-hidden card select-text">
+					<button data-aos="zoom-in" 
+						type="button"
+						class="faq-trigger flex w-full items-center gap-3 px-4 py-3 text-left transition"
+						aria-expanded="false"
+					>
+						<span class="shrink-0 rounded-md px-2.5 py-1 text-xs font-bold <%= helpers.methodBadgeClass(r.method) %>">
+							<%= r.method %>
+						</span>
+						<span class="min-w-0 flex-1 truncate font-mono text-sm font-semibold sm:text-base">
+							<%= r.path %>
+						</span>
+						<span class="faq-icon flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-300">
+							<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14"/>
+							</svg>
+						</span>
+					</button>
+					<div class="faq-answer grid grid-rows-[0fr] opacity-0 transition-all duration-300 ease-in-out">
+						<div data-aos="zoom-in" class="min-h-0 overflow-hidden border-t border-gray-200/70 dark:border-gray-800/70">
+							<div class="space-y-9 p-4 ">
+								<% if (r.description) { %>
+									<div class="mb-4 pb-4 border-b border-gray-200/70 dark:border-gray-800/70">
+										<h3 class="text-sm font-semibold mb-4">
+											Description
+										</h3>
+										<p class="border-l-4 border-gray-300 dark:border-gray-800 pl-3 text-sm leading-6">
+											<%= r.description %>
+										</p>
+									</div>
+								<% } %>
+
+								<div class="space-y-4">
+									<% if (r.documentation) { %>
+										<div class="mb-4 pb-4 border-b border-gray-200/70 dark:border-gray-800/70">
+										<h3 class="text-sm font-semibold mb-4">
+												Documentation
+											</h3>
+											<div
+												id="docs-<%= r.id %>"
+												class="prose dark:prose-invert max-w-6xl border-l-4 border-gray-300 dark:border-gray-800 pl-3 "
+											><%- marked.parse(r.documentation) %></div>
+										</div>
+									<% } %>
+									<div class="pb-4 mb-4 border-b border-gray-200/70 dark:border-gray-800/70">
+										<div class="mb-2 flex items-center justify-between gap-3">
+											<h3 class="text-sm font-semibold">
+												Request
+											</h3>
+											<button
+												type="button"
+												onclick="copyEditor('request-editor-<%= r.id %>', this); event.stopPropagation();"
+												class="text-xs font-mono px-2 py-0.5 rounded bg-gray-800 hover:bg-gray-700 text-white"
+											>
+												Copy
+											</button>
+										</div>
+										<div
+											id="request-editor-<%= r.id %>"
+											class="codemirror-editor"
+										></div>
+									</div>
+									<% if (r.sample_response) { %>
+										<div>
+											<div class="mb-2 flex items-center justify-between gap-3">
+												<h3 class="text-sm font-semibold">
+													Sample Response
+												</h3>
+
+												<button
+													type="button"
+													onclick="copyEditor('response-editor-<%= r.id %>', this); event.stopPropagation();"
+													class="text-xs font-mono px-2 py-0.5 rounded bg-gray-800 hover:bg-gray-700 text-white"
+												>
+													Copy
+												</button>
+											</div>
+
+											<div
+												id="response-editor-<%= r.id %>"
+												class="codemirror-editor"
+											></div>
+										</div>
+									<% } %>
+									<% if (r.request_schema) { %>
+										<div>
+											<div class="mb-2 flex items-center justify-between gap-3">
+												<h3 class="text-sm font-semibold">
+													Request Schema
+												</h3>
+
+												<button
+													type="button"
+													onclick="copyEditor('request-schema-editor-<%= r.id %>', this); event.stopPropagation();"
+													class="text-xs font-mono px-2 py-0.5 rounded bg-gray-800 hover:bg-gray-700 text-white"
+												>
+													Copy
+												</button>
+											</div>
+
+											<div
+												id="request-schema-editor-<%= r.id %>"
+												class="codemirror-editor"
+											></div>
+										</div>
+									<% } %>
+
+									<% if (r.response_schema) { %>
+										<div>
+											<div class="mb-2 flex items-center justify-between gap-3">
+												<h3 class="text-sm font-semibold">
+													Response Schema
+												</h3>
+												<button
+													type="button"
+													onclick="copyEditor('response-schema-editor-<%= r.id %>', this); event.stopPropagation();"
+													class="text-xs font-mono px-2 py-0.5 rounded bg-gray-800 hover:bg-gray-700 text-white"
+												>
+													Copy
+												</button>
+											</div>
+
+											<div
+												id="response-schema-editor-<%= r.id %>"
+												class="codemirror-editor"
+											></div>
+										</div>
+									<% } %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<% }); %>
+
+			<% if (routes.length === 0) { %>
+				<div class="px-6 py-12 text-center">
+					<h3 data-aos="zoom-in" class="font-semibold">
+						No endpoints available
+					</h3>
+
+					<p data-aos="zoom-in" class="mt-1 text-sm">
+						This API does not have any active endpoints yet.
+					</p>
+				</div>
+			<% } %>
+
+		</div>
+	</div>
+</div>

@@ -4,6 +4,7 @@ const Package = require('../../models/Package');
 const Api = require('../../models/Api');
 const ApiRoute = require('../../models/ApiRoute');
 const AdminSettings = require('../../models/AdminSettings');
+const helpers = require('../../utils/helpers');
 
 const publicController = {
 	// Landing
@@ -113,47 +114,49 @@ const publicController = {
 		});
 	},
 
-	// Browser APIs Detail
-	async getBrowserApiDetail(req, res) {
-		const api = await Api.findBySlug(req.params.slug);
+// Browser APIs Detail
+async getBrowserApiDetail(req, res) {
+    const api = await Api.findBySlug(req.params.slug);
 
-		if (!api || api.status !== 'active' || !api.is_public) {
-			return res.redirect('/browser-apis');
-		}
+    if (!api || api.status !== 'active' || !api.is_public) {
+        return res.redirect('/browser-apis');
+    }
 
-		const routes = await ApiRoute.findActiveByApiId(api.id);
+    const routes = await ApiRoute.findActiveByApiId(api.id);
 
-		const formattedRoutes = routes.map(route => {
-			let sampleResponse = route.sample_response;
+    const formattedRoutes = routes.map(route => {
+        let sampleResponse = route.sample_response;
 
-			if (sampleResponse) {
-				try {
-					const parsed = typeof sampleResponse === 'string'
-						? JSON.parse(sampleResponse)
-						: sampleResponse;
+        if (sampleResponse) {
+            try {
+                const parsed = typeof sampleResponse === 'string'
+                    ? JSON.parse(sampleResponse)
+                    : sampleResponse;
 
-					sampleResponse = JSON.stringify(parsed, null, 2);
-				} catch (err) {
-					sampleResponse = String(sampleResponse);
-				}
-			}
+                sampleResponse = JSON.stringify(parsed, null, 2);
+            } catch (err) {
+                sampleResponse = String(sampleResponse);
+            }
+        }
 
-			return {
-				...route,
-				documentation: route.documentation
-					? marked.parse(route.documentation)
-					: '',
-				sampleResponse
-			};
-		});
+        return {
+            ...route,
+            documentation: route.documentation
+                ? marked.parse(route.documentation)
+                : '',
+            sampleResponse
+        };
+    });
 
-		return res.render('browser-api-detail', {
-			title: api.name,
-			layout: 'layouts/public',
-			api,
-			routes: formattedRoutes
-		});
-	},
+    return res.render('browser-api-detail', {
+        title: api.name,
+        layout: 'layouts/public',
+        api,
+        routes: formattedRoutes,
+        helpers,
+        marked
+    });
+},
 
 	// Contact
 	getContact(req, res) {
