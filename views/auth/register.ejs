@@ -178,6 +178,14 @@
 						</div>
 					<% } %>
 				</div>
+				
+				<% if (typeof turnstileEnabled !== 'undefined' && turnstileEnabled) { %>
+				<div data-aos="zoom-in" class="w-full flex flex-col gap-2 group mt-4 items-center">
+					<div id="turnstile-container"></div>
+					<input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response">
+				</div>
+				<% } %>
+
 				<div class="w-full flex flex-col gap-1.5 group mt-6 max-w-xs mx-auto">
 					<button data-aos="zoom-in" type="submit" class="w-full btn-primary">
 						REGISTER
@@ -206,9 +214,9 @@
 <%
 pageScript = `
 <script>
-  function togglePassword(inputId, iconId) {
-    const passwordInput = document.getElementById(inputId);
-    const eyeIcon = document.getElementById(iconId);
+  function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eye-icon');
     
     if (passwordInput.type === 'password') {
       passwordInput.type = 'text';
@@ -219,5 +227,20 @@ pageScript = `
     }
   }
 </script>
+
+<script>
+  window.onloadTurnstileCallback = function () {
+      if (document.getElementById('turnstile-container')) {
+          turnstile.render('#turnstile-container', {
+              sitekey: '${siteKey}',
+              theme: 'auto', // Otomatis menyesuaikan Light/Dark mode
+              callback: function (token) {
+                  document.getElementById('cf-turnstile-response').value = token;
+              },
+          });
+      }
+  };
+</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" async defer></script>
 `;
 %>

@@ -7,7 +7,7 @@ class AdminSettings {
     const row = rows[0];
     switch (row.setting_type) {
       case 'int': return parseInt(row.setting_value);
-      case 'bool': return row.setting_value === 'true';
+      case 'bool': return row.setting_value === 'true' || row.setting_value === '1';
       case 'json': return JSON.parse(row.setting_value);
       default: return row.setting_value;
     }
@@ -20,7 +20,7 @@ class AdminSettings {
       parsed: (() => {
         switch (r.setting_type) {
           case 'int': return parseInt(r.setting_value);
-          case 'bool': return r.setting_value === 'true';
+          case 'bool': return r.setting_value === 'true' || r.setting_value === '1';
           case 'json': try { return JSON.parse(r.setting_value); } catch { return r.setting_value; }
           default: return r.setting_value;
         }
@@ -32,7 +32,7 @@ class AdminSettings {
     await db.query(
       `INSERT INTO admin_settings (setting_key, setting_value)
        VALUES (?, ?)
-       ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_at = NOW()`,
+       ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
       [key, String(value)]
     );
   }
@@ -45,7 +45,7 @@ class AdminSettings {
         await conn.query(
           `INSERT INTO admin_settings (setting_key, setting_value)
            VALUES (?, ?)
-           ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_at = NOW()`,
+           ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
           [key, String(value)]
         );
       }

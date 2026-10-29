@@ -672,7 +672,7 @@ const adminController = {
 
   async updateSettings(req, res) {
     try {
-      const { app_name, default_credits, credit_value_rp, global_rate_limit, registration_enabled, maintenance_mode, auth_captcha_enabled, notifications_enabled,
+      const { app_name, default_credits, credit_value_rp, global_rate_limit, registration_enabled, maintenance_mode, auth_captcha_enabled, auth_turnstile_enabled, notifications_enabled,
               credit_bonus_enabled, credit_bonus_threshold,
               credit_bonus_daily_enabled, credit_bonus_daily,
               credit_bonus_weekly_enabled, credit_bonus_weekly,
@@ -695,6 +695,7 @@ const adminController = {
         registration_enabled: registration_enabled === 'on' ? 'true' : 'false',
         maintenance_mode: maintenance_mode === 'on' ? 'true' : 'false',
         auth_captcha_enabled: auth_captcha_enabled === 'on' ? 'true' : 'false',
+        auth_turnstile_enabled: auth_turnstile_enabled === 'on' ? 'true' : 'false',
         notifications_enabled: notifications_enabled === 'on' ? 'true' : 'false',
         bank_name: bank_name || 'Bank BCA',
         bank_account_number: bank_account_number || '',

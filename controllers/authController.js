@@ -7,6 +7,7 @@ const SystemLog = require('../models/SystemLog');
 const Referral = require('../models/Referral');
 const Notification = require('../models/Notification');
 const Webhook = require('../models/Webhook');
+const { verifyTurnstile } = require('../config/turnstile');
 
 // Helper: emit notification via Socket.IO
 async function emitToUser(req, userId, notificationData) {
@@ -34,20 +35,30 @@ const authController = {
         ? res.redirect('/admin/dashboard')
         : res.redirect('/user/dashboard');
     }
+
+    // Check Turnstile setting
+    const turnstileEnabledSetting = await AdminSettings.get('auth_turnstile_enabled');
+    const turnstileEnabled = turnstileEnabledSetting === 'true' || turnstileEnabledSetting === true || turnstileEnabledSetting === '1' || turnstileEnabledSetting === 1;
+
     // Check captcha setting
-    const captchaEnabled = await AdminSettings.get('auth_captcha_enabled');
+    const captchaEnabledSetting = await AdminSettings.get('auth_captcha_enabled');
+    const captchaEnabled = captchaEnabledSetting === 'true' || captchaEnabledSetting === true || captchaEnabledSetting === '1' || captchaEnabledSetting === 1;
+    
     let captchaA, captchaB;
     if (captchaEnabled) {
       captchaA = Math.floor(Math.random() * 9) + 1;
       captchaB = Math.floor(Math.random() * (10 - captchaA)) + 1;
       req.session.captchaAnswer = captchaA + captchaB;
     }
+
     res.render('auth/login', {
       title: 'Login',
       layout: 'layouts/auth',
       captchaEnabled,
       captchaA,
-      captchaB
+      captchaB,
+      turnstileEnabled,
+      siteKey: process.env.CLOUDFLARE_TURNSTILE_SITE_KEY
     });
   },
 
@@ -61,8 +72,27 @@ const authController = {
         return res.redirect('/auth/login');
       }
 
+      // Validate Turnstile if enabled in AdminSettings
+      const turnstileEnabledSetting = await AdminSettings.get('auth_turnstile_enabled');
+      const turnstileEnabled = turnstileEnabledSetting === 'true' || turnstileEnabledSetting === true || turnstileEnabledSetting === '1' || turnstileEnabledSetting === 1;
+      
+      if (turnstileEnabled) {
+        const turnstileToken = req.body['cf-turnstile-response'];
+        if (!turnstileToken) {
+          req.flash('error', 'Please complete the Cloudflare verification.');
+          return res.redirect('/auth/login');
+        }
+
+        const isHuman = await verifyTurnstile(turnstileToken, helpers.getClientIp(req));
+        if (!isHuman) {
+          req.flash('error', 'Cloudflare verification failed. Please try again.');
+          return res.redirect('/auth/login');
+        }
+      }
+
       // Validate captcha if enabled
-      const captchaEnabled = await AdminSettings.get('auth_captcha_enabled');
+      const captchaEnabledSetting = await AdminSettings.get('auth_captcha_enabled');
+      const captchaEnabled = captchaEnabledSetting === 'true' || captchaEnabledSetting === true || captchaEnabledSetting === '1' || captchaEnabledSetting === 1;
       if (captchaEnabled) {
         if (captchaAnswer === undefined || captchaAnswer === '' || parseInt(captchaAnswer) !== req.session.captchaAnswer) {
           req.flash('error', 'Captcha answer is incorrect.');
@@ -145,8 +175,14 @@ const authController = {
     const referralEnabled = await AdminSettings.get('referral_enabled');
     const referralCode = req.query.ref || '';
 
+    // Check Turnstile setting
+    const turnstileEnabledSetting = await AdminSettings.get('auth_turnstile_enabled');
+    const turnstileEnabled = turnstileEnabledSetting === 'true' || turnstileEnabledSetting === true || turnstileEnabledSetting === '1' || turnstileEnabledSetting === 1;
+
     // Check captcha setting
-    const captchaEnabled = await AdminSettings.get('auth_captcha_enabled');
+    const captchaEnabledSetting = await AdminSettings.get('auth_captcha_enabled');
+    const captchaEnabled = captchaEnabledSetting === 'true' || captchaEnabledSetting === true || captchaEnabledSetting === '1' || captchaEnabledSetting === 1;
+
     let captchaA, captchaB;
     if (captchaEnabled) {
       captchaA = Math.floor(Math.random() * 9) + 1;
@@ -161,7 +197,9 @@ const authController = {
       referralCode,
       captchaEnabled,
       captchaA,
-      captchaB
+      captchaB,
+      turnstileEnabled,
+      siteKey: process.env.CLOUDFLARE_TURNSTILE_SITE_KEY
     });
   },
 
@@ -181,8 +219,27 @@ const authController = {
         return res.redirect('/auth/register');
       }
 
+      // Validate Turnstile if enabled in AdminSettings
+      const turnstileEnabledSetting = await AdminSettings.get('auth_turnstile_enabled');
+      const turnstileEnabled = turnstileEnabledSetting === 'true' || turnstileEnabledSetting === true || turnstileEnabledSetting === '1' || turnstileEnabledSetting === 1;
+
+      if (turnstileEnabled) {
+        const turnstileToken = req.body['cf-turnstile-response'];
+        if (!turnstileToken) {
+          req.flash('error', 'Please complete the Cloudflare verification.');
+          return res.redirect('/auth/register');
+        }
+
+        const isHuman = await verifyTurnstile(turnstileToken, helpers.getClientIp(req));
+        if (!isHuman) {
+          req.flash('error', 'Cloudflare verification failed. Please try again.');
+          return res.redirect('/auth/register');
+        }
+      }
+
       // Validate captcha if enabled
-      const captchaEnabled = await AdminSettings.get('auth_captcha_enabled');
+      const captchaEnabledSetting = await AdminSettings.get('auth_captcha_enabled');
+      const captchaEnabled = captchaEnabledSetting === 'true' || captchaEnabledSetting === true || captchaEnabledSetting === '1' || captchaEnabledSetting === 1;
       if (captchaEnabled) {
         if (captchaAnswer === undefined || captchaAnswer === '' || parseInt(captchaAnswer) !== req.session.captchaAnswer) {
           req.flash('error', 'Captcha answer is incorrect.');

@@ -26,7 +26,8 @@ pageScript = `
 			'new_user_bonus_enabled', 
 			'auth_captcha_enabled', 
 			'notifications_enabled', 
-			'notifications_poll_interval'
+			'notifications_poll_interval',
+			'auth_turnstile_enabled'
 		  ];
 
 		  const filteredSettings = settings.filter(s => allowedKeys.includes(s.setting_key));
