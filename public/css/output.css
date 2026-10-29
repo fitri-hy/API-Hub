@@ -4179,12 +4179,6 @@
       border-color: color-mix(in oklab, var(--color-gray-700) 50%, transparent);
     }
   }
-  .dark\:border-gray-700\/60:where(.dark, .dark *) {
-    border-color: color-mix(in srgb, oklch(37.3% 0.034 259.733) 60%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklab, var(--color-gray-700) 60%, transparent);
-    }
-  }
   .dark\:border-gray-700\/70:where(.dark, .dark *) {
     border-color: color-mix(in srgb, oklch(37.3% 0.034 259.733) 70%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
@@ -4988,9 +4982,6 @@
     --tw-prose-th-borders: var(--tw-prose-invert-th-borders);
     --tw-prose-td-borders: var(--tw-prose-invert-td-borders);
   }
-  .dark\:group-focus-within\:text-blue-400:where(.dark, .dark *):is(:where(.group):focus-within *) {
-    color: var(--color-blue-400);
-  }
   @media (hover: hover) {
     .dark\:group-hover\:text-blue-400:where(.dark, .dark *):is(:where(.group):hover *) {
       color: var(--color-blue-400);
@@ -5026,9 +5017,6 @@
   @media (hover: hover) {
     .dark\:hover\:border-blue-500:where(.dark, .dark *):hover {
       border-color: var(--color-blue-500);
-    }
-    .dark\:hover\:border-gray-600:where(.dark, .dark *):hover {
-      border-color: var(--color-gray-600);
     }
     .dark\:hover\:border-gray-700:where(.dark, .dark *):hover {
       border-color: var(--color-gray-700);

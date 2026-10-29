@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 29 Okt 2026 pada 02.50
+-- Waktu pembuatan: 29 Okt 2026 pada 03.01
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -95,7 +95,7 @@ INSERT INTO `admin_settings` (`id`, `setting_key`, `setting_value`, `setting_typ
 (553, 'help_center_enabled', 'true', 'bool', 'Enable the Help Center / Support Ticket system', '2026-09-21 09:41:39'),
 (554, 'ticket_auto_close_days', '7', 'int', 'Auto-close resolved tickets after N days of inactivity', '2026-09-21 09:41:39'),
 (555, 'ticket_max_per_user', '10', 'int', 'Maximum open tickets per user', '2026-09-21 09:41:39'),
-(829, 'auth_turnstile_enabled', 'false', 'bool', 'Enable Cloudflare Turnstile on login & register forms', '2026-10-29 08:49:57');
+(829, 'auth_turnstile_enabled', 'false', 'bool', 'Enable Cloudflare Turnstile on login & register forms', '2026-10-29 09:00:54');
 
 -- --------------------------------------------------------
 
@@ -720,7 +720,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `uuid`, `username`, `email`, `password_hash`, `google_id`, `full_name`, `role`, `package_id`, `custom_rate_limit`, `avatar`, `referral_code`, `is_active`, `is_verified`, `last_login`, `last_login_ip`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', NULL, 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-10-29 08:46:30', '127.0.0.1', '2026-08-27 16:12:19', '2026-10-29 08:46:30', NULL),
+(1, 'afdb4991-7c9a-44a2-bd4a-49232c5d8aae', 'admin', 'admin@saasgateway.local', '$2a$12$1oCElWR1hAEtAd/7Tc405.vinAQYhUgVDTacfE8aPnr.rh6aDvBxW', NULL, 'System Administrator', 'admin', NULL, NULL, '/uploads/avatars/user-1787997664637-566617926.webp', 'SEC7XSVT', 1, 1, '2026-10-29 08:56:39', '127.0.0.1', '2026-08-27 16:12:19', '2026-10-29 08:56:39', NULL),
 (2, '1400a05c-7850-4d25-bc90-5636fbc16978', 'demo', 'demo@saasgateway.local', '$2a$12$lh9t7BS8psJIAQFozYW9lOZ5vhN44SFXczxV6NlgtbKaW/bIROyna', NULL, 'Demo User', 'user', NULL, NULL, NULL, '55ZH3PXH', 1, 0, '2026-09-21 10:08:41', '127.0.0.1', '2026-09-01 18:04:40', '2026-09-21 10:08:41', NULL);
 
 -- --------------------------------------------------------

@@ -120,6 +120,13 @@
 							class="w-full resize-none bg-form px-4 py-2"
 						></textarea>
 					</div>
+					
+					<% if (typeof turnstileEnabled !== 'undefined' && turnstileEnabled) { %>
+					<div data-aos="zoom-in" class="w-full flex flex-col gap-2 group my-4">
+						<div id="turnstile-container"></div>
+						<input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response">
+					</div>
+					<% } %>
 
 					<button
 						type="submit"
@@ -165,5 +172,20 @@ document.getElementById('contactForm').addEventListener('submit', function (e) {
     window.open(mailto, '_blank');
 });
 </script>
+
+<script>
+  window.onloadTurnstileCallback = function () {
+      if (document.getElementById('turnstile-container')) {
+          turnstile.render('#turnstile-container', {
+              sitekey: '${siteKey}',
+              theme: 'auto', // Otomatis menyesuaikan Light/Dark mode
+              callback: function (token) {
+                  document.getElementById('cf-turnstile-response').value = token;
+              },
+          });
+      }
+  };
+</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" async defer></script>
 `;
 %>
