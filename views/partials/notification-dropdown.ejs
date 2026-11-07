@@ -1,6 +1,6 @@
 <% if (typeof notificationsEnabled === 'undefined' || notificationsEnabled) { %>
 <div class="relative" id="notification-wrapper">
-	<button data-aos="zoom-in" type="button" id="notification-bell" class="relative flex items-center justify-center h-9 w-9 rounded-full hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Notifications" data-unread-count="<%= typeof notificationUnreadCount !== 'undefined' ? notificationUnreadCount : 0 %>">
+	<button type="button" id="notification-bell" class="relative flex items-center justify-center h-9 w-9 rounded-full hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-colors" aria-label="Notifications" data-unread-count="<%= typeof notificationUnreadCount !== 'undefined' ? notificationUnreadCount : 0 %>">
 		<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
 			<path d="M0 0h24v24H0z" fill="none" />
 			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />

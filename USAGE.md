@@ -1,6 +1,6 @@
 # USAGE.md — Panduan Menulis handler_code
 
-Panduan lengkap cara menulis `handler_code` di Admin Panel SaaS Gateway.
+Panduan lengkap cara menulis `handler_code` di Admin Panel APIHub.
 
 ---
 
